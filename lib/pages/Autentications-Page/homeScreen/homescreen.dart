@@ -28,6 +28,15 @@ class _HomescreenState extends State<Homescreen> {
     _controller.dispose();
     super.dispose();
   }
+
+  _imageBackground(){
+    return Image(
+      image: AssetImage("assets/images/sol.jpeg"),
+      height: double.infinity,
+      width: double.infinity,
+      fit: BoxFit.cover,
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -35,16 +44,17 @@ class _HomescreenState extends State<Homescreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          _controller.value.isInitialized ? FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: _controller.value.size.width,
-              height: _controller.value.size.height,
-              child: VideoPlayer(_controller),
-            ),
-            ) : Container(color: Colors.transparent,),
+          // _controller.value.isInitialized ? FittedBox(
+          //   fit: BoxFit.cover,
+          //   child: SizedBox(
+          //     width: _controller.value.size.width,
+          //     height: _controller.value.size.height,
+          //     child: VideoPlayer(_controller),
+          //   ),
+          //   ) : Container(color: Colors.transparent,),
+          _imageBackground(),
             Container(
-                color: Colors.black.withOpacity(0.6),
+                color: Colors.black.withOpacity(0.7),
                 width: double.infinity,
                 height: double.infinity, // ajuste a opacidade
             ),
