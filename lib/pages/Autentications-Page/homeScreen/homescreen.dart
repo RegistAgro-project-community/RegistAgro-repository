@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/components/logo_text/logo_text.dart';
 import 'package:video_player/video_player.dart';
 
@@ -32,8 +33,8 @@ class _HomescreenState extends State<Homescreen> {
   _imageBackground(){
     return Image(
       image: AssetImage("assets/images/sol.jpeg"),
-      height: double.infinity,
-      width: double.infinity,
+      height: double.infinity.h,
+      width: double.infinity.w,
       fit: BoxFit.cover,
     );
   }
@@ -55,8 +56,8 @@ class _HomescreenState extends State<Homescreen> {
           _imageBackground(),
             Container(
                 color: Colors.black.withOpacity(0.7),
-                width: double.infinity,
-                height: double.infinity, // ajuste a opacidade
+                width: double.infinity.w,
+                height: double.infinity.h, // ajuste a opacidade
             ),
             Center(
               child: Column(

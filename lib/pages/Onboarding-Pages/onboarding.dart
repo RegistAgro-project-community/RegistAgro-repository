@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:projecto_registagro/Models/onboardingLinst.dart';
 import 'package:page_transition/page_transition.dart';
@@ -18,13 +19,13 @@ class _OnboardingState extends State<Onboarding> {
       body: IntroductionScreen(
         globalBackgroundColor: Colors.grey[200]!,
         showSkipButton: true,
-        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 18, fontWeight: FontWeight.bold),),
+        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 18.sp, fontWeight: FontWeight.bold),),
         next: Icon(Icons.arrow_forward, 
           color: Color(0xFF61983D),
-          size: 24,
+          size: 24.r,
           fontWeight: FontWeight.bold,
         ),
-        done: Text("Done", style: TextStyle(color: Color(0xFF61983D) ,fontWeight: FontWeight.w600, fontSize: 18)),
+        done: Text("Done", style: TextStyle(color: Color(0xFF61983D) ,fontWeight: FontWeight.w600, fontSize: 18.sp)),
         onDone: () {
           Navigator.pushReplacement(
             context,
@@ -42,7 +43,7 @@ class _OnboardingState extends State<Onboarding> {
           activeSize: const Size(25.20, 10.0),
           activeColor: Color(0xFF61983D),
           activeShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0), // deixa a barra arredondada
+            borderRadius: BorderRadius.circular(25.0.r), // deixa a barra arredondada
           ),
         ),
         pages: [
@@ -52,33 +53,33 @@ class _OnboardingState extends State<Onboarding> {
             bodyWidget: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 130,),
+                SizedBox(height: 130.h),
                 Text(
                 Onboardinglist['title'] ?? "", 
                 style: TextStyle(
                   color: Color(0xFF61983D),
-                  fontSize: 22,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                 ),
                ),
-               SizedBox(height: 20),
+               SizedBox(height: 20.h),
                 Text(Onboardinglist[
                   'description'] ?? "",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey[700],
-                    fontSize: 18,
+                    fontSize: 18.sp,
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 40.h),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(15.r),
                   child: Image(
                     image: AssetImage(
                       Onboardinglist["imagePath"] ?? "assets/images/icone.png",
                     ),
-                    height: 300.0,
-                    width: 300.0,
+                    height: 300.0.h,
+                    width: 300.0.w,
                     fit: BoxFit.cover,
                 ),
                 )
