@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/components/button_logoText/button_logoText.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/components/inputText/input.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
+import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
+import 'package:projecto_registagro/shared/formInput/input.dart';
+import 'package:projecto_registagro/shared/imageLogo/imageLogo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Login extends StatefulWidget {
@@ -13,9 +17,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _passwordCtrl = TextEditingController();
+  bool isObscure = true;
+  
 
     final List<Map<String, String>> users = [
       {"email": "elias.matingo@gmail.com", "password": "@Anselmo98"},
@@ -25,29 +29,51 @@ class _LoginState extends State<Login> {
       {"email": "ildeberto.vasconcelos@gmail.com", "password": "@vasconcelos"},
     ];
 
+    void _toggleObscure(){
+      setState(() {
+        isObscure = !isObscure;
+      });
+    }
+
   @override
   void dispose() {
     _emailCtrl.dispose();
-    _passCtrl.dispose();
+    _passwordCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: ArrowBack(
+          onPressed: () => {
+            Navigator.pushReplacement(
+              context, 
+              PageTransition(
+                type: PageTransitionType.leftToRight,
+                child: Homescreen(),
+                duration: Duration(milliseconds: 350)
+              )
+            )
+          },
+        ),
+      ),
       body: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Imagelogo(
+                    height: 150.h,
+                  ),
                   SizedBox(height: 24.h),
                   Text(
-                    'Bem-vindo de volta!',
+                    'Bem-vindo!',
                     style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8.h),
@@ -60,49 +86,67 @@ class _LoginState extends State<Login> {
                   Input(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
-                    placeholder: "NIF / Email",
+                    isObscure: false,
+                    placeholder: "Insira o seu NIF",
+                    labelText: "NIF",
                     icon: Icons.alternate_email,
+                    maxLenght: 10,
+                     onChanged: (value) {
+                      _emailCtrl.value =  TextEditingValue(
+                        text: value.toLowerCase(),
+                        selection: TextSelection.collapsed(offset: value.length)
+                      );
+                    },
                     validator: (input) => input == null || input.isEmpty ? 'Informe o email' : null,
                   ),
                   SizedBox(height: 12.h),
                   Input(
-                    controller: _passCtrl,
+                    controller: _passwordCtrl,
                     keyboardType: TextInputType.visiblePassword,
-                    placeholder: "Senha",
+                    isObscure: isObscure,
+                    placeholder: "Insira a sua senha",
+                    labelText: "Senha",
+                    maxLenght: 50,
+                    sufixIcon: IconButton(
+                      icon: Icon(
+                        isObscure ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: _toggleObscure,
+                      splashRadius: 20.r,
+                    ),
                     icon: Icons.lock,
                     validator: (input) => input == null || input.isEmpty ? 'Informe a senha' : null,
                   ),
                   SizedBox(height: 8.h),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Esqueci a minha senha',
-                        style: TextStyle(
-                          color: Color(0xFF61983D),
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ),
+                    
                   SizedBox(height: 16.h),
                   ButtonLogotext(
                     onPressed: () {
-                      final email = _emailController.text.trim();
-                      final password = _passwordController.text.trim();
-                      bool validUser  = users.any((user) => user['email'] == email && user['password'] == password);
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // realizar login
-                      }
 
+                      final email = _emailCtrl.text.trim();
+                      final password = _passwordCtrl.text.trim();
 
-
-                        if(validUser){
-                          print("Enter to new page");
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(
+                      bool validUser  = users.any((user) => 
+                      user['email'] == email && user['password'] == password);
+                      
+                      if (validUser) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "LOGIN!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.sp, 
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                                backgroundColor: Colors.green,
+                                behavior: SnackBarBehavior.floating,
+                              )
+                          );
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                 "Email ou senha inválidos!",
@@ -118,7 +162,8 @@ class _LoginState extends State<Login> {
                               )
                           );
                         }
-                      },
+                    },
+                    
                             
                     tilte: "Entrar",
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/components/logo_text/logo_text.dart';
+import 'package:projecto_registagro/shared/logoText/logoText.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -30,14 +30,14 @@ class _HomescreenState extends State<Homescreen> {
     super.dispose();
   }
 
-  _imageBackground(){
-    return Image(
-      image: AssetImage("assets/images/sol.jpeg"),
-      height: double.infinity.h,
-      width: double.infinity.w,
-      fit: BoxFit.cover,
-    );
-  }
+  // _imageBackground(){
+  //   return Image(
+  //     image: AssetImage("assets/images/sol.jpeg"),
+  //     height: double.infinity.h,
+  //     width: double.infinity.w,
+  //     fit: BoxFit.cover,
+  //   );
+  // }
   
   @override
   Widget build(BuildContext context) {
@@ -45,15 +45,15 @@ class _HomescreenState extends State<Homescreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // _controller.value.isInitialized ? FittedBox(
-          //   fit: BoxFit.cover,
-          //   child: SizedBox(
-          //     width: _controller.value.size.width,
-          //     height: _controller.value.size.height,
-          //     child: VideoPlayer(_controller),
-          //   ),
-          //   ) : Container(color: Colors.transparent,),
-          _imageBackground(),
+          _controller.value.isInitialized ? FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _controller.value.size.width,
+              height: _controller.value.size.height,
+              child: VideoPlayer(_controller),
+            ),
+            ) : Container(color: Colors.transparent,),
+          // _imageBackground(),
             Container(
                 color: Colors.black.withOpacity(0.7),
                 width: double.infinity.w,
