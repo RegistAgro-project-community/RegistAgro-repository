@@ -16,6 +16,21 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   bool ischecked = true;
+  final _Crtl = TextEditingController();
+
+  final List<Map<String, String>> nifs = [
+      {"nif": "5402132186"},
+      {"nif": "5401144440"},
+      {"nif": "5401003013"},
+      {"nif": "5410003594"},
+      {"nif": "5420009498"},
+    ];
+
+    @override
+    void dispose(){
+      _Crtl.dispose();
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +65,14 @@ class _SignupState extends State<Signup> {
             ),
             SizedBox(height: 20,),
             Input(
+              controller: _Crtl,
               placeholder: "NIF",
               labelText: "Insira o seu NIF",
               maxLenght: 10,
               isObscure: false,
               icon: Icons.alternate_email,
+              keyboardType: TextInputType.number,
+              validator: (v) => v == null || v.isEmpty ? 'NIF inválido!' : null,
             ),
             // Align(
             //   alignment: Alignment.centerRight,
@@ -73,7 +91,43 @@ class _SignupState extends State<Signup> {
             SizedBox(height: 20,),
             ButtonLogotext(
               tilte: "Verificar NIF",
-              onPressed: () => {},
+              onPressed: () {
+                final nifInput = _Crtl.text.trim();
+                bool validNIF = nifs.any((item) => item['nif'] == nifInput);
+                if (validNIF) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Passed!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp, 
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                        )
+                    );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "NIF inválido!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp, 
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        )
+                    );
+                  }
+              },
             ),
             SizedBox(height: 20,),
             Align(

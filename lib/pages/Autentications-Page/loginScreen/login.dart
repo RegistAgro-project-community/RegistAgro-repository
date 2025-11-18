@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/signUp/signUp.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
 import 'package:projecto_registagro/shared/formInput/input.dart';
@@ -175,7 +176,16 @@ class _LoginState extends State<Login> {
                       children: [
                         Text("Não tem uma conta?", style: TextStyle(color: Colors.grey, fontSize: 17.sp, fontWeight: FontWeight.w400),),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () => {
+                            Navigator.pushReplacement(
+                             context,
+                             PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              child: Signup(),
+                              duration: Duration(milliseconds: 350)
+                             ) 
+                            )
+                          },
                           child: Text(
                             'Criar conta',
                             style: TextStyle(
