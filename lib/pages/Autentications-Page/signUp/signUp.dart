@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenRegist.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
 import 'package:projecto_registagro/shared/formInput/input.dart';
@@ -70,6 +72,7 @@ class _SignupState extends State<Signup> {
               labelText: "Insira o seu NIF",
               maxLenght: 10,
               isObscure: false,
+              readOnly: false,
               icon: Icons.alternate_email,
               keyboardType: TextInputType.number,
               validator: (v) => v == null || v.isEmpty ? 'NIF inválido!' : null,
@@ -95,21 +98,14 @@ class _SignupState extends State<Signup> {
                 final nifInput = _Crtl.text.trim();
                 bool validNIF = nifs.any((item) => item['nif'] == nifInput);
                 if (validNIF) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Passed!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp, 
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                        )
-                    );
+                  Navigator.pushReplacement(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.bottomToTop,
+                      child: Screenregist(),
+                      duration: Duration(milliseconds: 350)
+                    )
+                  );
                 }else{
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -137,7 +133,16 @@ class _SignupState extends State<Signup> {
                 children: [
                   Text("Já tem uma conta?", style: TextStyle(color: Colors.grey, fontSize: 17.sp, fontWeight: FontWeight.w400),),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: Login(),
+                        duration: Duration(milliseconds: 350)
+                      )  
+                      );
+                    },
                     child: Text(
                       'Entrar',
                       style: TextStyle(

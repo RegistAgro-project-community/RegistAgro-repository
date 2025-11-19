@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenRegist.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/signUp/signUp.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
@@ -92,6 +93,7 @@ class _LoginState extends State<Login> {
                     labelText: "NIF",
                     icon: Icons.alternate_email,
                     maxLenght: 10,
+                    readOnly: false,
                      onChanged: (value) {
                       _emailCtrl.value =  TextEditingValue(
                         text: value.toLowerCase(),
@@ -108,6 +110,7 @@ class _LoginState extends State<Login> {
                     placeholder: "Insira a sua senha",
                     labelText: "Senha",
                     maxLenght: 50,
+                    readOnly: false,
                     sufixIcon: IconButton(
                       icon: Icon(
                         isObscure ? Icons.visibility : Icons.visibility_off,
@@ -164,8 +167,7 @@ class _LoginState extends State<Login> {
                           );
                         }
                     },
-                    
-                            
+                           
                     tilte: "Entrar",
                   ),
                   SizedBox(height: 8.h),

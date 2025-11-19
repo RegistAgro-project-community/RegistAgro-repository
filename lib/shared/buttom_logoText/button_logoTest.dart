@@ -6,12 +6,14 @@ class ButtonLogotext extends StatelessWidget {
   final VoidCallback onPressed;
   final  Color backgroundColor;
   final Color color;
+  final BorderRadius? borderRadius;
 
 
   const ButtonLogotext ({
     super.key,
     required this.tilte,
     required this.onPressed,
+    this.borderRadius,
     this.color = Colors.white,
     this.backgroundColor = const Color(0xFF61983D),
   });
@@ -26,7 +28,7 @@ class ButtonLogotext extends StatelessWidget {
           backgroundColor: backgroundColor,
           padding: EdgeInsets.symmetric(vertical: 16.r),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.r),
+            borderRadius: borderRadius?? BorderRadius.circular(100.r),
             side: BorderSide(
               color: Color(0xFF61983D),
               width: 2.w

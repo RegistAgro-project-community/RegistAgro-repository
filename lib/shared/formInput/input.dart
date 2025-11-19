@@ -11,8 +11,11 @@ class Input extends StatelessWidget {
   final Widget? sufixIcon;
   final ValueChanged<String>? onChanged;
   final bool isObscure;
+  final bool readOnly;
+  final bool showCursor;
   final String? Function(String?)? validator;
-  final  maxLenght;
+  final maxLenght;
+  final focusNode;
 
   const Input({
     super.key,
@@ -25,7 +28,10 @@ class Input extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.validator,
-    this.maxLenght = 10
+    this.maxLenght = 10,
+    this.readOnly = true,
+    this.showCursor = true,
+    this.focusNode
   });
 
   @override
@@ -35,6 +41,9 @@ class Input extends StatelessWidget {
       keyboardType: keyboardType,
       onChanged: onChanged,
       validator: validator,
+      focusNode: focusNode,
+      readOnly: readOnly,
+      showCursor: showCursor,
       obscureText: isObscure,
       inputFormatters: [
         LengthLimitingTextInputFormatter(maxLenght)
@@ -51,7 +60,7 @@ class Input extends StatelessWidget {
         labelStyle: TextStyle(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16.r,
-          vertical: 12.r,
+          vertical: 16.r,
         ),
       ),
     );
