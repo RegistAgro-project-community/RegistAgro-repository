@@ -19,7 +19,7 @@ class _OnboardingState extends State<Onboarding> {
       body: IntroductionScreen(
         globalBackgroundColor: Colors.grey[200]!,
         showSkipButton: true,
-        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 18.sp, fontWeight: FontWeight.bold),),
+        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 16.sp, fontWeight: FontWeight.bold),),
         next: Icon(Icons.arrow_forward, 
           color: Color(0xFF61983D),
           size: 24.r,
@@ -33,14 +33,12 @@ class _OnboardingState extends State<Onboarding> {
               type: PageTransitionType.rightToLeft,
               child: Homescreen(),
               duration: Duration(milliseconds: 350)
-            ) 
-          
+            )  
           );
         } ,
         dotsDecorator: DotsDecorator(
-          size: const Size(10.0, 10.0),
           color: Colors.grey, 
-          activeSize: const Size(25.20, 10.0),
+          activeSize: Size(12.0, 12.0),
           activeColor: Color(0xFF61983D),
           activeShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0.r), // deixa a barra arredondada

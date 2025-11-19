@@ -53,20 +53,15 @@ class _HomescreenState extends State<Homescreen> {
               child: VideoPlayer(_controller),
             ),
             ) : Container(color: Colors.transparent,),
-          // _imageBackground(),
+         
             Container(
                 color: Colors.black.withOpacity(0.7),
                 width: double.infinity.w,
                 height: double.infinity.h, // ajuste a opacidade
             ),
+
             Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LogoText(),
-                    
-                ],
-              ),
+              child: LogoText()
             ),
         ],
       ),

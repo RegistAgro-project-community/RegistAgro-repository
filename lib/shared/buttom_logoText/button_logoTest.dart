@@ -20,29 +20,32 @@ class ButtonLogotext extends StatelessWidget {
   @override
   
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).height * .4.w,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          padding: EdgeInsets.symmetric(vertical: 16.r),
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius?? BorderRadius.circular(100.r),
-            side: BorderSide(
-              color: Color(0xFF61983D),
-              width: 2.w
-            )
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).height * .4.w,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 16.r),
+            shape: RoundedRectangleBorder(
+              borderRadius: borderRadius?? BorderRadius.circular(100.r),
+              side: BorderSide(
+                color: Color(0xFF61983D),
+                width: 2.w
+              )
+            ),
+            elevation: 4.r,
           ),
-          elevation: 4.r,
-        ),
-        child: Text(
-          tilte,
-          style: TextStyle(
-            color:  color,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.r
+          child: Text(
+            tilte,
+            style: TextStyle(
+              color:  color,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.r
+            ),
           ),
         ),
       ),
