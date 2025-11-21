@@ -60,7 +60,7 @@ class Input extends StatelessWidget {
         labelStyle: TextStyle(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16.r,
-          vertical: 16.r,
+          vertical: 18.r,
         ),
       ),
     );

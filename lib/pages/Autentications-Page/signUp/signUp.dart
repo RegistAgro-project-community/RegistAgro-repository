@@ -103,7 +103,7 @@ class _SignupState extends State<Signup> {
                     PageTransition(
                       type: PageTransitionType.bottomToTop,
                       child: Screenregist(),
-                      duration: Duration(milliseconds: 350)
+                      duration: Duration(milliseconds: 500)
                     )
                   );
                 }else{

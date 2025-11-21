@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenRegist.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/signUp/signUp.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/transport/screenTransport.dart';
 import 'pages/Onboarding-Pages/onboarding.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
@@ -23,7 +25,10 @@ class MyApp extends StatelessWidget {
           routes: {
             "/": (context) => Onboarding(),
             "/Homescreen": (context) => Homescreen(),
-            "/Login": (context) => Login()
+            "/Login": (context) => Login(),
+            "/Signup": (context) => Signup(),
+            "/Screenregist": (context) => Screenregist(),
+            "/Screentransport": (context) => Screentransport()
           },
         );
       }

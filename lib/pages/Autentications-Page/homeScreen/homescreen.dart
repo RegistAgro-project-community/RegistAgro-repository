@@ -59,9 +59,11 @@ class _HomescreenState extends State<Homescreen> {
                 width: double.infinity.w,
                 height: double.infinity.h, // ajuste a opacidade
             ),
-
-            Center(
-              child: LogoText()
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 80).h,
+              child: Center(
+                child: LogoText()
+              ),
             ),
         ],
       ),

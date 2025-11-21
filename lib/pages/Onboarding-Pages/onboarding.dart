@@ -41,7 +41,7 @@ class _OnboardingState extends State<Onboarding> {
           activeSize: Size(12.0, 12.0),
           activeColor: Color(0xFF61983D),
           activeShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0.r), // deixa a barra arredondada
+            borderRadius: BorderRadius.circular(25.0.r), 
           ),
         ),
         pages: [

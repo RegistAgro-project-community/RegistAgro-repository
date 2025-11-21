@@ -36,7 +36,7 @@ class LogoText extends StatelessWidget {
             color: Colors.grey[300]
           ),
         ),
-        SizedBox(height: MediaQuery.sizeOf(context).height * (.3 + .07),),
+        SizedBox(height: MediaQuery.sizeOf(context).height * (.3 + .01).h ,),
         ButtonLogotext(
           tilte: "Entrar",
           onPressed: () => {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/transport/screenTransport.dart';
 import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
 import 'package:projecto_registagro/shared/formInput/input.dart';
 
@@ -20,8 +22,6 @@ class _ScreenregistState extends State<Screenregist> {
   String selectedOption = "";
 
   bool isObscure = true;
-  bool ischecked = true;
-
 
   void _toggleObscure(){
     setState(() {
@@ -84,7 +84,7 @@ class _ScreenregistState extends State<Screenregist> {
               readOnly: true,
               showCursor: true,
               maxLenght: 255,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
             ),
             SizedBox(height: 20,),
             Input(
@@ -159,7 +159,20 @@ class _ScreenregistState extends State<Screenregist> {
                     onChanged: (value) {
                       setState(() {
                         selectedOption = value.toString();
+
+                          if (selectedOption == value.toString()){
+                            Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.bottomToTop,
+                                child: Screentransport(),
+                                duration: Duration(milliseconds: 700)
+                              )
+                            );
+                          }
                       });
+
+                     
                     },
                   ),
                 ),
@@ -184,7 +197,7 @@ class _ScreenregistState extends State<Screenregist> {
                   ),
                 ),
               ],
-              ),
+            ),
             SizedBox(height: 30,),
             ButtonLogotext(
               tilte: "Cadastrar",

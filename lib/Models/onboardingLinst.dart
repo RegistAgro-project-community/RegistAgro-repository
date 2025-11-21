@@ -23,7 +23,7 @@ final List<Map<String, String>> onboardingPages = [
     {
       "title": "Registre-se e gira a sua produção",
       "description":
-          "Organize suas colheitas, controle estoques \ne acompanhe seu rendimento.",
+          "Organize suas colheitas, controle estoques e acompanhe \nseu rendimento.",
       "imagePath": "assets/images/gado.jpeg"
       
     },
