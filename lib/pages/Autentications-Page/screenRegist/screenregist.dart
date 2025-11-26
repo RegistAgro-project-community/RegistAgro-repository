@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/transport/screenTransport.dart';
-import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/text.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/transport/screentransport.dart';
+import 'package:projecto_registagro/shared/buttom_logoText/button_logotest.dart';
 import 'package:projecto_registagro/shared/formInput/input.dart';
 
 class Screenregist extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ScreenregistState extends State<Screenregist> {
   final _emailCtrl = TextEditingController();
   final _locationCrtl =TextEditingController();
   final _passwordCtrl = TextEditingController();
-  final _ConfirmPasswordCrtl = TextEditingController();
+  final _confirmpasswordCrtl = TextEditingController();
   String selectedOption = "";
 
   bool isObscure = true;
@@ -36,7 +37,7 @@ class _ScreenregistState extends State<Screenregist> {
     _emailCtrl.dispose();
     _locationCrtl.dispose();
     _passwordCtrl.dispose();
-    _ConfirmPasswordCrtl.dispose();
+    _confirmpasswordCrtl.dispose();
     super.dispose();
   }
 
@@ -63,50 +64,67 @@ class _ScreenregistState extends State<Screenregist> {
         padding: const EdgeInsets.symmetric(horizontal: 20,),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            MyText(title: "Nome da empresa:"),
+            SizedBox(height: 5,),
             Input(
               controller: _nameEpCrtl,
               placeholder: "Nome",
               labelText: "Nome",
               icon: Icons.domain,
               readOnly: true,
+              // enabled: true,
               showCursor: true,
               maxLenght: 255,
               keyboardType: TextInputType.text,
+              color: Color(0xF4F4F4F4),
 
             ),
             SizedBox(height: 20,),
+            MyText(title: "Telefone da empresa:"),
+            SizedBox(height: 5,),
             Input(
               controller: _foneNumberCrtl,
               placeholder: "Telefone",
               labelText: "Telefone",
               icon: Icons.phone,
               readOnly: true,
+              // enabled: true,
               showCursor: true,
               maxLenght: 255,
               keyboardType: TextInputType.phone,
+              color: Color(0xF4F4F4F4),
             ),
             SizedBox(height: 20,),
+            MyText(title: "Email da empresa:"),
+            SizedBox(height: 5,),
             Input(
               controller: _emailCtrl,
               placeholder: "Email",
               labelText: "Email",
               icon: Icons.email,
               readOnly: true,
+              // enabled: true,
               showCursor: true,
               maxLenght: 255,
               keyboardType: TextInputType.emailAddress,
+              color: Color(0xF4F4F4F4),
             ),
             SizedBox(height: 20,),
+            MyText(title: "Endereço da empresa:"),
+            SizedBox(height: 5,),
             Input(
               controller: _locationCrtl,
               placeholder: "Localização",
               labelText: "Localização",
               icon: Icons.location_on,
               readOnly: true,
+              // enabled: true,
               showCursor: true,
               maxLenght: 255,
               keyboardType: TextInputType.emailAddress,
+              color: Color(0xF4F4F4F4),
             ),
             SizedBox(height: 20,),
             Input(
@@ -116,6 +134,7 @@ class _ScreenregistState extends State<Screenregist> {
               icon: Icons.lock,
               readOnly: false,
               keyboardType: TextInputType.visiblePassword,
+              color: Colors.white,
               sufixIcon: IconButton(
                 icon: Icon(
                   isObscure ? Icons.visibility : Icons.visibility_off,
@@ -126,12 +145,13 @@ class _ScreenregistState extends State<Screenregist> {
             ),
             SizedBox(height: 20,),
             Input(
-              controller: _ConfirmPasswordCrtl,
+              controller: _confirmpasswordCrtl,
               placeholder: "Confirmar senha",
               labelText: "Confirmar senha",
               icon: Icons.lock,
               readOnly: false,
               keyboardType: TextInputType.visiblePassword,
+              color: Colors.white,
               sufixIcon: IconButton(
                 icon: Icon(
                   isObscure ? Icons.visibility : Icons.visibility_off,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projecto_registagro/shared/logoText/logoText.dart';
+import 'package:projecto_registagro/shared/logoText/logotext.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -53,18 +53,18 @@ class _HomescreenState extends State<Homescreen> {
               child: VideoPlayer(_controller),
             ),
             ) : Container(color: Colors.transparent,),
-         
             Container(
                 color: Colors.black.withOpacity(0.7),
                 width: double.infinity.w,
                 height: double.infinity.h, // ajuste a opacidade
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 80).h,
-              child: Center(
-                child: LogoText()
+           
+              Flexible(
+                fit: FlexFit.loose,
+                child: Center(
+                  child: LogoText()
+                ),
               ),
-            ),
         ],
       ),
     );

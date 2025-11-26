@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ButtonLogotext extends StatelessWidget {
   final String tilte;
   final VoidCallback onPressed;
-  final  Color backgroundColor;
+  final Color backgroundColor;
   final Color color;
   final BorderRadius? borderRadius;
+  final EdgeInsetsGeometry? padding;
 
 
   const ButtonLogotext ({
@@ -14,6 +15,7 @@ class ButtonLogotext extends StatelessWidget {
     required this.tilte,
     required this.onPressed,
     this.borderRadius,
+    this.padding,
     this.color = Colors.white,
     this.backgroundColor = const Color(0xFF61983D),
   });
@@ -21,7 +23,7 @@ class ButtonLogotext extends StatelessWidget {
   
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: padding?? EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
         width: MediaQuery.sizeOf(context).height * .4.w,
         child: ElevatedButton(
@@ -42,7 +44,7 @@ class ButtonLogotext extends StatelessWidget {
             tilte,
             style: TextStyle(
               color:  color,
-              fontSize: 18.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.r
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:projecto_registagro/Models/onboardingLinst.dart';
+import 'package:projecto_registagro/Models/onboardinglinst.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
 
@@ -19,13 +19,13 @@ class _OnboardingState extends State<Onboarding> {
       body: IntroductionScreen(
         globalBackgroundColor: Colors.grey[200]!,
         showSkipButton: true,
-        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 16.sp, fontWeight: FontWeight.bold),),
+        skip: Text("Skip", style: TextStyle( color: Color(0xFF61983D), fontSize: 13.sp, fontWeight: FontWeight.bold),),
         next: Icon(Icons.arrow_forward, 
           color: Color(0xFF61983D),
-          size: 24.r,
+          size: 20.r,
           fontWeight: FontWeight.bold,
         ),
-        done: Text("Done", style: TextStyle(color: Color(0xFF61983D) ,fontWeight: FontWeight.w600, fontSize: 18.sp)),
+        done: Text("Done", style: TextStyle(color: Color(0xFF61983D) ,fontWeight: FontWeight.w600, fontSize: 15.sp)),
         onDone: () {
           Navigator.pushReplacement(
             context,
@@ -38,14 +38,14 @@ class _OnboardingState extends State<Onboarding> {
         } ,
         dotsDecorator: DotsDecorator(
           color: Colors.grey, 
-          activeSize: Size(12.0, 12.0),
+          activeSize: Size(14.0, 12.0),
           activeColor: Color(0xFF61983D),
           activeShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0.r), 
           ),
         ),
         pages: [
-          for(var Onboardinglist in onboardingPages)
+          for(var onboardingPages in onboardingPages)
           PageViewModel(
             titleWidget: const SizedBox.shrink(),
             bodyWidget: Column(
@@ -53,7 +53,7 @@ class _OnboardingState extends State<Onboarding> {
               children: [
                 SizedBox(height: 130.h),
                 Text(
-                Onboardinglist['title'] ?? "", 
+                onboardingPages['title'] ?? "", 
                 style: TextStyle(
                   color: Color(0xFF61983D),
                   fontSize: 22.sp,
@@ -61,7 +61,7 @@ class _OnboardingState extends State<Onboarding> {
                 ),
                ),
                SizedBox(height: 20.h),
-                Text(Onboardinglist[
+                Text(onboardingPages[
                   'description'] ?? "",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -74,7 +74,7 @@ class _OnboardingState extends State<Onboarding> {
                   borderRadius: BorderRadius.circular(15.r),
                   child: Image(
                     image: AssetImage(
-                      Onboardinglist["imagePath"] ?? "assets/images/icone.png",
+                      onboardingPages["imagePath"] ?? "assets/images/icone.png",
                     ),
                     height: 300.0.h,
                     width: 300.0.w,

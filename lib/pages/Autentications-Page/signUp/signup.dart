@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenRegist.dart';
+import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenregist.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
-import 'package:projecto_registagro/shared/buttom_logoText/button_logoTest.dart';
+import 'package:projecto_registagro/shared/buttom_logoText/button_logotest.dart';
 import 'package:projecto_registagro/shared/formInput/input.dart';
-import 'package:projecto_registagro/shared/imageLogo/imageLogo.dart';
+import 'package:projecto_registagro/shared/imageLogo/imagelogo.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -18,7 +18,8 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   bool ischecked = true;
-  final _Crtl = TextEditingController();
+  final _crtl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   final List<Map<String, String>> nifs = [
       {"nif": "5402132186"},
@@ -30,7 +31,7 @@ class _SignupState extends State<Signup> {
 
     @override
     void dispose(){
-      _Crtl.dispose();
+      _crtl.dispose();
       super.dispose();
     }
 
@@ -66,17 +67,36 @@ class _SignupState extends State<Signup> {
               ],
             ),
             SizedBox(height: 20,),
-            Input(
-              controller: _Crtl,
-              placeholder: "NIF",
-              labelText: "Insira o seu NIF",
-              maxLenght: 10,
-              isObscure: false,
-              readOnly: false,
-              icon: Icons.alternate_email,
-              keyboardType: TextInputType.number,
-              validator: (v) => v == null || v.isEmpty ? 'NIF inválido!' : null,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                   Input(
+                    controller: _crtl,
+                    placeholder: "NIF",
+                    labelText: "Insira o seu NIF",
+                    maxLenght: 10,
+                    isObscure: false,
+                    readOnly: false,
+                    // enabled: true,
+                    showCursor: true,
+                    color: Color(0xF4F4F4F4),
+                    icon: Icons.alternate_email,
+                    keyboardType: TextInputType.number,
+                    validator: (v) {
+                      if (v == null || v.isEmpty){
+                        return "Por favor insira um NIF";
+                      }
+                      if (v.length != 10){
+                        return "O NIF deve ter pelo menos 10 dígitos";
+                      }
+                      return null;
+                    },
+                  ),
+                ],
             ),
+            ),
+           
             // Align(
             //   alignment: Alignment.centerRight,
             //   child: CheckboxListTile(
@@ -94,35 +114,40 @@ class _SignupState extends State<Signup> {
             SizedBox(height: 20,),
             ButtonLogotext(
               tilte: "Verificar NIF",
-              onPressed: () {
-                final nifInput = _Crtl.text.trim();
-                bool validNIF = nifs.any((item) => item['nif'] == nifInput);
-                if (validNIF) {
-                  Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.bottomToTop,
-                      child: Screenregist(),
-                      duration: Duration(milliseconds: 500)
-                    )
+              borderRadius: BorderRadius.circular(12.r),
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  // Exemplo de feedback de carregamento
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                      ),
+                    ),
                   );
-                }else{
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "NIF inválido!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp, 
-                            fontWeight: FontWeight.bold
-                          ),
+
+                  await Future.delayed(Duration(seconds: 2));
+
+                  if (mounted) {
+                    // Usei o addPostFrameCallback para garantir que a navegação aconteça no próximo ciclo de renderização
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+                      Navigator.of(context).pop();
+
+                      Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.bottomToTop,
+                          child: Screenregist(),
+                          duration: Duration(milliseconds: 500),
                         ),
-                          backgroundColor: Colors.red,
-                          behavior: SnackBarBehavior.floating,
-                        )
-                    );
+                      );
+                    });
                   }
+                }
               },
             ),
             SizedBox(height: 20,),
@@ -131,7 +156,7 @@ class _SignupState extends State<Signup> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Já tem uma conta?", style: TextStyle(color: Colors.grey, fontSize: 17.sp, fontWeight: FontWeight.w400),),
+                  Text("Já tem uma conta?", style: TextStyle(color: Colors.grey, fontSize: 15.sp, fontWeight: FontWeight.w400),),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
@@ -147,7 +172,7 @@ class _SignupState extends State<Signup> {
                       'Entrar',
                       style: TextStyle(
                         color: Color(0xFF61983D),
-                        fontSize: 17.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.bold
                       ),
                     ),
