@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenregist.dart';
@@ -7,12 +8,25 @@ import 'package:projecto_registagro/pages/Autentications-Page/transport/screentr
 import 'pages/Onboarding-Pages/onboarding.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
-  runApp(const MyApp());
-  
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // 🔥 Carregar rota salva
+  final prefs = await SharedPreferences.getInstance();
+  final lastRoute = prefs.getString("last_route") ?? "/";
+
+  runApp(MyApp(initialRoute: lastRoute));
 }
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key}); 
+  final String initialRoute;
+
+  const MyApp({super.key, required this.initialRoute});
+
+  Future<void> _saveRoute(String route) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("last_route", route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -21,16 +35,35 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          routes: {
-            "/": (context) => Onboarding(),
-            "/Homescreen": (context) => Homescreen(),
-            "/Login": (context) => Login(),
-            "/Signup": (context) => Signup(),
-            "/Screenregist": (context) => Screenregist(),
-            "/Screentransport": (context) => Screentransport()
+          initialRoute: initialRoute, // 🔥 inicia na última tela usada
+
+          // interceptar navegação e salvar rota automaticamente
+          onGenerateRoute: (settings) {
+            _saveRoute(settings.name ?? "/");
+            return MaterialPageRoute(
+              builder: (context) => _getPage(settings.name),
+            );
           },
         );
-      }
+      },
     );
+  }
+
+  // mapeamento das rotas
+  Widget _getPage(String? route) {
+    switch (route) {
+      case "/Homescreen":
+        return Homescreen();
+      case "/Login":
+        return Login();
+      case "/Signup":
+        return Signup();
+      case "/Screenregist":
+        return Screenregist();
+      case "/Screentransport":
+        return Screentransport();
+      default:
+        return Onboarding();
+    }
   }
 }
