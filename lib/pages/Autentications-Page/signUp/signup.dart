@@ -18,7 +18,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  bool ischecked = true;
+  bool ischecked = false;
   final _crtl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -113,11 +113,17 @@ class _SignupState extends State<Signup> {
                     //   child: CheckboxListTile(
                     //     value: ischecked,
                     //     activeColor: Colors.green,
-                    //     title: const Text("Remember me", style: TextStyle(color: Colors.green, fontSize: 17, fontWeight: FontWeight.bold),),
+                    //     title: const Text("Validar com BI (para consumidores)", style: TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold),),
                     //     onChanged: (value) => {
                     //       setState(() {
                     //         ischecked = !ischecked;
-                    //       })
+                    //       }),
+
+                    //       if(ischecked){
+                            
+                    //       } else {
+                    //         "Checkbox is unchecked"
+                    //       }
                     //     },
                     //     controlAffinity: ListTileControlAffinity.platform,
                     //   )
@@ -144,7 +150,7 @@ class _SignupState extends State<Signup> {
                           );
               
                           await Future.delayed(Duration(seconds: 2));
-                          if(validNif){}
+                          if(validNif){} const CircularProgressIndicator();
                           if (mounted) {
                             // Usei o addPostFrameCallback para garantir que a navegação aconteça no próximo ciclo de renderização
                             WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -165,7 +171,7 @@ class _SignupState extends State<Signup> {
                         }
                       },
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20.h,),
                     Align(
                       alignment: Alignment.center,
                       child: Row(

@@ -126,18 +126,24 @@ class _ScreenregistState extends State<Screenregist> {
                     SizedBox(height: 20,),
                     MyText(title: "Endereço da empresa:"),
                     SizedBox(height: 5,),
-                    Input(
-                      controller: _locationCrtl,
-                      placeholder: "Localização",
-                      labelText: "Localização",
-                      icon: Icons.location_on,
-                      readOnly: true,
-                      // enabled: true,
-                      showCursor: true,
-                      maxLenght: 255,
-                      keyboardType: TextInputType.emailAddress,
-                      color: Color(0xF4F4F4F4),
-                    ),
+                    // DropdownButtonFormField<UserRole>(
+                    //   value: values,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'Função',
+                    //     border: OutlineInputBorder(),
+                    //   ),
+                    //   items: const [
+                    //     DropdownMenuItem(
+                    //       value: UserRole.employee,
+                    //       child: Text('Colaborador'),
+                    //     ),
+                    //     DropdownMenuItem(
+                    //       value: UserRole.driver,
+                    //       child: Text('Motorista'),
+                    //     ),
+                    //   ],
+                    //   onChanged: (role) => setState(() => _role = role!),
+                    // ),
                     SizedBox(height: 20,),
                     Input(
                       controller: _passwordCtrl,
@@ -180,7 +186,7 @@ class _ScreenregistState extends State<Screenregist> {
                             title: const Text(
                               "Sim",
                               style: TextStyle(
-                                color: Colors.green,
+                                color: Color.fromARGB(255, 77, 177, 80),
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -191,19 +197,18 @@ class _ScreenregistState extends State<Screenregist> {
                             onChanged: (value) {
                               setState(() {
                                 selectedOption = value.toString();
-                                  if (selectedOption == value.toString()){
-                                    Navigator.pushReplacement(
-                                      context,
-                                      PageTransition(
-                                        type: PageTransitionType.bottomToTop,
-                                        child: Screentransport(),
-                                        duration: Duration(milliseconds: 700)
-                                      )
-                                    );
-                                  }
                               });
-
-                            
+                              Future.delayed(Duration(milliseconds: 300), () {
+                                 if (!context.mounted) return;
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.bottomToTop,
+                                      child: Screentransport(),
+                                      duration: const Duration(milliseconds: 500),
+                                    ),
+                                  );
+                              });                            
                             },
                           ),
                         ),

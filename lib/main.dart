@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/pages/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // 🔥 Carregar rota salva
   final prefs = await SharedPreferences.getInstance();
   final lastRoute = prefs.getString("last_route") ?? "/";
 
@@ -35,9 +35,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: initialRoute, // 🔥 inicia na última tela usada
-
-          // interceptar navegação e salvar rota automaticamente
+          initialRoute: initialRoute,
           onGenerateRoute: (settings) {
             _saveRoute(settings.name ?? "/");
             return MaterialPageRoute(
@@ -49,7 +47,6 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  // mapeamento das rotas
   Widget _getPage(String? route) {
     switch (route) {
       case "/Homescreen":
@@ -63,7 +60,7 @@ class MyApp extends StatelessWidget {
       case "/Screentransport":
         return Screentransport();
       default:
-        return Onboarding();
+        return LoginScreen();
     }
   }
 }
