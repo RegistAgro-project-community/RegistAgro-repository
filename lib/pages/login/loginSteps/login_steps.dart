@@ -1,8 +1,9 @@
 enum AcessoStep {
   initState,
   insertNIF,
+  insertBI,
   confirmar,
   acessKey,
   loadingPassword,
-  insertPassword,
+  insertEmailCode,
 }

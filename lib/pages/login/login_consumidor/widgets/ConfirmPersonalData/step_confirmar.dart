@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './login_base_modal.dart';
-import './modal_handle.dart';
+import '../loginBaseModal/login_base_modal.dart';
+import '../../../../../shared/Handle/modal_handle.dart';
 
 class StepConfirmar extends StatefulWidget {
   final Future<void> Function() onConfirmar;
@@ -70,7 +70,6 @@ class _StepConfirmarState extends State<StepConfirmar> {
                         height: 22,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          color: Colors.white,
                         ),
                       )
                     : const Text(

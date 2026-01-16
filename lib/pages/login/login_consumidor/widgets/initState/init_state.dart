@@ -1,42 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/pages/login/widgets/login_base_modal.dart';
-import 'package:projecto_registagro/pages/login/widgets/modal_handle.dart';
+import 'package:projecto_registagro/pages/login/login_consumidor/widgets/loginBaseModal/login_base_modal.dart';
+import 'package:projecto_registagro/shared/Handle/modal_handle.dart';
 
-class InitState extends StatefulWidget {
-  final bool isLoading;
-  final VoidCallback onConsumidor;
-  final VoidCallback onMotorista;
-  final ValueChanged<bool> onLoadingChanged;
 
-  const InitState(
-    {
-      super.key,
-      required this.isLoading,
-      required this.onConsumidor,
-      required this.onMotorista,
-      required this.onLoadingChanged
-      }
-    );
-
-  @override
-  State<InitState> createState() => _InitStateState();
-}
-
-class _InitStateState extends State<InitState> {
-
-  void handleConsumidor() async {
-    if (mounted) {
-      widget.onLoadingChanged(false);
-      widget.onConsumidor();          
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
+  Widget buildInitState( 
+    VoidCallback onConsumidor, 
+    VoidCallback onMotorista 
+    ) {
     return LoginBaseModal(
       key: const Key("initState"),
       child: SafeArea(
         child: SizedBox(
-          height: 230,
+          height: 250,
           child: Column(
             children: [
               const ModalHandle(),
@@ -50,8 +25,8 @@ class _InitStateState extends State<InitState> {
                 ),
               ),
               const SizedBox(height: 16),
-              InkWell(
-                onTap: widget.isLoading ? null : handleConsumidor,
+              GestureDetector(
+                onTap: onConsumidor,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -85,8 +60,8 @@ class _InitStateState extends State<InitState> {
                 ),
               ),
               const SizedBox(height: 20,),
-              InkWell(
-                onTap: () {},
+              GestureDetector(
+                onTap: onMotorista,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -116,7 +91,6 @@ class _InitStateState extends State<InitState> {
                       Icons.arrow_forward,
                       color: Colors.grey.shade400
                     ),
-                    onTap: (){},
                   ),
                 ),
               ),
@@ -126,4 +100,3 @@ class _InitStateState extends State<InitState> {
       ),
     );
   }
-}

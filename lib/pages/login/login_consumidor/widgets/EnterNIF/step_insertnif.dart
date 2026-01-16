@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './login_base_modal.dart';
-import './modal_handle.dart';
+import '../loginBaseModal/login_base_modal.dart';
+import '../../../../../shared/Handle/modal_handle.dart';
 
 class StepInsertNIF extends StatefulWidget {
   final bool isLoading;
@@ -47,7 +47,7 @@ class _StepInsertNIFState extends State<StepInsertNIF> {
               const ModalHandle(),
               const SizedBox(height: 6),
               const Text(
-                "Insira o seu NIF para começar.",
+                "Insira o seu NIF para começar como consumidor",
                 style: TextStyle(color: Colors.grey, fontSize: 15),
               ),
               Padding(
@@ -94,21 +94,20 @@ class _StepInsertNIFState extends State<StepInsertNIF> {
                       ),
                     ),
                     child: widget.isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text(
-                            "Continuar",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                    : const Text(
+                        "Continuar",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                   ),
                 ),
               ),

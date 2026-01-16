@@ -6,8 +6,8 @@ class ModalHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
-      height: 5,
+      width: 160,
+      height: 8,
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.grey[300],

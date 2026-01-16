@@ -103,8 +103,6 @@ class _LoginState extends State<Login> {
                             placeholder: "Insira o seu NIF",
                             labelText: "NIF",
                             icon: Icons.alternate_email,
-                            maxLenght: 10,
-                            readOnly: false,
                             onChanged: (value) {
                               _emailCtrl.value =  TextEditingValue(
                                 text: value.toLowerCase(),
@@ -120,8 +118,6 @@ class _LoginState extends State<Login> {
                             isObscure: isObscure,
                             placeholder: "Insira a sua senha",
                             labelText: "Senha",
-                            maxLenght: 50,
-                            readOnly: false,
                             sufixIcon: IconButton(
                               icon: Icon(
                                 isObscure ? Icons.visibility : Icons.visibility_off,

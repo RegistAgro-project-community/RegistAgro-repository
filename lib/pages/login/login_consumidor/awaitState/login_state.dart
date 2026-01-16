@@ -1,4 +1,4 @@
-import 'login_steps.dart';
+import '../../loginSteps/login_steps.dart';
 
 class LoginState {
   AcessoStep step;
@@ -15,9 +15,9 @@ class LoginState {
     List<String>? mensagens,
   }) : mensagens = mensagens ??
         const [
-          "Estamos a configurar o seu acesso...",
-          "A preparar o ambiente...",
+          "Enviando código de confirmação para o seu email...",
           "Quase tudo pronto...",
+          "Por favor, verifique o seu emal!"
         ];
 
   LoginState copyWith({

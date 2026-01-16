@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './login_base_modal.dart';
+import '../loginBaseModal/login_base_modal.dart';
 
 class StepLoadingPassword extends StatelessWidget {
   final String message;

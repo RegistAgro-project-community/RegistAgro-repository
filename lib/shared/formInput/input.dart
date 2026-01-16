@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Input extends StatelessWidget {
@@ -11,13 +10,8 @@ class Input extends StatelessWidget {
   final Widget? sufixIcon;
   final ValueChanged<String>? onChanged;
   final bool isObscure;
-  final bool readOnly;
-  final bool showCursor;
   final String? Function(String?)? validator;
-  final maxLenght;
-  final focusNode;
   final Color? color;
-  // final bool enabled;
 
   const Input({
     super.key,
@@ -30,12 +24,7 @@ class Input extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.validator,
-    this.maxLenght = 10,
-    this.readOnly = true,
-    // this.enabled = false,
     this.color,
-    this.showCursor = true,
-    this.focusNode
   });
 
   @override
@@ -45,40 +34,29 @@ class Input extends StatelessWidget {
       keyboardType: keyboardType,
       onChanged: onChanged,
       validator: validator,
-      focusNode: focusNode,
-      readOnly: readOnly,
-      showCursor: showCursor,
       obscureText: isObscure,
-      // enabled: false,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(maxLenght)
-      ],
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.grey.shade200,
         hintText: placeholder,
         suffixIcon: sufixIcon,
-        prefixIcon: icon != null ? Icon(icon, color: Colors.grey,) : null,
+        prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         labelText: labelText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(
-            color: Color(0xF4F4F4F4),
-          )
+          borderRadius: BorderRadius.circular(5.r),
+          borderSide: BorderSide(color: Color(0xF4F4F4F4)),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(
-            color: Colors.red,
-          )
+          borderRadius: BorderRadius.circular(5.r),
+          borderSide: BorderSide(color: Colors.red),
         ),
         labelStyle: TextStyle(color: Colors.grey),
         hintStyle: TextStyle(color: Colors.grey),
         iconColor: Colors.grey,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.r,
-          vertical: 18.r,
+          horizontal: 10.r, 
+          vertical: 18.r
         ),
       ),
     );
