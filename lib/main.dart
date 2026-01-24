@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/pages/login/login_home_screen/login_screen.dart';
+import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/homeScreen/homescreen.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/loginScreen/login.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/screenRegist/screenregist.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/signUp/signup.dart';
-import 'package:projecto_registagro/pages/Autentications-Page/transport/screentransport.dart';
-import 'pages/Onboarding-Pages/onboarding.dart';
+import 'package:projecto_registagro/view/login-signup/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
+import 'package:projecto_registagro/view/login-signup/signUp/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
@@ -55,12 +52,8 @@ class MyApp extends StatelessWidget {
         return Login();
       case "/Signup":
         return Signup();
-      case "/Screenregist":
-        return Screenregist();
-      case "/Screentransport":
-        return Screentransport();
       default:
-        return LoginScreen();
+        return MainPage();
     }
   }
 }

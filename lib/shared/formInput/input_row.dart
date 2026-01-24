@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Input extends StatelessWidget {
+class InputRow extends StatelessWidget {
   final String placeholder;
   final String labelText;
   final TextEditingController? controller;
@@ -13,7 +13,7 @@ class Input extends StatelessWidget {
   final String? Function(String?)? validator;
   final Color? color;
 
-  const Input({
+  const InputRow({
     super.key,
     this.icon,
     this.isObscure = false,
@@ -37,10 +37,13 @@ class Input extends StatelessWidget {
       obscureText: isObscure,
       decoration: InputDecoration(
         filled: false,
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green, width: 1.5),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey)
         ),
-        errorBorder: const OutlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 1.5),
+        ),
+        errorBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.red),
         ),
         hintText: placeholder,
