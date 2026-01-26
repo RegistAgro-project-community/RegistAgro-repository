@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/Models/product.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -92,13 +92,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     if (stockStatus == "confirmado") {
       backgroundColor = const Color.fromARGB(255, 111, 212, 114);
       text = "Confirmado";
-    } else if (stockStatus == "vazio") {
+    } 
+    else if (stockStatus == "vazio") {
       backgroundColor = Colors.red;
       text = "Sem stock";
-    } else if (stockStatus == "pendente") {
+    } 
+    else if (stockStatus == "pendente") {
       backgroundColor = Colors.amber;
       text = "Pendente";
-    } else {
+    } 
+    else {
       backgroundColor = Colors.grey;
       text = "Desconhecido";
     }
@@ -134,7 +137,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           trailing: Badge(
-            isLabelVisible: cartCount > 0,
+            isLabelVisible: cartCount > 0  ,
             backgroundColor: Colors.orange,
             label: Text(
               cartCount.toString(),

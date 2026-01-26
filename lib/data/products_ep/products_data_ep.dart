@@ -1,4 +1,4 @@
-import 'package:projecto_registagro/Models/product.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 
 final products = [
   Product(

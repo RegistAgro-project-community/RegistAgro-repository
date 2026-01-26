@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/Models/product.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/view/pages/home_screen/details/product_details.dart';
 
 

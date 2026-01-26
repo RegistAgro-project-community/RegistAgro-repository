@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/data/products.dart';
-import '../home_screen/widgets/productCard/product_card.dart';
+import 'package:projecto_registagro/data/products_ep/products_data_ep.dart';
+import 'widgets/productCard_ep/product_card.dart';
 
 class HomeState extends StatelessWidget {
   const HomeState({super.key});
@@ -114,6 +114,7 @@ class HomeState extends StatelessWidget {
             SizedBox(
               height: 200,
               child: ListView.separated(
+                padding: EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
@@ -126,6 +127,7 @@ class HomeState extends StatelessWidget {
             SizedBox(
               height: 200,
               child: ListView.separated(
+                padding: EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
@@ -138,6 +140,7 @@ class HomeState extends StatelessWidget {
             SizedBox(
               height: 200,
               child: ListView.separated(
+                padding: EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
@@ -167,7 +170,7 @@ class HomeState extends StatelessWidget {
     );
   }
 
-  Widget _productsGrid(List products) {
+  Widget productsGrid(List products) {
     return SizedBox(
       height: 200,
       child: ListView.separated(
