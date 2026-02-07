@@ -1,27 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_list_orders.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/OrdersCard/orders_card.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/OrdersEmptyState/orders_empty_state.dart';
 
-class MyOrders extends StatefulWidget {
-  const MyOrders({super.key});
+class MyOrderScreen extends StatefulWidget {
+  const MyOrderScreen({super.key});
 
   @override
-  State<MyOrders> createState() => _MyOrdersState();
+  State<MyOrderScreen> createState() => _MyOrderScreenState();
 }
 
-class _MyOrdersState extends State<MyOrders> {
+class _MyOrderScreenState extends State<MyOrderScreen> {
+  final bool hasOrders = true;
+
+  List<Order> _filteredOrders = [];
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredOrders = allOrders;
+    _searchController.addListener(_filterOrders);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterOrders() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredOrders = allOrders.where((order) {
+        return order.id.toLowerCase().contains(query) ||
+            order.storeName.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A6E1F),
-      body: Center(
-        child: Text(
-          "Brevemente not defined...",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 25
-          ),
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(top: 30),
+          child: hasOrders ? _buildOrderList() : buildEmptyState(context),
+        ),
       ),
+    );
+  }
+
+  Widget _buildOrderList() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Pesquisar...',
+              hintStyle: TextStyle(color: Colors.grey),
+              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+              suffixIcon: const Icon(Icons.filter_list, color: Colors.grey),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 4),
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: _filteredOrders.length,
+            itemBuilder: (context, index) {
+              final order = _filteredOrders[index];
+              return OrderCard(order: order);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

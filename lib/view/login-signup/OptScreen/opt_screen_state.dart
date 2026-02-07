@@ -128,7 +128,6 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
               ),
               const SizedBox(height: 30),
-              // OTP Input
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: PinCodeTextField(
@@ -159,7 +158,6 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               SizedBox(height: 40),
-              // Botão de confirmar OTP
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.8.w,
                 height: 40.h,
@@ -194,7 +192,6 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              // Reenviar código
               TextButton(
                 onPressed: canResend ? resendCode : null,
                 child: Text(

@@ -19,7 +19,7 @@ class _MainPageState extends State<MainPage>
   final List<Widget> screens = const [
     HomeState(),
     InicialStore(),
-    MyOrders(),
+    MyOrderScreen(),
     ProfileState(),
   ];
 
@@ -56,8 +56,6 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
-
       body: SafeArea(
         child: TabBarView(
           controller: tabController,
