@@ -24,14 +24,6 @@ class _LoginState extends State<Login> {
   final _passwordCtrl = TextEditingController();
   bool isObscure = true;
 
-  final List<Map<String, String>> users = [
-    {"email": "elias.matingo@gmail.com", "password": "@Anselmo"},
-    {"email": "claudio.cassoma@gmail.com", "password": "@cassoma777"},
-    {"email": "leocania.melo@gmail.com", "password": "@melo123"},
-    {"email": "debora.francisco@gmail.com", "password": "@francisco90"},
-    {"email": "ildeberto.vasconcelos@gmail.com", "password": "@vasconcelos"},
-  ];
-
   void _toggleObscure() {
     setState(() {
       isObscure = !isObscure;
