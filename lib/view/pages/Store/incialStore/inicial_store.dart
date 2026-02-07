@@ -10,13 +10,16 @@ class InicialStore extends StatefulWidget {
 class _InicialStoreState extends State<InicialStore> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "Brevemente store...",
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 25
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A6E1F),
+      body: Center(
+        child: Text(
+          "Brevemente store...",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25
+          ),
         ),
       ),
     );

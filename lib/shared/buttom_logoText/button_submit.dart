@@ -9,8 +9,7 @@ class ButtonSubmit extends StatelessWidget {
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry? padding;
 
-
-  const ButtonSubmit ({
+  const ButtonSubmit({
     super.key,
     required this.tilte,
     required this.onPressed,
@@ -20,33 +19,29 @@ class ButtonSubmit extends StatelessWidget {
     this.backgroundColor = const Color(0xFF61983D),
   });
   @override
-  
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding?? EdgeInsets.symmetric(horizontal: 20),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        width: MediaQuery.sizeOf(context).height * .4.w,
+        width: MediaQuery.sizeOf(context).width * .8.w,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: backgroundColor,
-            padding: EdgeInsets.symmetric(vertical: 16.r),
+            padding: EdgeInsets.symmetric(vertical: 10.r),
             shape: RoundedRectangleBorder(
-              borderRadius: borderRadius?? BorderRadius.circular(100.r),
-              side: BorderSide(
-                color: Color(0xFF61983D),
-                width: 2.w
-              )
+              borderRadius: borderRadius ?? BorderRadius.circular(10.r),
+              side: BorderSide(color: Color(0xFF61983D), width: 2.w),
             ),
-            elevation: 4.r,
+            elevation: 2.r,
           ),
           child: Text(
             tilte,
             style: TextStyle(
-              color:  color,
+              color: color,
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.r
+              letterSpacing: 1.r,
             ),
           ),
         ),

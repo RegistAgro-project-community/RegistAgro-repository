@@ -1,4 +1,5 @@
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/Models/profile_ep/profile_modals_ep.dart';
 
 final products = [
   Product(
@@ -13,6 +14,12 @@ final products = [
     quantity: "20kg/cx",
     recommendedTransport: "Refrigerada",
     stockStatus: "vazio",
+    supplier: ProfileModel(
+      id: "1",
+      username: "Fazenda Maria",
+      description: "Frutas frescas",
+      image: "assets/images/batata.png",
+    )
   ),
   Product(
     id: "2",
@@ -26,9 +33,15 @@ final products = [
     quantity: "30kg/cx",
     recommendedTransport: "Refrigerada",
     stockStatus: "confirmado",
+    supplier: ProfileModel(
+      id: "2",
+      username: "Fazenda Filomena",
+      description: "Frutas frescas",
+      image: "assets/images/batata.png",
+    )
   ),
   Product(
-    id: "1",
+    id: "3",
     title: "Organic Banana",
     subTitle: "Frutas frescas",
     price: "1990.99 Kz",
@@ -39,9 +52,15 @@ final products = [
     quantity: "20kg/cx",
     recommendedTransport: "Refrigerada",
     stockStatus: "vazio",
+    supplier: ProfileModel(
+      id: "3",
+      username: "Fazenda Kikovo",
+      description: "Frutas frescas",
+      image: "assets/images/batata.png",
+    )
   ),
   Product(
-    id: "2",
+    id: "4",
     title: "Organic Apple",
     subTitle: "Frutas frescas",
     price: "2990.50 Kz",
@@ -52,5 +71,11 @@ final products = [
     quantity: "30kg/cx",
     recommendedTransport: "Refrigerada",
     stockStatus: "confirmado",
+    supplier: ProfileModel(
+      id: "4",
+      username: "Fazenda Tio Lucas",
+      description: "Frutas frescas",
+      image: "assets/images/batata.png",
+    )
   ),
 ];

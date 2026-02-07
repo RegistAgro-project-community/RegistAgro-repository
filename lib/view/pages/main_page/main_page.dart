@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/view/pages/NotDefined/not_defined.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/my_orders.dart';
 import 'package:projecto_registagro/view/pages/Store/incialStore/inicial_store.dart';
-import 'package:projecto_registagro/view/pages/home_screen/home.dart';
+import 'package:projecto_registagro/view/pages/main_page/home_screen/home_state.dart';
 import 'package:projecto_registagro/view/pages/userProfile/profile.dart';
 
 class MainPage extends StatefulWidget {
@@ -19,20 +19,18 @@ class _MainPageState extends State<MainPage>
   final List<Widget> screens = const [
     HomeState(),
     InicialStore(),
-    NotDefined(),
-    Profile(),
+    MyOrderScreen(),
+    ProfileState(),
   ];
 
   @override
   void initState() {
     super.initState();
-
     tabController = TabController(
       length: screens.length,
       vsync: this,
       initialIndex: selectedIndex,
     );
-
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         setState(() {
@@ -58,12 +56,12 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A6E1F),
-
-      body: TabBarView(
-        controller: tabController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: screens,
+      body: SafeArea(
+        child: TabBarView(
+          controller: tabController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: screens,
+        ),
       ),
 
       bottomNavigationBar: Theme(
@@ -83,7 +81,7 @@ class _MainPageState extends State<MainPage>
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Store'),
-            BottomNavigationBarItem(icon: Icon(Icons.check_box_rounded), label: 'not defined',),
+            BottomNavigationBarItem(icon: Icon(Icons.online_prediction_rounded), label: 'Orders',),
             BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),
           ],
         ),

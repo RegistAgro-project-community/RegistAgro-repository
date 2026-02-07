@@ -1,7 +1,9 @@
+import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/login-signup/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
@@ -20,7 +22,9 @@ class _SignupState extends State<Signup> {
   bool ischecked = false;
   final _crtl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _location = TextEditingController();
   final _emailCtrl = TextEditingController();
+  final _foneNumber = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool isObscure = true;
 
@@ -59,6 +63,17 @@ class _SignupState extends State<Signup> {
 
     return null;
   }
+  String? validateFoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Informe o seu número de tel.';
+    }
+
+    if (value.length != 9) {
+      return 'O contacto deve ter exatamente 9 digítos!';
+    }
+
+    return null;
+  }
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Informe a senha';
@@ -76,7 +91,9 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: ArrowBack(
           onPressed: () => {
             Navigator.pushReplacement(
@@ -125,13 +142,22 @@ class _SignupState extends State<Signup> {
                             isObscure: false,
                             color: Color(0xF4F4F4F4),
                             icon: Icons.alternate_email,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
                                 return "Por favor insira um Nome";
                               }
                               return null;
                             },
+                          ),
+                          Input(
+                            controller: _foneNumber,
+                            keyboardType: TextInputType.number,
+                            isObscure: false,
+                            placeholder: "Insira um nº de telefone",
+                            labelText: "Tel",
+                            icon: Icons.call,
+                            validator: validateFoneNumber,
                           ),
                           Input(
                             controller: _emailCtrl,
@@ -147,6 +173,21 @@ class _SignupState extends State<Signup> {
                               );
                             },
                             validator: validateEmail,
+                          ),
+                          Input(
+                            controller: _location,
+                            placeholder: "Insira a sua localização",
+                            labelText: "Localização",
+                            isObscure: false,
+                            color: Color(0xF4F4F4F4),
+                            icon: Icons.place,
+                            keyboardType: TextInputType.text,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) {
+                                return "Insira a localização, por favor!";
+                              }
+                              return null;
+                            },
                           ),
                           Input(
                             controller: _passwordCtrl,
@@ -167,57 +208,46 @@ class _SignupState extends State<Signup> {
                         ],
                       ),
                     ),
-                    
                     SizedBox(height: 20),
                     ButtonSubmit(
                       tilte: "criar conta",
                       borderRadius: BorderRadius.circular(12.r),
                       padding: EdgeInsets.symmetric(horizontal: 0),
-                      onPressed: () {
+                      onPressed: () async {
                         final form = _formKey.currentState;
                         if (form == null) return;
                         if (!form.validate()) {
                           return;
                         }
-                      },
-                    ),
-                    SizedBox(height: 25.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Divider(color: Colors.grey),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            "Ou entrar com",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 17,
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext dialogContext) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        );
+                        ElegantNotification.info(
+                          title: Text("Enviando código"),
+                          description: Text("Consulte o seu email."),
+                          height: 80,
+                        ).show(context);
+                        await Future.delayed(const Duration(seconds: 4));
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                        if (context.mounted) {
+                          Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.leftToRight,
+                              child: const OtpScreen(),
+                              duration: const Duration(milliseconds: 350),
                             ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Material(
-                      shape: CircleBorder(),
-                      child: InkWell(
-                        customBorder: CircleBorder(),
-                        onTap: () {
-                        },
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.white,
-                          child: Image.asset(
-                            "assets/images/google.png",
-                            height: 40,
-                          ),
-                        ),
-                      ),
+                          );
+                        }
+                      },
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -255,7 +285,6 @@ class _SignupState extends State<Signup> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),

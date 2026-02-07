@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
+import 'package:projecto_registagro/view/pages/main_page/home_screen/profile_ep/profile_details_card.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -69,9 +71,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                if(cartCount.toString() == "0"){
+                  showTopNotification(
+                    context, 
+                    title: "Ups! Carrinho vazio!", 
+                    description: "Adicione produtos ao carrinho!", 
+                    backgroundColor: Colors.amber, 
+                    icon: Icons.error_outline
+                  );
+                }
+              },
               child: Text(
-                "Comprar Agora",
+                "Ver carrinho",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -145,7 +157,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
             child: IconButton(
               onPressed: () {
-                print("Carrinho clicado!");
+                 if(cartCount.toString() == "0"){
+                  showTopNotification(
+                    context, 
+                    title: "Ups! Carrinho vazio!", 
+                    description: "Adicione produtos ao carrinho!", 
+                    backgroundColor: Colors.amber, 
+                    icon: Icons.error_outline
+                  );
+                }
               },
               icon: const Icon(
                 Icons.shopping_cart_outlined,
@@ -336,7 +356,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProfileDetailsPage(profile: product.supplier),
+                              ),
+                            );
+                          },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: const Row(
