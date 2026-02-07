@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-class InicialStore extends StatefulWidget {
-  const InicialStore({super.key});
+class MyOrders extends StatefulWidget {
+  const MyOrders({super.key});
 
   @override
-  State<InicialStore> createState() => _InicialStoreState();
+  State<MyOrders> createState() => _MyOrdersState();
 }
 
-class _InicialStoreState extends State<InicialStore> {
+class _MyOrdersState extends State<MyOrders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A6E1F),
       body: Center(
         child: Text(
-          "Brevemente store...",
+          "Brevemente not defined...",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 25
           ),
-        ),
+          ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/data/products_ep/products_data_ep.dart';
-import 'widgets/productCard_ep/product_card.dart';
+import 'productCard_ep/product_card.dart';
 
+final searchInputController = TextEditingController();
 class HomeState extends StatelessWidget {
   const HomeState({super.key});
   @override
@@ -10,7 +11,12 @@ class HomeState extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 11, 121, 35),
-      body: Stack(children: [_buildHeader(context), _buildBody()]),
+      body: Stack(
+        children: [
+          _buildHeader(context), 
+          _buildBody()
+        ]
+      ),
     );
   }
 
@@ -67,21 +73,26 @@ class HomeState extends StatelessWidget {
   }
 
   Widget _buildSearch() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: const TextField(
-        decoration: InputDecoration(
-          hintText: "Pesquisar...",
-          hintStyle: TextStyle(color: Colors.white70),
-          prefixIcon: Icon(Icons.search, color: Colors.white70),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 14),
+    return Column(
+      children: [
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.25),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: const TextField(
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              hintText: "Pesquisar...",
+              hintStyle: TextStyle(color: Colors.white70),
+              prefixIcon: Icon(Icons.search, color: Colors.white70),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(vertical: 14),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -106,7 +117,7 @@ class HomeState extends StatelessWidget {
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (context, index) =>
-                    ProductCard(product: products[index]),
+                  ProductCard(product: products[index]),
               ),
             ),
             const SizedBox(height: 14),
@@ -119,7 +130,7 @@ class HomeState extends StatelessWidget {
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (context, index) =>
-                    ProductCard(product: products[index]),
+                  ProductCard(product: products[index]),
               ),
             ),
             const SizedBox(height: 24),
@@ -132,7 +143,7 @@ class HomeState extends StatelessWidget {
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (context, index) =>
-                    ProductCard(product: products[index]),
+                  ProductCard(product: products[index]),
               ),
             ),
             const SizedBox(height: 24),
@@ -145,7 +156,7 @@ class HomeState extends StatelessWidget {
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (context, index) =>
-                    ProductCard(product: products[index]),
+                  ProductCard(product: products[index]),
               ),
             ),
           ],

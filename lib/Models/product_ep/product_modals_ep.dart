@@ -1,3 +1,5 @@
+import 'package:projecto_registagro/Models/profile_ep/profile_modals_ep.dart';
+
 class Product {
   final String id;
   final String title;
@@ -10,6 +12,7 @@ class Product {
   final String quantity;
   final String stockStatus;
   final String recommendedTransport;
+  final ProfileModel supplier;
 
   Product({
     required this.id,
@@ -22,6 +25,7 @@ class Product {
     required this.province,
     required this.quantity,
     required this.recommendedTransport,
+    required this.supplier,
     String? stockStatus,
   }) : stockStatus =
         (stockStatus == null || stockStatus.trim().isEmpty)
