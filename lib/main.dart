@@ -46,14 +46,14 @@ class MyApp extends StatelessWidget {
 
   Widget _getPage(String? route) {
     switch (route) {
-      case "/Homescreen":
-        return Homescreen();
       case "/Login":
         return Login();
+      case "/MainPage":
+        return MainPage();
       case "/Signup":
         return Signup();
       default:
-        return MainPage();
+        return Homescreen();
     }
   }
 }
