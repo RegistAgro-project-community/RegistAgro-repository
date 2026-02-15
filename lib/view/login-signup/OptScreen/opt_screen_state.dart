@@ -3,6 +3,7 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:projecto_registagro/repositories/auth/signup.dart';
 import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/view/login-signup/signUp/signup.dart';
@@ -56,42 +57,6 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
-  void validateOtp() async {
-    if (otpCode.length != 6 || isLoading) return;
-
-    setState(() {
-      isLoading = true;
-    });
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    bool otpIsCorrect = otpCode == "123456";
-
-    setState(() {
-      isLoading = false;
-    });
-
-    if (otpIsCorrect) {
-      ElegantNotification.success(
-        title: Text("Sucesso"),
-        description: Text("Operação concluída com êxito!"),
-        height: 80,
-      ).show(context);
-
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const Signup()),
-        );
-      });
-    } else {
-      ElegantNotification.error(
-        title: Text("Erro"),
-        description: Text("Algo deu errado."),
-        height: 80,
-      ).show(context);
-    }
-  }
   void resendCode() async {
     if (!canResend) return;
 
@@ -117,15 +82,14 @@ class _OtpScreenState extends State<OtpScreen> {
                 height: 100.0.h,
                 width: 100.0.w,
                 fit: BoxFit.cover,
-
               ),
               Text(
                 "RegistAgro",
                 style: TextStyle(
                   color: Color.fromARGB(255, 110, 173, 68),
                   fontSize: 25.sp,
-                  fontWeight: FontWeight.bold
-                  ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 30),
               Padding(
@@ -137,11 +101,20 @@ class _OtpScreenState extends State<OtpScreen> {
                   keyboardType: TextInputType.number,
                   animationType: AnimationType.fade,
                   onChanged: (value) {
-                    otpCode = value;
+                    setState(() {
+                      otpCode = value;
+                    });
+
+                    print(otpCode);
                   },
-                  onCompleted: (value) {
+                  onCompleted: (value) async {
                     otpCode = value;
-                    validateOtp();
+
+                    final signupClass = SignupValidations();
+
+                    await signupClass.validateOtp(context, otpCode);
+
+                    print(otpCode);
                   },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -162,8 +135,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 width: MediaQuery.sizeOf(context).width * 0.8.w,
                 height: 40.h,
                 child: ElevatedButton(
-                  onPressed: () {
-                    validateOtp();
+                  onPressed: () async {
+                    final signupClass = SignupValidations();
+                    await signupClass.validateOtp(context, otpCode);
+                    print(otpCode);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isLoading ? null : const Color(0xFF61983D),
@@ -211,12 +186,3 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
