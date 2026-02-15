@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:projecto_registagro/repositories/auth/signup.dart';
 import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/login-signup/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
@@ -20,12 +21,14 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   bool ischecked = false;
-  final _crtl = TextEditingController();
+  final _name = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _province = TextEditingController();
   final _location = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _foneNumber = TextEditingController();
   final _passwordCtrl = TextEditingController();
+  final _passwordConfirm = TextEditingController();
   bool isObscure = true;
 
   final List<Map<String, String>> nifs = [
@@ -38,24 +41,24 @@ class _SignupState extends State<Signup> {
 
   @override
   void dispose() {
-    _crtl.dispose();
+    _name.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
     super.dispose();
   }
-  void _toggleObscure(){
+
+  void _toggleObscure() {
     setState(() {
       isObscure = !isObscure;
     });
   }
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Informe o email';
     }
 
-    final emailRegex = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-    );
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (!emailRegex.hasMatch(value)) {
       return 'Email inválido';
@@ -63,6 +66,7 @@ class _SignupState extends State<Signup> {
 
     return null;
   }
+
   String? validateFoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Informe o seu número de tel.';
@@ -74,18 +78,18 @@ class _SignupState extends State<Signup> {
 
     return null;
   }
+
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Informe a senha';
     }
 
-    if (value.length < 6) {
-      return 'A senha deve ter no mínimo 6 caracteres';
+    if (value.length < 8) {
+      return 'A senha deve ter no mínimo 8 caracteres';
     }
 
     return null;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +126,7 @@ class _SignupState extends State<Signup> {
                   children: [
                     Imagelogo(height: 100.h),
                     Text(
-                      "Get started",
+                      "Informe seus dados",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -136,7 +140,7 @@ class _SignupState extends State<Signup> {
                         spacing: 12,
                         children: [
                           Input(
-                            controller: _crtl,
+                            controller: _name,
                             placeholder: "Insira o seu nome completo",
                             labelText: "Nome completo",
                             isObscure: false,
@@ -155,7 +159,7 @@ class _SignupState extends State<Signup> {
                             keyboardType: TextInputType.number,
                             isObscure: false,
                             placeholder: "Insira um nº de telefone",
-                            labelText: "Tel",
+                            labelText: "Telefone",
                             icon: Icons.call,
                             validator: validateFoneNumber,
                           ),
@@ -167,12 +171,29 @@ class _SignupState extends State<Signup> {
                             labelText: "Email",
                             icon: Icons.alternate_email,
                             onChanged: (value) {
-                              _emailCtrl.value =  TextEditingValue(
+                              _emailCtrl.value = TextEditingValue(
                                 text: value.toLowerCase(),
-                                selection: TextSelection.collapsed(offset: value.length)
+                                selection: TextSelection.collapsed(
+                                  offset: value.length,
+                                ),
                               );
                             },
                             validator: validateEmail,
+                          ),
+                          Input(
+                            controller: _province,
+                            placeholder: "Insira a sua província",
+                            labelText: "Província",
+                            isObscure: false,
+                            color: Color(0xF4F4F4F4),
+                            icon: Icons.place,
+                            keyboardType: TextInputType.text,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) {
+                                return "Este campo é obrigatório!";
+                              }
+                              return null;
+                            },
                           ),
                           Input(
                             controller: _location,
@@ -184,7 +205,7 @@ class _SignupState extends State<Signup> {
                             keyboardType: TextInputType.text,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
-                                return "Insira a localização, por favor!";
+                                return "Este campo é obrigatório!";
                               }
                               return null;
                             },
@@ -197,7 +218,27 @@ class _SignupState extends State<Signup> {
                             labelText: "Senha",
                             sufixIcon: IconButton(
                               icon: Icon(
-                                isObscure ? Icons.visibility : Icons.visibility_off,
+                                isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: _toggleObscure,
+                              splashRadius: 20.r,
+                            ),
+                            icon: Icons.lock,
+                            validator: validatePassword,
+                          ),
+                          Input(
+                            controller: _passwordConfirm,
+                            keyboardType: TextInputType.visiblePassword,
+                            isObscure: isObscure,
+                            placeholder: "Confirma sua senha",
+                            labelText: "Senha",
+                            sufixIcon: IconButton(
+                              icon: Icon(
+                                isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
                               onPressed: _toggleObscure,
                               splashRadius: 20.r,
@@ -210,7 +251,7 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 20),
                     ButtonSubmit(
-                      tilte: "criar conta",
+                      tilte: "Criar conta",
                       borderRadius: BorderRadius.circular(12.r),
                       padding: EdgeInsets.symmetric(horizontal: 0),
                       onPressed: () async {
@@ -219,34 +260,18 @@ class _SignupState extends State<Signup> {
                         if (!form.validate()) {
                           return;
                         }
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext dialogContext) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
+
+                        final signupClass = SignupValidations(
+                          name:  _name.text,
+                          email:  _emailCtrl.text,
+                          phone:  _foneNumber.text,
+                          province:  _province.text,
+                          adress:  _location.text,
+                          pass1:  _passwordCtrl.text,
+                          pass2:  _passwordConfirm.text,
                         );
-                        ElegantNotification.info(
-                          title: Text("Enviando código"),
-                          description: Text("Consulte o seu email."),
-                          height: 80,
-                        ).show(context);
-                        await Future.delayed(const Duration(seconds: 4));
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                        if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.leftToRight,
-                              child: const OtpScreen(),
-                              duration: const Duration(milliseconds: 350),
-                            ),
-                          );
-                        }
+
+                        await signupClass.sendEmail(context);
                       },
                     ),
                     Align(
