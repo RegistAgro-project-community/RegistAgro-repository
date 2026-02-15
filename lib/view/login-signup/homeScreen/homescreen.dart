@@ -54,7 +54,7 @@ class _HomescreenState extends State<Homescreen> {
           //     height: _controller.value.size.height,
           //     child: VideoPlayer(_controller),
           //   ),
-          //   ) : Container(color: Colors.transparent,),
+          //   ) : Container(color: Colors.transparent,),3
           imageBackground(),
             Container(
                 color: Colors.black.withOpacity(0.7),
