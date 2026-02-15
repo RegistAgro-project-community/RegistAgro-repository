@@ -171,23 +171,29 @@ class _LoginState extends State<Login> {
                           final email = _emailCtrl.text.trim();
                           final password = _passwordCtrl.text.trim();
 
-                          final res = await login(email, password);
-                          
+                          final res = await login(context, email, password);
+
                           if (res.containsKey('message')) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text("${res['message']}"),
-                                backgroundColor: const Color.fromARGB(255, 0, 255, 64),
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  0,
+                                  255,
+                                  64,
+                                ),
                               ),
                             );
-                             Navigator.pushReplacement(
-                               context,
-                               PageTransition(
-                                 type: PageTransitionType.fade,
-                                 child: MainPage(),
-                                 duration: const Duration(milliseconds: 300),
-                               ),
-                             );
+                            Navigator.pushReplacement(
+                              // ignore: use_build_context_synchronously
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.fade,
+                                child: MainPage(),
+                                duration: const Duration(milliseconds: 300),
+                              ),
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
