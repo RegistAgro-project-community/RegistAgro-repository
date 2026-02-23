@@ -11,7 +11,7 @@ class ProfileDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(profile.username), 
+        title: Text(profile.name), 
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
@@ -24,7 +24,7 @@ class ProfileDetailsPage extends StatelessWidget {
                 CircleAvatar(
                   radius: 50,
                   child: Image.asset(
-                    profile.image,
+                    profile.profile,
                     width: double.infinity,
                     height: 220,
                     fit: BoxFit.cover,
@@ -35,7 +35,7 @@ class ProfileDetailsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      profile.username,
+                      profile.name,
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
@@ -51,7 +51,7 @@ class ProfileDetailsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: Text(
-                            profile.description,
+                            profile.name,
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
