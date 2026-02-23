@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/repositories/profile.dart';
 // c
 
 // class _ProfileState extends State<Profile> {
@@ -51,8 +52,19 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
-class ProfileState extends StatelessWidget {
+class ProfileState extends StatefulWidget {
   const ProfileState({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<ProfileState> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -92,7 +104,10 @@ class ProfileState extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0.5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 0.5,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0xF4F4F4F4)),
                         borderRadius: BorderRadius.circular(100),
@@ -222,12 +237,16 @@ class ProfileState extends StatelessWidget {
                 ),
                 Center(
                   child: TextButton.icon(
-                    onPressed: () {
-                      // Navigator.pushAndRemoveUntil(
-                      //   context,
-                      //   MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      //   (Route<dynamic> route) => false, // remove todas as rotas anteriores
-                      // );
+                    onPressed: () async {
+                      //Navigator.pushAndRemoveUntil(
+                      // context,
+                      //  MaterialPageRoute(builder: (_) => const Login()),
+                      //  (Route<dynamic> route) =>
+                      //      false, // remove todas as rotas anteriores
+                      //);
+
+                      final profileClass = Profile();
+                      await profileClass.logout(context);
                     },
                     icon: const Icon(Icons.logout, color: Colors.red),
 
