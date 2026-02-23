@@ -36,7 +36,7 @@ class ProfileCard extends StatelessWidget {
           children: [
             Expanded(
               child: Image.asset(
-                profile.image,
+                profile.profile,
                 fit: BoxFit.cover,
               ),
             ),
@@ -44,7 +44,7 @@ class ProfileCard extends StatelessWidget {
             const SizedBox(height: 10),
 
             Text(
-              profile.username,
+              profile.name,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),
@@ -53,7 +53,7 @@ class ProfileCard extends StatelessWidget {
             const SizedBox(height: 4),
 
             Text(
-              profile.description,
+              profile.name,
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 12,
