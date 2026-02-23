@@ -18,9 +18,9 @@ class _MainPageState extends State<MainPage>
 
   final List<Widget> screens = const [
     HomeState(),
-    InicialStore(),
+    InicialStore(title: "data", products: [],),
     MyOrderScreen(),
-    ProfileState(),
+    ProfileScreen(),
   ];
 
   @override
@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: SizedBox(
         child: TabBarView(
           controller: tabController,
           physics: const NeverScrollableScrollPhysics(),
@@ -80,9 +80,9 @@ class _MainPageState extends State<MainPage>
           unselectedLabelStyle: const TextStyle(fontFamily: 'Inter'),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Store'),
-            BottomNavigationBarItem(icon: Icon(Icons.online_prediction_rounded), label: 'Orders',),
-            BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),
+            BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Loja'),
+            BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: 'Pedidos',),
+            BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Perfil'),
           ],
         ),
       ),

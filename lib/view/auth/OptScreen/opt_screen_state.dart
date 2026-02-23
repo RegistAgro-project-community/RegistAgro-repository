@@ -3,9 +3,7 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
-import 'package:projecto_registagro/view/login-signup/signUp/signup.dart';
+import 'package:projecto_registagro/view/auth/signUp/signup.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -87,7 +85,7 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       ElegantNotification.error(
         title: Text("Erro"),
-        description: Text("Algo deu errado."),
+        description: Text("Algo deu errado. ${otpCode}"),
         height: 80,
       ).show(context);
     }

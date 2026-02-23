@@ -1,114 +1,104 @@
 import 'package:flutter/material.dart';
-// c
+import 'package:projecto_registagro/view/pages/userProfile/changepassword/change_password_screen.dart';
+import 'package:projecto_registagro/view/pages/userProfile/editProfile/edit_profile.dart';
+import 'package:projecto_registagro/view/pages/userProfile/privacePolicy/privace_policy.dart';
+import 'package:projecto_registagro/view/pages/userProfile/suportScreen/support_screen.dart';
+import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 
-// class _ProfileState extends State<Profile> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//        backgroundColor: Color(0xF4F4F4F4),
-//        body:  SingleChildScrollView(
-//         child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               Column(
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
-//                   const SizedBox(height: 32),
-//                   // ElevatedButton.icon(
-//                   //   onPressed: () {},
-//                   //   icon: const Icon(Icons.edit),
-//                   //   label: const Text(
-//                   //     'Editar Perfil',
-//                   //     style: TextStyle(fontFamily: 'Inter'),
-//                   //   ),
-//                   //   style: ElevatedButton.styleFrom(
-//                   //     fixedSize: Size(200, 45),
-//                   //     backgroundColor: Color(0xF4F4F4F4),
-//                   //     shape: RoundedRectangleBorder(
-//                   //       borderRadius: BorderRadius.circular(100),
-//                   //       side: BorderSide(
-//                   //         color: Colors.blue[900]!,
-//                   //         width: sqrt1_2,
-//                   //       )
-//                   //     ),
-//                   //   ),
-//                   // ),
-//                 ],
-//               ),
-//               const SizedBox(height: 48),
-//               Container(
-//                 width: double.infinity,
-//                 decoration: BoxDecoration(
-//                   color: Colors.amber
-//                 ),
-//                 child:
-//                   ),
-//             ],
-//           ),
-//         ),
-//       );
-//   }
-// }
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
-class ProfileState extends StatelessWidget {
-  const ProfileState({super.key});
+class _ProfileScreenState extends State<ProfileScreen> {
+  UserModel user = UserModel(
+    name: 'Elias Manuell',
+    email: 'eliasmanuell@gmail.com',
+    phone: '+244 923 456 789',
+    bio: 'Apaixonado por tecnologia e inovação.',
+  );
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Color(0xF4F4F4F4),
-      body: Stack(children: [_buildHeader(context), _buildBody()]),
+      backgroundColor: const Color(0xFFF4F4F4),
+      body: Stack(
+        children: [
+          _buildHeader(),
+          _buildBody(),
+        ],
+      ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 55),
-        child: Column(
-          spacing: 20,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.fromLTRB(24, 80, 24, 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              spacing: 5,
-              children: [
-                const CircleAvatar(
-                  radius: 40,
-                  child: Icon(Icons.person, size: 48),
-                ),
-                const SizedBox(height: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Elias Manuell",
-                      style: const TextStyle(
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 42,
+                backgroundColor: Colors.white,
+                backgroundImage: user.photoPath != null
+                    ? AssetImage(user.photoPath!)
+                    : null,
+                child: user.photoPath == null
+                    ? const Icon(Icons.person, size: 52, color: Color(0xFF0D47A1))
+                    : null,
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                      letterSpacing: 0.1,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: const Color(0xFFE0E0E0)),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      user.email,
+                      style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.w500,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0.5),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xF4F4F4F4)),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "eliasmanuell@gmail.com",
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -117,130 +107,184 @@ class ProfileState extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Container(
-      margin: const EdgeInsets.only(top: 200),
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.person_2, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Detalhes do Perfil',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.lock, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Alterar Senha',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.privacy_tip_outlined, color: Colors.blue[900]),
-                      const SizedBox(width: 16),
-                      const Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.support_agent_outlined,
-                        color: Colors.blue[900],
-                      ),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Suporte',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.settings, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Configurações',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () {
-                      // Navigator.pushAndRemoveUntil(
-                      //   context,
-                      //   MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      //   (Route<dynamic> route) => false, // remove todas as rotas anteriores
-                      // );
-                    },
-                    icon: const Icon(Icons.logout, color: Colors.red),
-
-                    label: const Text(
-                      'Terminar Sessão',
-                      style: TextStyle(color: Colors.red, fontFamily: 'Inter'),
-                    ),
-                  ),
-                ),
-              ],
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.60,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 16,
+              offset: Offset(0, -4),
             ),
           ],
         ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(12, 38, 12, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildMenuTile(
+                icon: Icons.person_outline,
+                title: 'Detalhes do Perfil',
+                subtitle: 'Edita nome, foto, bio, telemóvel...',
+                onTap: () async {
+                  final updatedUser = await Navigator.push<UserModel>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditProfileScreen(user: user),
+                    ),
+                  );
+                  if (updatedUser != null) {
+                    setState(() => user = updatedUser);
+                  }
+                },
+              ),
+              _buildMenuTile(
+                icon: Icons.lock_outline,
+                title: 'Alterar Senha',
+                subtitle: 'Atualiza a tua palavra-passe',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
+                ),
+              ),
+              _buildMenuTile(
+                icon: Icons.privacy_tip_outlined,
+                title: 'Política de Privacidade',
+                subtitle: 'Lê os termos de utilização e privacidade',
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                  ),
+                  builder: (_) => const PrivacyPolicyBottomSheet(),
+                ),
+              ),
+              _buildMenuTile(
+                icon: Icons.support_agent_outlined,
+                title: 'Suporte',
+                subtitle: 'Fala connosco ou envia um pedido',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SupportScreen()),
+                ),
+              ),
+              const SizedBox(height: 80),
+              Center(
+                child: TextButton.icon(
+                  onPressed: () => _showLogoutDialog(),
+                  icon: const Icon(Icons.logout, color: Colors.red, size: 24),
+                  label: const Text(
+                    'Terminar Sessão',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            child: Row(
+              children: [
+                Icon(icon, color: Colors.blue[900], size: 26),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 15.5,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right, 
+                  color: Colors.grey[400], 
+                  size: 24
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Terminar sessão?',
+          style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w700),
+        ),
+        content: const Text(
+          'Tem a certeza que pretende terminar sessão?',
+          style: TextStyle(fontFamily: 'Inter'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Sair', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
   }

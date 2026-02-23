@@ -7,7 +7,6 @@ class Order {
   final Color statusColor;
   final DateTime date;
   final String description;
-  final String additions;
   final String? driverPosition;
 
   Order({
@@ -17,7 +16,6 @@ class Order {
     required this.statusColor,
     required this.date,
     required this.description,
-    required this.additions,
     this.driverPosition,
   });
 }

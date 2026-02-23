@@ -9,7 +9,6 @@ final List<Order> allOrders = [
       statusColor: Colors.green,
       date: DateTime(2023, 10, 15, 14, 30),
       description: 'Pedido de itens variados da loja principal.',
-      additions: 'Adicionais: Entrega expressa, embalagem presente.',
     ),
     Order(
       id: '#2',
@@ -18,7 +17,6 @@ final List<Order> allOrders = [
       statusColor: Colors.orange,
       date: DateTime(2023, 10, 16, 15, 45),
       description: 'Pedido em andamento para entrega.',
-      additions: 'Adicionais: Nenhum.',
       driverPosition: 'Motorista a 5km, chegando em 10 min.',
     ),
     Order(
@@ -28,7 +26,6 @@ final List<Order> allOrders = [
       statusColor: Colors.red,
       date: DateTime(2023, 10, 17, 16, 0),
       description: 'Pedido cancelado pelo usuário.',
-      additions: 'Adicionais: Reembolso processado.',
     ),
     Order(
       id: '#4',
@@ -37,6 +34,5 @@ final List<Order> allOrders = [
       statusColor: Colors.green,
       date: DateTime(2023, 10, 18, 17, 15),
       description: 'Pedido finalizado com sucesso.',
-      additions: 'Adicionais: Avaliação pendente.',
     ),
   ];

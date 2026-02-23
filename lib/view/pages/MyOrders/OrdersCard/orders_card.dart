@@ -26,42 +26,61 @@ class OrderCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                order.id,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: order.statusColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                order.status,
+                style: TextStyle(
+                  color: order.statusColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: order.statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  order.status,
-                  style: TextStyle(
-                    color: order.statusColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            order.storeName,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 12),
+          Row(
+            spacing: 6,
+            children: [
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[300],
+                ),
+                child: const Icon(Icons.image, color: Colors.grey,),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    order.storeName,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    order.description,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15
+                    ),
+                  )
+                ],
+              ),
+              
+            ],
+          ),
+          
+          
+      const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(

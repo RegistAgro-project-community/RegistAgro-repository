@@ -1,7 +1,9 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/profile_ep/profile_details_card.dart';
+import 'package:projecto_registagro/view/pages/main_page/home_screen/paymentScreen/payment_screen.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -72,18 +74,37 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
               ),
               onPressed: () {
-                if(cartCount.toString() == "0"){
-                  showTopNotification(
-                    context, 
-                    title: "Ups! Carrinho vazio!", 
-                    description: "Adicione produtos ao carrinho!", 
-                    backgroundColor: Colors.amber, 
-                    icon: Icons.error_outline
+                if (cartCount == 0) {
+                  ElegantNotification.error(
+                    title: const Text(
+                      "Ups! Carrinho vazio!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    description: const Text(
+                      "Adicione produtos ao carrinho!",
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.grey
+                      ),
+                    ),
+                    icon: const SizedBox(),
+                    height: 75,
+                    width: MediaQuery.of(context).size.width * .9,
+                    animation: AnimationType.fromTop,
+                  ).show(context);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CheckoutPage()),
                   );
                 }
               },
               child: Text(
-                "Ver carrinho",
+                "Comprar",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -104,16 +125,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     if (stockStatus == "confirmado") {
       backgroundColor = const Color.fromARGB(255, 111, 212, 114);
       text = "Confirmado";
-    } 
-    else if (stockStatus == "vazio") {
+    } else if (stockStatus == "vazio") {
       backgroundColor = Colors.red;
       text = "Sem stock";
-    } 
-    else if (stockStatus == "pendente") {
+    } else if (stockStatus == "pendente") {
       backgroundColor = Colors.amber;
       text = "Pendente";
-    } 
-    else {
+    } else {
       backgroundColor = Colors.grey;
       text = "Desconhecido";
     }
@@ -143,35 +161,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: ListTile(
-          contentPadding: EdgeInsets.only(left: 40),
+          contentPadding: EdgeInsets.only(left: 10),
           title: Text(
             "Detalhes do produto",
             style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-          trailing: Badge(
-            isLabelVisible: cartCount > 0  ,
-            backgroundColor: Colors.orange,
-            label: Text(
-              cartCount.toString(),
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-            ),
-            child: IconButton(
-              onPressed: () {
-                 if(cartCount.toString() == "0"){
-                  showTopNotification(
-                    context, 
-                    title: "Ups! Carrinho vazio!", 
-                    description: "Adicione produtos ao carrinho!", 
-                    backgroundColor: Colors.amber, 
-                    icon: Icons.error_outline
-                  );
-                }
-              },
-              icon: const Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.white,
-              ),
-            ),
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 11, 121, 35),
@@ -188,7 +181,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   width: double.infinity,
                   height: 375,
                   decoration: BoxDecoration(color: Colors.white),
-                  padding: const EdgeInsets.all(100),
+                  padding: const EdgeInsets.symmetric(vertical: 48),
                   child: Image.asset(product.image, fit: BoxFit.cover),
                 ),
               ),
@@ -347,7 +340,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 0,
-                            foregroundColor: const Color.fromARGB(255, 11, 121, 35),
+                            foregroundColor: const Color.fromARGB(
+                              255,
+                              11,
+                              121,
+                              35,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             side: BorderSide.none,
                             shape: const RoundedRectangleBorder(
@@ -360,7 +358,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ProfileDetailsPage(profile: product.supplier),
+                                builder: (_) => ProfileDetailsPage(
+                                  profile: product.supplier,
+                                ),
                               ),
                             );
                           },
@@ -372,8 +372,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 CircleAvatar(
                                   radius: 22,
                                   backgroundColor: Color(0xFFF5F5F5),
-                                  backgroundImage:
-                                      AssetImage("assets/images/icone.png"),
+                                  backgroundImage: AssetImage(
+                                    "assets/images/icone.png",
+                                  ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
