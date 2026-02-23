@@ -26,11 +26,14 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     super.initState();
+    //_loadToken();
+
     tabController = TabController(
       length: screens.length,
       vsync: this,
       initialIndex: selectedIndex,
     );
+
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         setState(() {
@@ -81,8 +84,14 @@ class _MainPageState extends State<MainPage>
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Store'),
-            BottomNavigationBarItem(icon: Icon(Icons.online_prediction_rounded), label: 'Orders',),
-            BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Profile'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.online_prediction_rounded),
+              label: 'Orders',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outlined),
+              label: 'Profile',
+            ),
           ],
         ),
       ),
