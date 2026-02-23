@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
 import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
@@ -33,9 +32,12 @@ class Profile {
       final prefes = await SharedPreferences.getInstance();
       prefes.setString("last_route", '/');
 
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        PageTransition(type: PageTransitionType.leftToRight, child: Login()),
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ),
+        (route) => false,
       );
     }else{
       showTopNotification(
