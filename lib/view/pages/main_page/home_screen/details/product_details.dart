@@ -189,7 +189,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   height: 375,
                   decoration: BoxDecoration(color: Colors.white),
                   padding: const EdgeInsets.all(100),
-                  child: Image.asset(product.image, fit: BoxFit.cover),
+                  child: Image.asset(product.photo, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -210,14 +210,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            product.title,
+                            product.name,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            product.subTitle,
+                            product.name,
                             style: const TextStyle(
                               fontSize: 15,
                               color: Colors.grey,
@@ -273,7 +273,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         spacing: 6,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Origem:", style: TextStyle(fontSize: 16)),
+                          Text("Preço:", style: TextStyle(fontSize: 16)),
                           const Text(
                             "Categoria:",
                             style: TextStyle(fontSize: 16),
@@ -297,29 +297,35 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            product.province,
+                            product.price,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.category,
+                            product.type,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.quantity,
+                            product.qtd,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
-                          stockStatusBadge(product.stockStatus),
                           Text(
-                            product.recommendedTransport,
+                            product.unit,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Text(
+                            product.transport,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
@@ -360,7 +366,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ProfileDetailsPage(profile: product.supplier),
+                                builder: (_) => ProfileDetailsPage(profile: product.farm),
                               ),
                             );
                           },
