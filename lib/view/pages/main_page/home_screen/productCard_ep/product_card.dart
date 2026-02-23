@@ -40,20 +40,20 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: Image.asset(
-                product.image,
+                product.photo,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 10),
             Text(
-              product.title,
+              product.name,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              "Fresh & Organic",
+            Text(
+              product.description,
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 12,
