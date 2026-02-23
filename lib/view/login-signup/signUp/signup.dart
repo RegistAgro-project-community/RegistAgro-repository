@@ -1,10 +1,8 @@
-import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/auth/signup.dart';
-import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/login-signup/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
 import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
@@ -30,14 +28,6 @@ class _SignupState extends State<Signup> {
   final _passwordCtrl = TextEditingController();
   final _passwordConfirm = TextEditingController();
   bool isObscure = true;
-
-  final List<Map<String, String>> nifs = [
-    {"nif": "5402132186"},
-    {"nif": "5401144440"},
-    {"nif": "5401003013"},
-    {"nif": "5410003594"},
-    {"nif": "5420009498"},
-  ];
 
   @override
   void dispose() {
