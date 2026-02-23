@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
 import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final dio = Dio(
   BaseOptions(
@@ -66,6 +67,9 @@ class SignupValidations {
         height: 80,
         // ignore: use_build_context_synchronously
       ).show(context);
+
+      final prefes = await SharedPreferences.getInstance();
+      prefes.setString("last_route", '/otpCode');
 
       if (context.mounted) {
         Navigator.pushReplacement(
@@ -130,7 +134,7 @@ class SignupValidations {
 
     try {
       final otpCode = await dio.get(
-        'https://api-registagro.onrender.com/auth/verify/$code',
+        'https://api-registagro.onrender.com/auth/signup/verify/$code',
       );
 
       if (context.mounted) Navigator.of(context).pop();
@@ -142,6 +146,15 @@ class SignupValidations {
 
       try {
         await tokenStorage.storeToken(token!);
+
+        final message = otpCode.data['message'];
+
+        ElegantNotification.success(
+          title: Text("Sucess"),
+          description: Text(message),
+          height: 80,
+          // ignore: use_build_context_synchronously
+        ).show(context);
 
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.pushReplacement(
@@ -155,15 +168,6 @@ class SignupValidations {
             //MaterialPageRoute(builder: (_) => const MainPage()),
           );
         });
-
-        final message = otpCode.data['message'];
-
-        ElegantNotification.success(
-          title: Text("Sucess"),
-          description: Text(message),
-          height: 80,
-          // ignore: use_build_context_synchronously
-        ).show(context);
       } catch (e) {
         if (context.mounted) Navigator.of(context).pop();
 
@@ -174,7 +178,6 @@ class SignupValidations {
           // ignore: use_build_context_synchronously
         ).show(context);
       }
-
     } on DioException catch (e) {
       if (context.mounted) Navigator.of(context).pop();
 
