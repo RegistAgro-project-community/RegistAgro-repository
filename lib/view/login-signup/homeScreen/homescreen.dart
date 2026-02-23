@@ -19,6 +19,10 @@ class _HomescreenState extends State<Homescreen> {
   @override
   void initState() {
     super.initState();
+
+     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 1000));
+    });
     // _controller = VideoPlayerController.asset("assets/videos/Muinho.mp4")
     //   ..initialize().then((_) {
     //     setState(() {}); 
@@ -61,8 +65,7 @@ class _HomescreenState extends State<Homescreen> {
                 width: double.infinity.w,
                 height: double.infinity.h,
             ),
-            Flexible(
-              fit: FlexFit.loose,
+            Positioned.fill(
               child: Center(
                 child:  Column(
                       mainAxisAlignment: MainAxisAlignment.center,
