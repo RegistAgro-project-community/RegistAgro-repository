@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:projecto_registagro/repositories/auth/signup.dart';
-import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/shared/arraow_back/arrow_back.dart';
-import 'package:projecto_registagro/view/login-signup/signUp/signup.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -104,8 +101,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     setState(() {
                       otpCode = value;
                     });
-
-                    print(otpCode);
                   },
                   onCompleted: (value) async {
                     otpCode = value;
@@ -113,8 +108,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     final signupClass = SignupValidations();
 
                     await signupClass.validateOtp(context, otpCode);
-
-                    print(otpCode);
                   },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -137,8 +130,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     final signupClass = SignupValidations();
+
                     await signupClass.validateOtp(context, otpCode);
-                    print(otpCode);
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isLoading ? null : const Color(0xFF61983D),
