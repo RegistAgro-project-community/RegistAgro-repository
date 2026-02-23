@@ -10,6 +10,7 @@ import 'package:projecto_registagro/shared/formInput/input.dart';
 import 'package:projecto_registagro/shared/imageLogo/imagelogo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -185,6 +186,10 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             );
+
+                            final prefes = await SharedPreferences.getInstance();
+                            prefes.setString("last_route", '/MainPage');
+
                             Navigator.pushReplacement(
                               // ignore: use_build_context_synchronously
                               context,
