@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
+import 'package:projecto_registagro/view/auth/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
