@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
-import 'package:projecto_registagro/shared/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
+import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile {
