@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/repositories/profile.dart';
-// c
 import 'package:projecto_registagro/view/pages/userProfile/changepassword/change_password_screen.dart';
 import 'package:projecto_registagro/view/pages/userProfile/editProfile/edit_profile.dart';
 import 'package:projecto_registagro/view/pages/userProfile/privacePolicy/privace_policy.dart';
@@ -22,29 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bio: 'Apaixonado por tecnologia e inovação.',
   );
 
-class ProfileState extends StatefulWidget {
-  const ProfileState({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<ProfileState> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
-      body: Stack(
-        children: [
-          _buildHeader(),
-          _buildBody(),
-        ],
-      ),
+      body: Stack(children: [_buildHeader(), _buildBody()]),
     );
   }
 
@@ -73,7 +54,11 @@ class _ProfileState extends State<ProfileState> {
                     ? AssetImage(user.photoPath!)
                     : null,
                 child: user.photoPath == null
-                    ? const Icon(Icons.person, size: 52, color: Color(0xFF0D47A1))
+                    ? const Icon(
+                        Icons.person,
+                        size: 52,
+                        color: Color(0xFF0D47A1),
+                      )
                     : null,
               ),
             ),
@@ -95,7 +80,10 @@ class _ProfileState extends State<ProfileState> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: const Color(0xFFE0E0E0)),
@@ -111,27 +99,6 @@ class _ProfileState extends State<ProfileState> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 0.5,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xF4F4F4F4)),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "eliasmanuell@gmail.com",
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
                   ),
                 ],
               ),
@@ -143,131 +110,6 @@ class _ProfileState extends State<ProfileState> {
   }
 
   Widget _buildBody() {
-    return Container(
-      margin: const EdgeInsets.only(top: 200),
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.person_2, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Detalhes do Perfil',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.lock, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Alterar Senha',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.privacy_tip_outlined, color: Colors.blue[900]),
-                      const SizedBox(width: 16),
-                      const Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.support_agent_outlined,
-                        color: Colors.blue[900],
-                      ),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Suporte',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Row(
-                    children: [
-                      Icon(Icons.settings, color: Colors.blue[900]),
-                      const SizedBox(width: 13),
-                      const Text(
-                        'Configurações',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () async {
-                      //Navigator.pushAndRemoveUntil(
-                      // context,
-                      //  MaterialPageRoute(builder: (_) => const Login()),
-                      //  (Route<dynamic> route) =>
-                      //      false, // remove todas as rotas anteriores
-                      //);
-
-                      final profileClass = Profile();
-                      await profileClass.logout(context);
-                    },
-                    icon: const Icon(Icons.logout, color: Colors.red),
-
-                    label: const Text(
-                      'Terminar Sessão',
-                      style: TextStyle(color: Colors.red, fontFamily: 'Inter'),
-                    ),
-                  ),
-                ),
-              ],
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -311,7 +153,9 @@ class _ProfileState extends State<ProfileState> {
                 subtitle: 'Atualiza a tua palavra-passe',
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => const ChangePasswordScreen(),
+                  ),
                 ),
               ),
               _buildMenuTile(
@@ -322,7 +166,9 @@ class _ProfileState extends State<ProfileState> {
                   context: context,
                   isScrollControlled: true,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(28),
+                    ),
                   ),
                   builder: (_) => const PrivacyPolicyBottomSheet(),
                 ),
@@ -351,8 +197,13 @@ class _ProfileState extends State<ProfileState> {
                     ),
                   ),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
@@ -408,11 +259,7 @@ class _ProfileState extends State<ProfileState> {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right, 
-                  color: Colors.grey[400], 
-                  size: 24
-                ),
+                Icon(Icons.chevron_right, color: Colors.grey[400], size: 24),
               ],
             ),
           ),
@@ -440,8 +287,11 @@ class _ProfileState extends State<ProfileState> {
             child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
+            onPressed: () async {
+              final profile = Profile();
+              await profile.logout(context);
+              
+              //Navigator.pop(context);
             },
             child: const Text('Sair', style: TextStyle(color: Colors.red)),
           ),
