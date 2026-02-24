@@ -3,7 +3,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/auth/signup.dart';
-import 'package:projecto_registagro/view/auth/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:projecto_registagro/components/arraow_back/arrow_back.dart';
