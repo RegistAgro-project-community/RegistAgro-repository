@@ -15,6 +15,16 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: Container(
+                    height: 5,
+                    width: 130,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(244, 185, 185, 185),
+                      borderRadius: BorderRadius.circular(100)
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -28,14 +38,36 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
                   'Detalhes do Pedido',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 16),
-                Text('Data e Hora: ${order.date.toString().substring(0, 16)}'),
-                const SizedBox(height: 8),
-                Text('Estado: ${order.status}'),
-                const SizedBox(height: 8),
-                Text('Descrição: ${order.description}'),
-                const SizedBox(height: 8),
-                Text(order.additions),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Data e Hora: '),
+                        Text('Estado: '),
+                        Text('Descrição: '),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(order.date.toString().substring(0, 16)),
+                        Text(order.status),
+                        Text(order.description),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  height: 250,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                )
               ],
             ),
           ),

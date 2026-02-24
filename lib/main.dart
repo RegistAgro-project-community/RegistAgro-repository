@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projecto_registagro/view/login-signup/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projecto_registagro/view/login-signup/homeScreen/homescreen.dart';
-import 'package:projecto_registagro/view/login-signup/loginScreen/login.dart';
-import 'package:projecto_registagro/view/login-signup/signUp/signup.dart';
+import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
+import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
+import 'package:projecto_registagro/view/auth/signUp/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {

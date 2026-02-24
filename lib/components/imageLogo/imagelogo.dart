@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Imagelogo extends StatelessWidget {
-  final height;
-
+  final double height;
   const Imagelogo(
     {
       super.key,
