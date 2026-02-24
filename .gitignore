@@ -71,3 +71,50 @@ app.*.map.json
 .svn/
 .swiftpm/
 migrate_working_dir/
+
+.dart_tool/
+.packages
+.pub-cache/
+build/
+**/ephemeral/
+**/generated_plugin_registrant.*
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.*
+
+# Plataformas específicas
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/Generated.xcconfig
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+**/android/.gradle/
+**/android/local.properties
+**/android/gradlew*
+**/android/key.properties  # se tiver chaves sensíveis
+
+**/linux/flutter/generated_*
+**/windows/
+**/macos/Flutter/Generated*
+**/macos/Flutter/ephemeral/
+
+# Web
+**/web/build/
+**/web/flutter_bootstrap.*
+
+# Codegen
+**/*.g.dart
+**/*.freezed.dart
+**/*.mocks.dart
+**/*.gr.dart
+
+# Logs e temporários
+*.log
+flutter_*.log
+coverage/
+
+# IDEs e OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+pubspec.lock
