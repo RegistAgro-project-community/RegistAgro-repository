@@ -70,8 +70,8 @@ class _HomeStateState extends State<HomeState> {
         _filteredProducts = products
             .where(
               (p) =>
-                  p.title.toLowerCase().contains(query) ||
-                  (p.category.toLowerCase().contains(query)),
+                  p.name.toLowerCase().contains(query) ||
+                  (p.type.toLowerCase().contains(query)),
             )
             .toList();
       }
@@ -316,8 +316,8 @@ class _HomeStateState extends State<HomeState> {
           const SizedBox(height: 10),
           _buildHorizontalList(
             context,
-            products.where((p) => p.category == 'fruto').toList().isNotEmpty
-                ? products.where((p) => p.category == 'fruto').toList()
+            products.where((p) => p.type == 'frutas').toList().isNotEmpty
+                ? products.where((p) => p.type == 'frutas').toList()
                 : products,
           ),
 
@@ -400,11 +400,11 @@ class _HomeStateState extends State<HomeState> {
                   title: title,
                   products: category == 'frutos'
                       ? (products
-                                .where((p) => p.category == 'fruto')
+                                .where((p) => p.type == 'frutas')
                                 .toList()
                                 .isNotEmpty
                             ? products
-                                  .where((p) => p.category == 'fruto')
+                                  .where((p) => p.type == 'frutas')
                                   .toList()
                             : products)
                       : category == 'mais_vendidos'
