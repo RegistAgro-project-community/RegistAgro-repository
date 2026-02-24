@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/components/showLoadingDialog/show_loading_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
