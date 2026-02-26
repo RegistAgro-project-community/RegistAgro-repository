@@ -156,15 +156,14 @@ class SignupValidations {
           // ignore: use_build_context_synchronously
         ).show(context);
 
+        final prefes = await SharedPreferences.getInstance();
+        prefes.setString("last_route", '/MainPage');
+        
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.pushReplacement(
             // ignore: use_build_context_synchronously
             context,
-            PageTransition(
-              type: PageTransitionType.leftToRight,
-              child: const MainPage(),
-              duration: const Duration(milliseconds: 350),
-            ),
+            MaterialPageRoute(builder: (context) => const MainPage())
             //MaterialPageRoute(builder: (_) => const MainPage()),
           );
         });
