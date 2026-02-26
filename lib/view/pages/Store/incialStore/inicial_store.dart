@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/productCard_ep/product_card.dart';
 
 class InicialStore extends StatefulWidget {
@@ -21,6 +23,11 @@ class _InicialStoreState extends State<InicialStore> {
   String _sortOption = 'default';
   bool _isGrid = true;
 
+  List<Product> products = [];
+  List<DataKeys> farms = [];
+  bool isloading = true;
+  String? errorMessage;
+
   final List<String> _sortOptions = ['default', 'name_asc', 'name_desc', 'price_asc', 'price_desc'];
   final Map<String, String> _sortLabels = {
     'default': 'Padrão',
@@ -33,8 +40,48 @@ class _InicialStoreState extends State<InicialStore> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProducts();
+    });
+
     _filteredProducts = List.from(widget.products);
     _searchController.addListener(_filterAndSort);
+  }
+
+    Future<void> _loadProducts() async {
+    setState(() {
+      isloading = true;
+    });
+
+    final productsClass = ProductsRepositories();
+
+    try {
+      final fetchedProducts = await productsClass.getProducts(context);
+
+      setState(() {
+        farms = fetchedProducts;
+
+        products = farms
+            .expand(
+              (farm) => farm.products.map((p) {
+                return p;
+              }),
+            )
+            .toList();
+
+        _filteredProducts = products;
+        isloading = false;
+        errorMessage = null;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          errorMessage = e.toString();
+          isloading = false;
+        });
+      }
+    }
   }
 
   void _filterAndSort() {
@@ -277,7 +324,7 @@ class _InicialStoreState extends State<InicialStore> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
+                child: Image.network(
                   product.image ?? 'assets/images/placeholder.png',
                   width: 70,
                   height: 70,
