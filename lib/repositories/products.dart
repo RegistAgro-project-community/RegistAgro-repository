@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
@@ -8,101 +7,99 @@ import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsRepositories {
-  getProducts(BuildContext context) async {
+  Future<List<DataKeys>> getProducts(BuildContext context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return const Center(child: CircularProgressIndicator());
-      },
+      builder: (_) => const Center(child: CircularProgressIndicator()),
     );
 
-    final tokenClass = TokenStorage();
-    final token = await tokenClass.readToken();
+    try {
+      final tokenMap = await TokenStorage().readToken();
 
-    if (token.containsKey('error') || token['token'] == null) {
-      if (context.mounted) Navigator.of(context).pop();
+      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
+        _handleAuthError(context, tokenMap["error"] ?? "Faça login novamente");
+        throw Exception("Não autenticado");
+      }
 
-      if (!context.mounted) return;
+      final dio = Dio(
+        BaseOptions(
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': "Bearer ${tokenMap['token']}",
+          },
+        ),
+      );
+
+      final response = await dio.get(
+        'https://api-registagro.onrender.com/products/consumers/get/products',
+      );
+
+      Navigator.of(context, rootNavigator: true).pop();
+
+      final json = response.data as Map<String, dynamic>? ?? {};
+      final List<dynamic> items = json['data'] as List<dynamic>? ?? [];
+
+      return items
+          .map((item) => DataKeys.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
+
+      String message = "Erro ao carregar produtos";
+
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        message = e.response?.data?['error'] ?? 'Sessão expirada';
+
+        _handleAuthError(context, message);
+      } else {
+        message =
+            e.response?.data?['error'] ??
+            e.response?.data?['info'] ??
+            e.message ??
+            message;
+
+        showTopNotification(
+          context,
+          title: "Erro",
+          description: message,
+          backgroundColor: Colors.red.shade700,
+          icon: Icons.error_outline,
+        );
+      }
+
+      throw Exception(message);
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
 
       showTopNotification(
         context,
-        title: "Failed",
-        description: token['error'] ?? "Ocorreu um erro inesperado. Faça Login",
+        title: "Erro inesperado",
+        description: e.toString(),
         backgroundColor: Colors.amber,
         icon: Icons.error_outline,
       );
 
-      if (!context.mounted) return;
-      Navigator.pushReplacement(
-        context,
-        PageTransition(type: PageTransitionType.rightToLeft, child: Login()),
-      );
+      rethrow;
     }
+  }
 
-    final dio = Dio(
-      BaseOptions(
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': "Bearer ${token['token']}",
-        },
-      ),
+  void _handleAuthError(BuildContext context, String message) {
+    showTopNotification(
+      context,
+      title: "Falha de autenticação",
+      description: message,
+      backgroundColor: Colors.amber,
+      icon: Icons.error_outline,
     );
 
-    try {
-      final products = await dio.get(
-        'https://api-registagro.onrender.com/products/consumers/get/products',
-      );
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("last_route", '/');
+    });
 
-      if (context.mounted) Navigator.of(context).pop();
-
-      final Map<String, dynamic> data = products.data;
-      final List<dynamic> productsList = data['data'];
-
-      final List<Product> productsData = productsList
-          .map((item) => Product.fromJson(item as Map<String, dynamic>))
-          .toList();
-
-      return productsData;
-    } on DioException catch (e) {
-      var message = e.response?.data;
-
-      switch (e.response?.statusCode) {
-        case 401 || 403:
-          message = message['error'];
-
-          if (context.mounted) Navigator.of(context).pop();
-
-          if (!context.mounted) return;
-          showTopNotification(
-            context,
-            title: "Error",
-            description: message,
-            backgroundColor: Colors.amber,
-            icon: Icons.error_outline,
-          );
-
-          final prefes = await SharedPreferences.getInstance();
-          prefes.setString("last_route", '/');
-
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              type: PageTransitionType.leftToRight,
-              child: Login(),
-              duration: Duration(milliseconds: 350),
-            ),
-          );
-
-          break;
-        default:
-          message = message['error'] ?? message['info'];
-          break;
-      }
-
-      if (context.mounted) Navigator.of(context).pop();
-
-      return message;
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Login())
+    );
   }
 }
