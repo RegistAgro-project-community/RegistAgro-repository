@@ -7,9 +7,9 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      id: json['id'],
-      name: json['name'],
-      profile: json['profile'],
+      id: json['id'] as String? ?? "",
+      name: json['name'] as String? ?? "Sem nome",
+      profile: json['profile'] as String? ?? "",
     );
   }
 }
