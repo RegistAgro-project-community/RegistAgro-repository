@@ -7,7 +7,6 @@ import 'package:projecto_registagro/view/pages/notifications/notifications_scree
 
 final searchInputController = TextEditingController();
 
-
 class HomeState extends StatefulWidget {
   const HomeState({super.key});
 
@@ -15,13 +14,14 @@ class HomeState extends StatefulWidget {
   State<HomeState> createState() => _HomeStateState();
 }
 
-
 class _HomeStateState extends State<HomeState> {
   List<Product> products = [];
+  List<DataKeys> farms = [];
   bool isloading = true;
   String? errorMessage;
+
   final TextEditingController _searchController = TextEditingController();
-  List _filteredProducts = [];
+  List<Product> _filteredProducts = [];
   bool _isSearching = false;
 
   @override
@@ -35,26 +35,36 @@ class _HomeStateState extends State<HomeState> {
     });
   }
 
-
   Future<void> _loadProducts() async {
+    setState(() {
+      isloading = true;
+    });
+
     final productsClass = ProductsRepositories();
 
     try {
       final fetchedProducts = await productsClass.getProducts(context);
 
-      if (context.mounted) {
-        setState(() {
-          if (fetchedProducts is List<Product>) {
-            products = fetchedProducts;
-          } else {
-            errorMessage = fetchedProducts;
-          }
-        });
-      }
+      setState(() {
+        farms = fetchedProducts;
+
+        products = farms
+            .expand(
+              (farm) => farm.products.map((p) {
+                return p;
+              }),
+            )
+            .toList();
+
+        _filteredProducts = products;
+        isloading = false;
+        errorMessage = null;
+      });
     } catch (e) {
       if (mounted) {
         setState(() {
           errorMessage = e.toString();
+          isloading = false;
         });
       }
     }
@@ -71,7 +81,7 @@ class _HomeStateState extends State<HomeState> {
             .where(
               (p) =>
                   p.name.toLowerCase().contains(query) ||
-                  (p.type.toLowerCase().contains(query)),
+                  (p.type!.toLowerCase().contains(query)),
             )
             .toList();
       }
@@ -201,6 +211,7 @@ class _HomeStateState extends State<HomeState> {
       ),
     );
   }
+
   Widget _buildSearch() {
     return Container(
       height: 50,
@@ -245,7 +256,7 @@ class _HomeStateState extends State<HomeState> {
       ),
       child: errorMessage != null
           ? _buildErrorWidget()
-          :  _isSearching
+          : _isSearching
           ? _buildSearchResults()
           : _buildNormalContent(context),
     );
@@ -355,7 +366,7 @@ class _HomeStateState extends State<HomeState> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Bem-vindo! 👋",
+                  "Bem-vindo!",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -398,14 +409,12 @@ class _HomeStateState extends State<HomeState> {
               MaterialPageRoute(
                 builder: (_) => InicialStore(
                   title: title,
-                  products: category == 'frutos'
+                  products: category == 'frutas'
                       ? (products
                                 .where((p) => p.type == 'frutas')
                                 .toList()
                                 .isNotEmpty
-                            ? products
-                                  .where((p) => p.type == 'frutas')
-                                  .toList()
+                            ? products.where((p) => p.type == 'frutas').toList()
                             : products)
                       : category == 'mais_vendidos'
                       ? products.reversed.toList()
