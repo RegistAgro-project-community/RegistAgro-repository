@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProductDetailsPage(product: product),
+            builder: (_) => ProductDetailsPage(data: product),
           ),
         );
       },
@@ -39,8 +39,8 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Image.asset(
-                product.photo,
+              child: Image.network(
+                product.photo as String,
                 fit: BoxFit.cover,
               ),
             ),
@@ -53,7 +53,7 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              product.description,
+              product.description as String,
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 12,
@@ -61,7 +61,7 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              product.price,
+              product.price as String,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
