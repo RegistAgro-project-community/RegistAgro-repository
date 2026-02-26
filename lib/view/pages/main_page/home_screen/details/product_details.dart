@@ -2,13 +2,12 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/view/pages/main_page/home_screen/profile_ep/profile_details_card.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/paymentScreen/payment_screen.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  final Product product;
+  final Product data;
 
-  const ProductDetailsPage({super.key, required this.product});
+  const ProductDetailsPage({super.key, required this.data});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
@@ -155,7 +154,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.product;
+    final product = widget.data;
+    //final farm = widget.data.farm;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -175,14 +175,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: product.id,
+              tag: product,
               child: Center(
                 child: Container(
                   width: double.infinity,
                   height: 375,
                   decoration: BoxDecoration(color: Colors.white),
                   padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Image.asset(product.photo, fit: BoxFit.cover),
+                  child: Image.network(product.photo as String, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -219,7 +219,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ],
                       ),
                       Text(
-                        product.price,
+                        product.price!,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    product.description,
+                    product.description!,
                     maxLines: showMore ? null : 3,
                     textAlign: TextAlign.justify,
                     overflow: showMore
@@ -276,11 +276,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             style: TextStyle(fontSize: 16),
                           ),
                           const Text(
-                            "Estado do Stock:",
+                            "Estoque:",
                             style: TextStyle(fontSize: 16),
                           ),
                           const Text(
-                            "Transporte Recomendado:",
+                            "Transporte:",
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -290,35 +290,35 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            product.price,
+                            product.price!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.type,
+                            product.type!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.qtd,
+                            product.qtd!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.unit,
+                            product.unit!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
-                            product.transport,
+                            product.transport!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
@@ -361,12 +361,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ProfileDetailsPage(profile: product.farm),
-                              ),
-                            );
+                            //Navigator.push(
+                           //   context,
+                              //MaterialPageRoute(
+                              //  builder: (_) => //(profile: farm),
+                             // ),
+                           // );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
