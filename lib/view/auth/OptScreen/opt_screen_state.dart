@@ -78,7 +78,7 @@ class _OtpScreenState extends State<OtpScreen> {
       ).show(context);
 
       Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const Signup()),
         );
