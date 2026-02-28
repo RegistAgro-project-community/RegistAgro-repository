@@ -18,7 +18,7 @@ class ProductsRepositories {
       final tokenMap = await TokenStorage().readToken();
 
       if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        _handleAuthError(context, tokenMap["error"] ?? "Faça login novamente");
+        handleAuthError(context, tokenMap["error"] ?? "Faça login novamente");
         throw Exception("Não autenticado");
       }
 
@@ -51,7 +51,7 @@ class ProductsRepositories {
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         message = e.response?.data?['error'] ?? 'Sessão expirada';
 
-        _handleAuthError(context, message);
+        handleAuthError(context, message);
       } else {
         message =
             e.response?.data?['error'] ??
@@ -61,7 +61,7 @@ class ProductsRepositories {
 
         showTopNotification(
           context,
-          title: "Erro",
+          title: "Error",
           description: message,
           backgroundColor: Colors.red.shade700,
           icon: Icons.error_outline,
@@ -74,8 +74,8 @@ class ProductsRepositories {
 
       showTopNotification(
         context,
-        title: "Erro inesperado",
-        description: e.toString(),
+        title: "Error",
+        description: "Ocorreu um erro inesperado",
         backgroundColor: Colors.amber,
         icon: Icons.error_outline,
       );
@@ -84,10 +84,10 @@ class ProductsRepositories {
     }
   }
 
-  void _handleAuthError(BuildContext context, String message) {
+  void handleAuthError(BuildContext context, String message) {
     showTopNotification(
       context,
-      title: "Falha de autenticação",
+      title: "Error",
       description: message,
       backgroundColor: Colors.amber,
       icon: Icons.error_outline,
@@ -97,7 +97,7 @@ class ProductsRepositories {
       prefs.setString("last_route", '/');
     });
 
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Login())
     );
