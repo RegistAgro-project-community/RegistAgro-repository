@@ -291,7 +291,7 @@ class _HomeStateState extends State<HomeState> {
 
           const SizedBox(height: 20),
 
-          _buildSectionTitle(context, "Melhores Frutos", category: "frutos"),
+          _buildSectionTitle(context, "Melhores Frutos", category: "frutas"),
           const SizedBox(height: 10),
           _buildHorizontalList(
             context,
