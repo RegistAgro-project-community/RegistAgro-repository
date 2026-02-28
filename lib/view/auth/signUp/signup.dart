@@ -3,9 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/auth/signup.dart';
-import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
-import 'package:projecto_registagro/components/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/components/buttom_logoText/button_submit.dart';
 import 'package:projecto_registagro/components/formInput/input.dart';
 import 'package:projecto_registagro/components/imageLogo/imagelogo.dart';
@@ -89,7 +87,7 @@ class _SignupState extends State<Signup> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: ArrowBack(
+        /*title: ArrowBack(
           onPressed: () => {
             Navigator.pushReplacement(
               context,
@@ -100,7 +98,7 @@ class _SignupState extends State<Signup> {
               ),
             ),
           },
-        ),
+        ),*/
       ),
       body: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) {
