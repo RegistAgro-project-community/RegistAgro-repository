@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:projecto_registagro/components/arraow_back/arrow_back.dart';
 import 'package:projecto_registagro/repositories/auth/login.dart';
-import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/auth/signUp/signup.dart';
 import 'package:projecto_registagro/components/buttom_logoText/button_submit.dart';
 import 'package:projecto_registagro/components/formInput/input.dart';
@@ -68,20 +66,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: ArrowBack(
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.leftToRight,
-                child: Homescreen(),
-                duration: Duration(milliseconds: 350),
-              ),
-            ),
-          },
-        ),
-      ),
+      appBar: AppBar(),
       body: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) {
           return AnimatedContainer(
