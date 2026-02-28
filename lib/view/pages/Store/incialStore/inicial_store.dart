@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/productCard_ep/product_card.dart';
+import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InicialStore extends StatefulWidget {
   final String title;
   final List products;
 
-  const InicialStore({
-    super.key,
-    required this.title,
-    required this.products,
-  });
+  const InicialStore({super.key, required this.title, required this.products});
 
   @override
   State<InicialStore> createState() => _InicialStoreState();
@@ -23,12 +19,13 @@ class _InicialStoreState extends State<InicialStore> {
   String _sortOption = 'default';
   bool _isGrid = true;
 
-  List<Product> products = [];
-  List<DataKeys> farms = [];
-  bool isloading = true;
-  String? errorMessage;
-
-  final List<String> _sortOptions = ['default', 'name_asc', 'name_desc', 'price_asc', 'price_desc'];
+  final List<String> _sortOptions = [
+    'default',
+    'name_asc',
+    'name_desc',
+    'price_asc',
+    'price_desc',
+  ];
   final Map<String, String> _sortLabels = {
     'default': 'Padrão',
     'name_asc': 'Nome (A-Z)',
@@ -41,47 +38,8 @@ class _InicialStoreState extends State<InicialStore> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadProducts();
-    });
-
     _filteredProducts = List.from(widget.products);
     _searchController.addListener(_filterAndSort);
-  }
-
-    Future<void> _loadProducts() async {
-    setState(() {
-      isloading = true;
-    });
-
-    final productsClass = ProductsRepositories();
-
-    try {
-      final fetchedProducts = await productsClass.getProducts(context);
-
-      setState(() {
-        farms = fetchedProducts;
-
-        products = farms
-            .expand(
-              (farm) => farm.products.map((p) {
-                return p;
-              }),
-            )
-            .toList();
-
-        _filteredProducts = products;
-        isloading = false;
-        errorMessage = null;
-      });
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          errorMessage = e.toString();
-          isloading = false;
-        });
-      }
-    }
   }
 
   void _filterAndSort() {
@@ -138,8 +96,8 @@ class _InicialStoreState extends State<InicialStore> {
                     child: _filteredProducts.isEmpty
                         ? _buildEmptyState()
                         : _isGrid
-                            ? _buildGrid()
-                            : _buildList(),
+                        ? _buildGrid()
+                        : _buildList(),
                   ),
                 ],
               ),
@@ -160,7 +118,16 @@ class _InicialStoreState extends State<InicialStore> {
             Row(
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString('last_route', '/MainPage');
+
+                    Navigator.push(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainPage()),
+                    );
+                  },
                   child: Container(
                     width: 40,
                     height: 40,
@@ -168,8 +135,11 @@ class _InicialStoreState extends State<InicialStore> {
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.arrow_back_ios_new,
-                        color: Colors.white, size: 18),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -211,8 +181,11 @@ class _InicialStoreState extends State<InicialStore> {
                   prefixIcon: const Icon(Icons.search, color: Colors.white70),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.close,
-                              color: Colors.white70, size: 20),
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white70,
+                            size: 20,
+                          ),
                           onPressed: () => _searchController.clear(),
                         )
                       : null,
@@ -247,10 +220,12 @@ class _InicialStoreState extends State<InicialStore> {
                   icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                   style: const TextStyle(fontSize: 13, color: Colors.black87),
                   items: _sortOptions
-                      .map((opt) => DropdownMenuItem(
-                            value: opt,
-                            child: Text(_sortLabels[opt]!),
-                          ))
+                      .map(
+                        (opt) => DropdownMenuItem(
+                          value: opt,
+                          child: Text(_sortLabels[opt]!),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) {
                     setState(() => _sortOption = val!);
