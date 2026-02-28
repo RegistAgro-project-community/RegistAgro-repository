@@ -72,7 +72,7 @@ class SignupValidations {
       prefes.setString("last_route", '/otpCode');
 
       if (context.mounted) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           PageTransition(
             type: PageTransitionType.leftToRight,
@@ -159,14 +159,12 @@ class SignupValidations {
         final prefes = await SharedPreferences.getInstance();
         prefes.setString("last_route", '/MainPage');
         
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.pushReplacement(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(builder: (context) => const MainPage())
-            //MaterialPageRoute(builder: (_) => const MainPage()),
-          );
-        });
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => const MainPage())
+          //MaterialPageRoute(builder: (_) => const MainPage()),
+        );
       } catch (e) {
         if (context.mounted) Navigator.of(context).pop();
 
