@@ -194,7 +194,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (_) => MainPage()),
                         );
