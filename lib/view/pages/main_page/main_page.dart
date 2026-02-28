@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/repositories/products.dart';
+import 'package:projecto_registagro/repositories/profile.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/my_orders.dart';
 import 'package:projecto_registagro/view/pages/Store/incialStore/inicial_store.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/home_state.dart';
 import 'package:projecto_registagro/view/pages/userProfile/profile.dart';
+import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -12,21 +16,45 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+  with SingleTickerProviderStateMixin {
   late TabController tabController;
   int selectedIndex = 0;
+  List<Product> products = [];
+  List<DataKeys> farms = [];
+  bool isloading = true;
+  String? errorMessage;
+  String? name;
 
-  final List<Widget> screens = const [
-    HomeState(),
-    InicialStore(title: "data", products: [],),
+  UserModel userData = UserModel(
+    name: 'Elias Manuell',
+    email: 'eliasmanuell@gmail.com',
+    phone: '+244 923 456 789',
+    bio: 'Apaixonado por tecnologia e inovação.',
+    province: "Luanda",
+    adress: "Kalemba 2/Rua A",
+  );
+
+  List<Widget> get screens => [
+    HomeState(products: products, name: name),
+    InicialStore(title: "Loja", products: products),
     MyOrderScreen(),
-    ProfileScreen(),
+    ProfileScreen(
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      photo: userData.photoPath,
+      adress: userData.adress
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-    //_loadToken();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProducts();
+      _loadUserData();
+    });
 
     tabController = TabController(
       length: screens.length,
@@ -41,6 +69,62 @@ class _MainPageState extends State<MainPage>
         });
       }
     });
+  }
+
+  Future<void> _loadUserData() async {
+    setState(() {
+      isloading = true;
+    });
+
+    try {
+      final data = await Profile().userData(context);
+
+      setState(() {
+        name = data.name.split(" ")[0];
+        userData = data;
+
+        errorMessage = null;
+        isloading = false;
+      });
+    } on Exception catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+      });
+    }
+  }
+
+  Future<void> _loadProducts() async {
+    setState(() {
+      isloading = true;
+    });
+
+    final productsClass = ProductsRepositories();
+
+    try {
+      final fetchedProducts = await productsClass.getProducts(context);
+
+      setState(() {
+        farms = fetchedProducts;
+
+        products = farms
+            .expand(
+              (farm) => farm.products.map((p) {
+                return p;
+              }),
+            )
+            .toList();
+
+        isloading = false;
+        errorMessage = null;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          errorMessage = e.toString();
+          isloading = false;
+        });
+      }
+    }
   }
 
   void _onItemTapped(int index) {
@@ -84,8 +168,14 @@ class _MainPageState extends State<MainPage>
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Loja'),
-            BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: 'Pedidos',),
-            BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: 'Perfil'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              label: 'Pedidos',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outlined),
+              label: 'Perfil',
+            ),
           ],
         ),
       ),
