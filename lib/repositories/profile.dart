@@ -27,7 +27,7 @@ class Profile {
       showTopNotification(
         context,
         title: "Sucess",
-        description: "Logout efetuado com sucesso",
+        description: "Sessão terminada com sucesso",
         backgroundColor: Colors.green,
         icon: Icons.verified,
       );
