@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/repositories/products.dart';
 import 'productCard_ep/product_card.dart';
 import 'package:projecto_registagro/view/pages/Store/incialStore/inicial_store.dart';
 import 'package:projecto_registagro/view/pages/notifications/notifications_screen.dart';
 
 final searchInputController = TextEditingController();
 
+// ignore: must_be_immutable
 class HomeState extends StatefulWidget {
-  const HomeState({super.key});
+  List<Product> products = [];
+  String? name;
+  HomeState({super.key, required this.products, this.name});
 
   @override
   State<HomeState> createState() => _HomeStateState();
@@ -19,59 +21,25 @@ class _HomeStateState extends State<HomeState> {
   List<DataKeys> farms = [];
   bool isloading = true;
   String? errorMessage;
+  String? name;
 
   final TextEditingController _searchController = TextEditingController();
-  List<Product> _filteredProducts = [];
+  late List _filteredProducts = [];
   bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
 
+    name = widget.name?.split(" ")[0];
     _filteredProducts = products;
     _searchController.addListener(_onSearchChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadProducts();
-    });
-  }
-
-  Future<void> _loadProducts() async {
-    setState(() {
-      isloading = true;
-    });
-
-    final productsClass = ProductsRepositories();
-
-    try {
-      final fetchedProducts = await productsClass.getProducts(context);
-
-      setState(() {
-        farms = fetchedProducts;
-
-        products = farms
-            .expand(
-              (farm) => farm.products.map((p) {
-                return p;
-              }),
-            )
-            .toList();
-
-        _filteredProducts = products;
-        isloading = false;
-        errorMessage = null;
-      });
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          errorMessage = e.toString();
-          isloading = false;
-        });
-      }
-    }
   }
 
   void _onSearchChanged() {
+    final products = widget.products;
     final query = _searchController.text.toLowerCase().trim();
+
     setState(() {
       _isSearching = query.isNotEmpty;
       if (query.isEmpty) {
@@ -319,7 +287,7 @@ class _HomeStateState extends State<HomeState> {
 
           _buildSectionTitle(context, "Produtos", category: "produtos"),
           const SizedBox(height: 10),
-          _buildHorizontalList(context, products),
+          _buildHorizontalList(context, widget.products),
 
           const SizedBox(height: 20),
 
@@ -327,9 +295,9 @@ class _HomeStateState extends State<HomeState> {
           const SizedBox(height: 10),
           _buildHorizontalList(
             context,
-            products.where((p) => p.type == 'frutas').toList().isNotEmpty
-                ? products.where((p) => p.type == 'frutas').toList()
-                : products,
+            widget.products.where((p) => p.type == 'frutas').toList().isNotEmpty
+                ? widget.products.where((p) => p.type == 'frutas').toList()
+                : widget.products,
           ),
 
           const SizedBox(height: 20),
@@ -340,7 +308,7 @@ class _HomeStateState extends State<HomeState> {
             category: "mais_vendidos",
           ),
           const SizedBox(height: 10),
-          _buildHorizontalList(context, products.reversed.toList()),
+          _buildHorizontalList(context, widget.products.reversed.toList()),
 
           const SizedBox(height: 24),
         ],
@@ -365,8 +333,10 @@ class _HomeStateState extends State<HomeState> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Bem-vindo!",
+                Text(
+                  widget.name != null
+                      ? "Bem-vindo, ${widget.name}!"
+                      : "Bem-vindo!",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -410,15 +380,17 @@ class _HomeStateState extends State<HomeState> {
                 builder: (_) => InicialStore(
                   title: title,
                   products: category == 'frutas'
-                      ? (products
+                      ? (widget.products
                                 .where((p) => p.type == 'frutas')
                                 .toList()
                                 .isNotEmpty
-                            ? products.where((p) => p.type == 'frutas').toList()
-                            : products)
+                            ? widget.products
+                                  .where((p) => p.type == 'frutas')
+                                  .toList()
+                            : widget.products)
                       : category == 'mais_vendidos'
-                      ? products.reversed.toList()
-                      : products,
+                      ? widget.products.reversed.toList()
+                      : widget.products,
                 ),
               ),
             );
@@ -445,7 +417,7 @@ class _HomeStateState extends State<HomeState> {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 4),
         scrollDirection: Axis.horizontal,
-        itemCount: productList.length,
+        itemCount: productList.length <= 6 ? productList.length : 6,
         separatorBuilder: (_, __) => const SizedBox(width: 14),
         itemBuilder: (context, index) =>
             ProductCard(product: productList[index]),
