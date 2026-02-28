@@ -7,7 +7,22 @@ import 'package:projecto_registagro/view/pages/userProfile/suportScreen/support_
 import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? photo;
+  final String? province;
+  final String? adress;
+
+  const ProfileScreen({
+    super.key,
+    this.name,
+    this.email,
+    this.phone,
+    this.photo,
+    this.province,
+    this.adress,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -19,6 +34,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     email: 'eliasmanuell@gmail.com',
     phone: '+244 923 456 789',
     bio: 'Apaixonado por tecnologia e inovação.',
+    province: "Luanda",
+    adress: "Kalemba 2/Rua A",
   );
 
   @override
@@ -50,10 +67,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: CircleAvatar(
                 radius: 42,
                 backgroundColor: Colors.white,
-                backgroundImage: user.photoPath != null
-                    ? AssetImage(user.photoPath!)
+                backgroundImage: widget.photo != null
+                    ? NetworkImage(widget.photo!)
                     : null,
-                child: user.photoPath == null
+                child: widget.photo == null
                     ? const Icon(
                         Icons.person,
                         size: 52,
@@ -69,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    user.name,
+                    widget.name ?? user.name,
                     style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 22,
@@ -90,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Text(
-                      user.email,
+                      widget.email ?? user.email,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -110,6 +127,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildBody() {
+    user = UserModel(
+      name: widget.name ?? user.name,
+      email: widget.email ?? user.email,
+      phone: widget.phone ?? user.phone,
+      bio: user.bio,
+      province: widget.province ?? user.province,
+      adress: widget.adress ?? user.adress,
+      photoPath: widget.photo
+    );
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -290,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () async {
               final profile = Profile();
               await profile.logout(context);
-              
+
               //Navigator.pop(context);
             },
             child: const Text('Sair', style: TextStyle(color: Colors.red)),
