@@ -98,7 +98,7 @@ class _HomescreenState extends State<Homescreen> {
                         ButtonSubmit(
                           tilte: "Entrar",
                           onPressed: () => {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context, 
                               PageTransition(
                                 type: PageTransitionType.rightToLeft,
@@ -114,7 +114,7 @@ class _HomescreenState extends State<Homescreen> {
                           color: Color(0xFF61983D),
                           backgroundColor: Colors.transparent,
                           onPressed: () => {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context, 
                               PageTransition(
                                 type: PageTransitionType.rightToLeft,
