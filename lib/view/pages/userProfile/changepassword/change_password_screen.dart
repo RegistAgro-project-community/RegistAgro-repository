@@ -103,7 +103,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new, 
-            color: Color(0xFF0D47A1), 
+            color: Color.fromARGB(255, 4, 136, 9), 
             size: 20
           ),
           onPressed: () => Navigator.pop(context),
@@ -133,13 +133,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   width: 90,
                   height: 90,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8EEF9),
+                    color: const Color.fromARGB(255, 246, 255, 246),
+                    border: Border.all(color: const Color.fromARGB(255, 169, 233, 172), width: 2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.lock_outline,
                     size: 46,
-                    color: Color(0xFF0D47A1),
+                    color: Color.fromARGB(255, 66, 204, 73),
                   ),
                 ),
               ),
@@ -242,9 +243,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0F4FF),
+                  color: const Color.fromARGB(255, 246, 255, 246),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFBDD0F5)),
+                  border: Border.all(color: const Color.fromARGB(255, 169, 233, 172)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +254,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       children: [
                         Icon(
                           Icons.shield_outlined, 
-                          color: Color(0xFF0D47A1), 
+                          color: Color.fromARGB(255, 6, 139, 10), 
                           size: 18
                         ),
                         SizedBox(width: 8),
@@ -263,14 +264,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             fontFamily: 'Inter',
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF0D47A1),
+                            color: Color.fromARGB(255, 6, 139, 10),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     ...[
-                      'Usa pelo menos 8 caracteres',
+                      'Usa pelo menos 6 caracteres',
                       'Inclui maiúsculas e minúsculas',
                       'Adiciona números e símbolos',
                       'Evita usar dados pessoais',
@@ -281,7 +282,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           children: [
                             const Icon(
                               Icons.check, 
-                              color: Color(0xFF0D47A1), 
+                              color: Color.fromARGB(255, 6, 139, 10), 
                               size: 14
                             ),
                             const SizedBox(width: 8),
@@ -306,9 +307,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _savePassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D47A1),
+                    backgroundColor: Color.fromARGB(255, 6, 139, 10),
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: const Color(0xFF0D47A1).withOpacity(0.6),
+                    disabledBackgroundColor: const Color.fromARGB(255, 6, 139, 10).withOpacity(0.6),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     elevation: 0,
@@ -373,7 +374,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             color: Colors.black87,
           ),
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF0D47A1), size: 20),
+            prefixIcon: const Icon(Icons.lock_outline, color: Color.fromARGB(255, 4, 124, 8), size: 20),
             suffixIcon: IconButton(
               icon: Icon(
                 isVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -383,7 +384,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               onPressed: onToggle,
             ),
             filled: true,
-            fillColor: const Color(0xFFF0F4FF),
+            fillColor: const Color.fromARGB(255, 246, 255, 246),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
@@ -391,11 +392,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFFBDD0F5), width: 1.5),
+              borderSide: const BorderSide(color: Color.fromARGB(255, 169, 233, 172), width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+              borderSide: const BorderSide(color: Color.fromARGB(255, 4, 124, 8), width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),

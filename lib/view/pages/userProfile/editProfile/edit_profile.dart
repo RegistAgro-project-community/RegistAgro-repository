@@ -95,7 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF0D47A1), size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Color.fromARGB(255, 4, 136, 9), size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -117,12 +117,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 icon: const Icon(
                   Icons.edit_outlined, 
                   size: 18, 
-                  color: Color(0xFF0D47A1)
+                  color: Color.fromARGB(255, 4, 136, 9),
                 ),
                 label: const Text(
                   'Editar',
                   style: TextStyle(
-                    color: Color(0xFF0D47A1),
+                    color: Color.fromARGB(255, 4, 136, 9),
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
@@ -162,7 +162,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ? const Icon(
                             Icons.person,
                             size: 52,
-                            color: Color(0xFF0D47A1),
+                            color: Color.fromARGB(255, 4, 136, 9),
                           )
                         : null,
                   ),
@@ -184,7 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0D47A1),
+                        color: const Color.fromARGB(255, 4, 136, 9),
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2.5),
                         boxShadow: [
@@ -260,7 +260,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: ElevatedButton(
                   onPressed: _saveChanges,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D47A1),
+                    backgroundColor: const Color.fromARGB(255, 4, 124, 8),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -342,11 +342,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: InputDecoration(
             prefixIcon: Icon(
               icon,
-              color: enabled ? const Color(0xFF0D47A1) : Colors.grey[400],
+              color: enabled ? const Color.fromARGB(255, 4, 136, 9) : Colors.grey[400],
               size: 20,
             ),
             filled: true,
-            fillColor: enabled ? const Color(0xFFF0F4FF) : const Color(0xFFF9F9F9),
+            fillColor: enabled ? const Color.fromARGB(255, 246, 255, 246) : const Color(0xFFF9F9F9),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
@@ -354,7 +354,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFFBDD0F5), width: 1.5),
+              borderSide: const BorderSide(color: Color.fromARGB(255, 169, 233, 172), width: 1.5),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
@@ -362,7 +362,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+              borderSide: const BorderSide(color: Color.fromARGB(255, 29, 126, 32), width: 2),
             ),
           ),
         ),

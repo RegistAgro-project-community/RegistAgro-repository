@@ -108,12 +108,12 @@ class PrivacyPolicyBottomSheet extends StatelessWidget {
                           width: 44,
                           height: 44,
                           decoration: const BoxDecoration(
-                            color: Color(0xFFE8EEF9),
+                            color: Color.fromARGB(255, 246, 255, 246),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
                             Icons.privacy_tip_outlined,
-                            color: Color(0xFF0D47A1),
+                            color: Color.fromARGB(255, 66, 204, 73),
                             size: 24,
                           ),
                         ),
@@ -148,16 +148,16 @@ class PrivacyPolicyBottomSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0F4FF),
+                        color: Color.fromARGB(255, 246, 255, 246),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFBDD0F5)),
+                        border: Border.all(color: Color.fromARGB(255, 66, 204, 73)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.verified_outlined, 
-                            color: Color(0xFF0D47A1), 
-                            size: 18
+                            color: Colors.green[800], 
+                            size: 20
                           ),
                           const SizedBox(width: 10),
                           Expanded(
@@ -166,7 +166,7 @@ class PrivacyPolicyBottomSheet extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 13,
-                                color: Colors.blue[900],
+                                color: Colors.green[800],
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -225,10 +225,10 @@ class _SectionItemState extends State<_SectionItem> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
+        color: Colors.grey[50],
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _expanded ? const Color(0xFFBDD0F5) : Colors.transparent,
+          color: _expanded ? Colors.grey[500]! : Colors.transparent,
           width: 1.5,
         ),
       ),
@@ -249,12 +249,12 @@ class _SectionItemState extends State<_SectionItem> {
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          color: _expanded ? const Color(0xFFE8EEF9) : const Color(0xFFEEEEEE),
+                          color: _expanded ? Color.fromARGB(255, 246, 255, 246) : const Color(0xFFEEEEEE),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           widget.icon,
-                          color: _expanded ? const Color(0xFF0D47A1) : Colors.grey[500],
+                          color: _expanded ? Colors.green[800] : Colors.grey[500],
                           size: 18,
                         ),
                       ),
@@ -266,7 +266,7 @@ class _SectionItemState extends State<_SectionItem> {
                             fontFamily: 'Inter',
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: _expanded ? const Color(0xFF0D47A1) : Colors.black87,
+                            color: _expanded ? Colors.green[800] : Colors.black87,
                           ),
                         ),
                       ),

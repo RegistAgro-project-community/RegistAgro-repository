@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ? const Icon(
                         Icons.person,
                         size: 52,
-                        color: Color(0xFF0D47A1),
+                        color: Color.fromARGB(255, 4, 136, 9),
                       )
                     : null,
               ),
@@ -259,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
             child: Row(
               children: [
-                Icon(icon, color: Colors.blue[900], size: 26),
+                Icon(icon, color: Color.fromARGB(255, 4, 136, 9), size: 26),
                 const SizedBox(width: 18),
                 Expanded(
                   child: Column(
