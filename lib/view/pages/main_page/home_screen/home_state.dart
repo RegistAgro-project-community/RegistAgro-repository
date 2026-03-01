@@ -296,8 +296,8 @@ class _HomeStateState extends State<HomeState> {
           _buildHorizontalList(
             context,
             widget.products.where((p) => p.type == 'frutas').toList().isNotEmpty
-                ? widget.products.where((p) => p.type == 'frutas').toList()
-                : widget.products,
+              ? widget.products.where((p) => p.type == 'frutas').toList()
+              : widget.products,
           ),
 
           const SizedBox(height: 20),
@@ -413,12 +413,12 @@ class _HomeStateState extends State<HomeState> {
 
   Widget _buildHorizontalList(BuildContext context, List productList) {
     return SizedBox(
-      height: 200,
+      height: 250,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 13),
         scrollDirection: Axis.horizontal,
         itemCount: productList.length <= 6 ? productList.length : 6,
-        separatorBuilder: (_, __) => const SizedBox(width: 14),
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) =>
             ProductCard(product: productList[index]),
       ),

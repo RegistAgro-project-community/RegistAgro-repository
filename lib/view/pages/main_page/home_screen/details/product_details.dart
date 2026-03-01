@@ -177,15 +177,68 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             Hero(
               tag: product,
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
-                  height: 375,
-                  decoration: BoxDecoration(color: Colors.white),
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Image.network(product.photo as String, fit: BoxFit.cover),
+                  height: 385,
+                  child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.network(
+                              product.photo as String,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: const Color(0xFFF2F2F7),
+                                child: const Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: Color(0xFFB0B0C3),
+                                  size: 32,
+                                ),
+                              ),
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return Container(
+                                  color: const Color(0xFFF2F2F7),
+                                  child: const Center(
+                                    child: SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Color(0xFFB0B0C3),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              height: 40,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                      Colors.black.withOpacity(0.12),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ),
               ),
-            ),
 
             Container(
               padding: const EdgeInsets.all(20),
