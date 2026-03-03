@@ -260,7 +260,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         child: _buildContactCard(
                           icon: Icons.email_outlined,
                           label: 'Email',
-                          value: 'suporte@tuaapp.com',
+                          value: 'eucleniocadete@gmail.com',
                           color: const Color(0xFF0D47A1),
                           bgColor: const Color(0xFFE8EEF9),
                         ),
@@ -282,7 +282,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         child: _buildContactCard(
                           icon: Icons.whatshot_sharp,
                           label: 'WhatsApp',
-                          value: 'ex: +244 935 555 500',
+                          value: '+244 941 877 294',
                           color: const Color(0xFF0D47A1),
                           bgColor: const Color(0xFFE8EEF9),
                         ),
