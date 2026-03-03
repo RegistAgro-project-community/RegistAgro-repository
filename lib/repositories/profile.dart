@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
-import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
+import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,7 +37,7 @@ class Profile {
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => Homescreen()),
         (route) => false,
       );
     } else {
