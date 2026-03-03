@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/repositories/orders.dart';
 import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/repositories/profile.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/my_orders.dart';
 import 'package:projecto_registagro/view/pages/Store/incialStore/inicial_store.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/home_state.dart';
@@ -16,7 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>
-  with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late TabController tabController;
   int selectedIndex = 0;
   List<Product> products = [];
@@ -34,16 +36,18 @@ class _MainPageState extends State<MainPage>
     adress: "Kalemba 2/Rua A",
   );
 
+  List<Order> orders = [];
+
   List<Widget> get screens => [
     HomeState(products: products, name: name),
     InicialStore(title: "Loja", products: products),
-    MyOrderScreen(),
+    MyOrderScreen(orders: orders),
     ProfileScreen(
       name: userData.name,
       email: userData.email,
       phone: userData.phone,
       photo: userData.photoPath,
-      adress: userData.adress
+      adress: userData.adress,
     ),
   ];
 
@@ -54,6 +58,7 @@ class _MainPageState extends State<MainPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadProducts();
       _loadUserData();
+      _loadOrders();
     });
 
     tabController = TabController(
@@ -69,6 +74,26 @@ class _MainPageState extends State<MainPage>
         });
       }
     });
+  }
+
+  Future<void> _loadOrders() async {
+    setState(() {
+      isloading = true;
+    });
+
+    try {
+      final data = await OrdersRepositories().getOrders(context);
+
+      setState(() {
+        orders = data;
+        errorMessage = null;
+        isloading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+      });
+    }
   }
 
   Future<void> _loadUserData() async {
