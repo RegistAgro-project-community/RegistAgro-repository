@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
+import 'package:projecto_registagro/repositories/products.dart';
+import 'package:projecto_registagro/repositories/storage.dart';
 import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -14,36 +18,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isEditing = false;
 
   late TextEditingController _nameCtrl;
-  late TextEditingController _emailCtrl;
-  late TextEditingController _phoneCtrl;
+  late TextEditingController _provinceCtrl;
+  late TextEditingController _adressCtrl;
   late TextEditingController _bioCtrl;
 
   @override
   void initState() {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.user.name);
-    _emailCtrl = TextEditingController(text: widget.user.email);
-    _phoneCtrl = TextEditingController(text: widget.user.phone);
+    _provinceCtrl = TextEditingController(text: widget.user.province);
+    _adressCtrl = TextEditingController(text: widget.user.adress);
     _bioCtrl = TextEditingController(text: widget.user.bio);
   }
 
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _emailCtrl.dispose();
-    _phoneCtrl.dispose();
+    _provinceCtrl.dispose();
+    _adressCtrl.dispose();
     _bioCtrl.dispose();
     super.dispose();
   }
 
-  void _saveChanges() {
-    if (_nameCtrl.text.trim().isEmpty || _emailCtrl.text.trim().isEmpty) {
+  void _saveChanges() async {
+    if (_nameCtrl.text.trim().isEmpty ||
+        _provinceCtrl.text.trim().isEmpty ||
+        _adressCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Nome e email são obrigatórios.'),
+          content: const Text('Todos os campos são obrigatórios.'),
           backgroundColor: Colors.red[400],
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       return;
@@ -51,37 +59,111 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final updated = widget.user.copyWith(
       name: _nameCtrl.text.trim(),
-      email: _emailCtrl.text.trim(),
-      phone: _phoneCtrl.text.trim(),
-      bio: _bioCtrl.text.trim(),
+      province: _provinceCtrl.text.trim(),
+      adress: _adressCtrl.text.trim(),
     );
 
     setState(() => _isEditing = false);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
-            SizedBox(width: 10),
-            Text('Perfil atualizado com sucesso!'),
-          ],
-        ),
-        backgroundColor: const Color.fromARGB(255, 11, 121, 35),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12)
-        ),
-      ),
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
     );
 
-    Navigator.pop(context, updated);
+    try {
+      final tokenMap = await TokenStorage().readToken();
+      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
+        ProductsRepositories().handleAuthError(
+          context,
+          tokenMap["error"] ?? "Faça Login novamente",
+        );
+
+        throw Exception("Não autenticado");
+      }
+
+      final dio = Dio(
+        BaseOptions(
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': "Bearer ${tokenMap['token']}",
+          },
+        ),
+      );
+
+      final response = await dio.put(
+        "https://api-registagro.onrender.com/users/update",
+        data: {
+          "name": updated.name,
+          "province": updated.province,
+          "adress": updated.adress,
+        },
+      );
+
+      Navigator.of(context).pop();
+
+      String message = response.data['message'];
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text(message),
+            ],
+          ),
+          backgroundColor: const Color.fromARGB(255, 11, 121, 35),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+
+      Navigator.pop(context, updated);
+    } on DioException catch (e) {
+      Navigator.of(context).pop();
+
+      String message = "";
+
+      switch (e.response?.statusCode) {
+        case 401 || 403 || 500:
+          message = e.response?.data["error"] ?? "Sessão expirada";
+
+          ProductsRepositories().handleAuthError(context, message);
+          break;
+        default:
+          showTopNotification(
+            context,
+            title: "Error",
+            description: message,
+            backgroundColor: Colors.red.shade700,
+            icon: Icons.error_outline,
+          );
+          break;
+      }
+
+      throw Exception(message);
+    } catch (e) {
+      Navigator.of(context).pop();
+
+      showTopNotification(
+        context,
+        title: "Error",
+        description: "Ocorreu um erro inesperado",
+        backgroundColor: Colors.amber,
+        icon: Icons.error_outline,
+      );
+
+      rethrow;
+    }
   }
 
   void _cancelEditing() {
     _nameCtrl.text = widget.user.name;
-    _emailCtrl.text = widget.user.email;
-    _phoneCtrl.text = widget.user.phone;
+    _provinceCtrl.text = widget.user.province;
+    _adressCtrl.text = widget.user.adress;
     _bioCtrl.text = widget.user.bio;
     setState(() => _isEditing = false);
   }
@@ -95,7 +177,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color.fromARGB(255, 4, 136, 9), size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color.fromARGB(255, 4, 136, 9),
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -115,8 +201,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: TextButton.icon(
                 onPressed: () => setState(() => _isEditing = true),
                 icon: const Icon(
-                  Icons.edit_outlined, 
-                  size: 18, 
+                  Icons.edit_outlined,
+                  size: 18,
                   color: Color.fromARGB(255, 4, 136, 9),
                 ),
                 label: const Text(
@@ -175,7 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           content: const Text('Selecionar foto em breve...'),
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       );
@@ -196,9 +282,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
                       child: const Icon(
-                        Icons.camera_alt, 
-                        color: Colors.white, 
-                        size: 18
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 18,
                       ),
                     ),
                   ),
@@ -229,16 +315,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     keyboardType: TextInputType.name,
                   ),
                   _buildField(
-                    label: 'Email',
-                    controller: _emailCtrl,
-                    icon: Icons.email_outlined,
+                    label: 'Província',
+                    controller: _provinceCtrl,
+                    icon: Icons.location_city,
                     enabled: _isEditing,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   _buildField(
-                    label: 'Telemóvel',
-                    controller: _phoneCtrl,
-                    icon: Icons.phone_outlined,
+                    label: 'Endereço',
+                    controller: _adressCtrl,
+                    icon: Icons.location_city_outlined,
                     enabled: _isEditing,
                     keyboardType: TextInputType.phone,
                   ),
@@ -258,13 +344,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _saveChanges,
+                  onPressed: () async {
+                    _saveChanges();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 4, 124, 8),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     elevation: 0,
                   ),
@@ -287,7 +375,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     foregroundColor: Colors.grey[700],
                     side: BorderSide(color: Colors.grey[300]!),
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: const Text(
                     'Cancelar',
@@ -342,19 +432,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: InputDecoration(
             prefixIcon: Icon(
               icon,
-              color: enabled ? const Color.fromARGB(255, 4, 136, 9) : Colors.grey[400],
+              color: enabled
+                  ? const Color.fromARGB(255, 4, 136, 9)
+                  : Colors.grey[400],
               size: 20,
             ),
             filled: true,
-            fillColor: enabled ? const Color.fromARGB(255, 246, 255, 246) : const Color(0xFFF9F9F9),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            fillColor: enabled
+                ? const Color.fromARGB(255, 246, 255, 246)
+                : const Color(0xFFF9F9F9),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color.fromARGB(255, 169, 233, 172), width: 1.5),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 169, 233, 172),
+                width: 1.5,
+              ),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
@@ -362,7 +462,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color.fromARGB(255, 29, 126, 32), width: 2),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 29, 126, 32),
+                width: 2,
+              ),
             ),
           ),
         ),
