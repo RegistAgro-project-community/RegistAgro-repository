@@ -129,9 +129,9 @@ class OrderCard extends StatelessWidget {
             child: TextButton(
               onPressed: () {
                 if (order.status == 'ongoing') {
-                  showTrackingBottomSheet(context, order);
-                } else {
                   showDetailsBottomSheet(context, order);
+                } else {
+                  showTrackingBottomSheet(context, order);
                 }
               },
               style: TextButton.styleFrom(
