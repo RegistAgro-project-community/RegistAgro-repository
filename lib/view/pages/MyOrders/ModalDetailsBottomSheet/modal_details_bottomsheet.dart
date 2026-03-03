@@ -93,7 +93,7 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
               ),
               SizedBox(height: 20),
               Container(
-                height: 250,
+                height: 200,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
