@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
-import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_list_orders.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/OrdersCard/orders_card.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/OrdersEmptyState/orders_empty_state.dart';
 
 class MyOrderScreen extends StatefulWidget {
-  const MyOrderScreen({super.key});
+  List<Order> orders;
+  MyOrderScreen({super.key, required this.orders});
 
   @override
   State<MyOrderScreen> createState() => _MyOrderScreenState();
@@ -20,7 +20,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
   @override
   void initState() {
     super.initState();
-    _filteredOrders = allOrders;
+    _filteredOrders = widget.orders;
     _searchController.addListener(_filterOrders);
   }
 
@@ -33,9 +33,9 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
   void _filterOrders() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredOrders = allOrders.where((order) {
+      _filteredOrders = widget.orders.where((order) {
         return order.id.toLowerCase().contains(query) ||
-            order.storeName.toLowerCase().contains(query);
+            order.farm.name.toLowerCase().contains(query);
       }).toList();
     });
   }
