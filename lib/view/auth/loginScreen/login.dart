@@ -176,12 +176,10 @@ class _LoginState extends State<Login> {
                                 await SharedPreferences.getInstance();
                             prefes.setString("last_route", '/MainPage');
 
-                            Navigator.push(
-                              // ignore: use_build_context_synchronously
+                            Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const MainPage(),
-                              ),
+                              MaterialPageRoute(builder: (context) => MainPage()),
+                              (route) => false,
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
