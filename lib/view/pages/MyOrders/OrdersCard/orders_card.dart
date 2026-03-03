@@ -7,6 +7,40 @@ class OrderCard extends StatelessWidget {
   final Order order;
   const OrderCard({super.key, required this.order});
 
+  MaterialColor _setColor(Order color) {
+    switch (color.status) {
+      case "pendent":
+        return Colors.amber;
+      case "confirmed":
+        return Colors.green;
+      case "canceled":
+        return Colors.red;
+      case "rejected":
+        return Colors.red;
+      case "ongoing":
+        return Colors.blue;
+      default:
+        return Colors.amber;
+    }
+  }
+
+  String _setDescription(Order order){
+    switch (order.status) {
+      case "pendent":
+        return "O pedido precisa da confirmação \nde ${order.farm.name}.";
+      case "confirmed":
+        return "O pedido foi confirmado \npor ${order.farm.name}";
+      case "canceled":
+        return "Você cancelou este pedido";
+      case "rejected":
+        return "O pedido foi rejeitado \npor ${order.farm.name}";
+      case "ongoing":
+        return "O pedido está em andamento";
+      default:
+        return "Caregando...";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,13 +65,13 @@ class OrderCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: order.statusColor.withOpacity(0.1),
+                color: _setColor(order).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 order.status,
                 style: TextStyle(
-                  color: order.statusColor,
+                  color: _setColor(order),
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -54,38 +88,47 @@ class OrderCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey[300],
                 ),
-                child: const Icon(Icons.image, color: Colors.grey,),
+                child: order.farm.profile != "" && order.farm.profile.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          order.farm.profile,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.image_not_supported, 
+                              color: Colors.grey
+                            );
+                          },
+                        ),
+                      )
+                    : Icon(Icons.image, color: Colors.grey),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    order.storeName,
+                    order.farm.name,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    order.description,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 15
-                    ),
-                  )
+                    _setDescription(order),
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
                 ],
               ),
-              
             ],
           ),
-          
-          
-      const SizedBox(height: 12),
+
+          const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                if (order.status == 'Pending') {
+                if (order.status == 'ongoing') {
                   showTrackingBottomSheet(context, order);
                 } else {
                   showDetailsBottomSheet(context, order);
@@ -97,7 +140,7 @@ class OrderCard extends StatelessWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                order.status == 'Pending' ? 'Acompanhar' : 'Ver detalhes',
+                order.status == 'ongoing' ? 'Acompanhar' : 'Ver detalhes',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,

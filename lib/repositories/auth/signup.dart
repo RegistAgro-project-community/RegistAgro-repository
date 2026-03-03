@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
 import 'package:projecto_registagro/view/auth/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
@@ -72,13 +71,10 @@ class SignupValidations {
       prefes.setString("last_route", '/otpCode');
 
       if (context.mounted) {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
-          PageTransition(
-            type: PageTransitionType.leftToRight,
-            child: const OtpScreen(),
-            duration: const Duration(milliseconds: 350),
-          ),
+          MaterialPageRoute(builder: (context) => OtpScreen()),
+          (route) => false,
         );
       }
     } on DioException catch (e) {
@@ -109,7 +105,7 @@ class SignupValidations {
               // ignore: use_build_context_synchronously
             ).show(context);
 
-            await Future.delayed(const Duration(seconds: 4));
+            await Future.delayed(const Duration(seconds: 5));
           }
         }
       } else {
@@ -159,11 +155,10 @@ class SignupValidations {
         final prefes = await SharedPreferences.getInstance();
         prefes.setString("last_route", '/MainPage');
         
-        Navigator.push(
-          // ignore: use_build_context_synchronously
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const MainPage())
-          //MaterialPageRoute(builder: (_) => const MainPage()),
+          MaterialPageRoute(builder: (context) => MainPage()),
+          (route) => false,
         );
       } catch (e) {
         if (context.mounted) Navigator.of(context).pop();

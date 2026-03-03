@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 
+String setDescription(Order order){
+  switch (order.status) {
+    case "pendent":
+      return "Este pedido precisa de confirmação.";
+    case "confirmed":
+      return "Este pedido foi confirmado.";
+    case "canceled":
+      return "Você cancelou este pedido";
+    case "rejected":
+      return "Este pedido foi rejeitado.";
+    case "ongoing":
+      return "O pedido está em andamento";
+    default:
+      return "Caregando...";
+  }
+}
+
 void showDetailsBottomSheet(BuildContext context, Order order) {
     showModalBottomSheet(
       context: context,
@@ -44,6 +61,8 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("Quantidade: "),
+                        Text("Total: "),
                         Text('Data e Hora: '),
                         Text('Estado: '),
                         Text('Descrição: '),
@@ -52,9 +71,11 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(order.date.toString().substring(0, 16)),
+                        Text("${order.qtd}${order.unit}"),
+                        Text(order.total),
+                        Text(order.created_at.toString().substring(0, 16)),
                         Text(order.status),
-                        Text(order.description),
+                        Text(setDescription(order)),
                       ],
                     )
                   ],
