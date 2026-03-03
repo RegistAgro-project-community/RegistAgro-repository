@@ -3,6 +3,7 @@ import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_
 import 'package:projecto_registagro/view/pages/MyOrders/OrdersCard/orders_card.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/OrdersEmptyState/orders_empty_state.dart';
 
+// ignore: must_be_immutable
 class MyOrderScreen extends StatefulWidget {
   List<Order> orders;
   MyOrderScreen({super.key, required this.orders});
