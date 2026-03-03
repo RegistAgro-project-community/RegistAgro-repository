@@ -48,7 +48,7 @@ class ProductsRepositories {
 
       String message = "Erro ao carregar produtos";
 
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 500) {
         message = e.response?.data?['error'] ?? 'Sessão expirada';
 
         handleAuthError(context, message);
@@ -97,9 +97,10 @@ class ProductsRepositories {
       prefs.setString("last_route", '/');
     });
 
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const Login())
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
     );
   }
 }
