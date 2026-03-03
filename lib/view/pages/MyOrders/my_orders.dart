@@ -47,7 +47,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsetsGeometry.only(top: 30),
-          child: hasOrders ? _buildOrderList() : buildEmptyState(context),
+          child: widget.orders.isNotEmpty ? _buildOrderList() : buildEmptyState(context),
         ),
       ),
     );
