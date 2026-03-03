@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/view/pages/MyOrders/ModalDetailsBottomSheet/modal_details_bottomsheet.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 
 void showTrackingBottomSheet(BuildContext context, Order order) {
@@ -36,10 +37,10 @@ void showTrackingBottomSheet(BuildContext context, Order order) {
                 child: const Center(child: Text('Mapa placeholder')),
               ),
               const SizedBox(height: 16),
-              Text('Posição atual: ${order.driverPosition ?? 'N/A'}'),
+              Text('Posição atual: '),
               const SizedBox(height: 16),
-              Text('Data: ${order.date.toString().substring(0, 16)}'),
-              Text('Descrição: ${order.description}'),
+              Text('Data: ${order.created_at.toString().substring(0, 16)}'),
+              Text('Descrição: ${setDescription(order)}'),
             ],
           ),
         ),
