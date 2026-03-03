@@ -21,6 +21,8 @@ class UserModel {
     String? name,
     String? email,
     String? phone,
+    String? province,
+    String? adress,
     String? bio,
     String? photoPath,
   }) {
@@ -30,8 +32,8 @@ class UserModel {
       phone: phone ?? this.phone,
       bio: bio ?? this.bio,
       photoPath: photoPath ?? this.photoPath,
-      province: province,
-      adress: adress
+      province: province ?? "",
+      adress: adress ?? ""
     );
   }
 }
