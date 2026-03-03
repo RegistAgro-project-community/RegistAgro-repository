@@ -1,21 +1,63 @@
-import 'package:flutter/material.dart';
-
 class Order {
   final String id;
-  final String storeName;
+  final Farm farm;
+  final OrderProduct product;
+  final int qtd;
+  final String unit;
+  final String total;
   final String status;
-  final Color statusColor;
-  final DateTime date;
-  final String description;
-  final String? driverPosition;
+  final String created_at;
 
   Order({
     required this.id,
-    required this.storeName,
+    required this.farm,
+    required this.product,
+    required this.qtd,
+    required this.unit,
+    required this.total,
     required this.status,
-    required this.statusColor,
-    required this.date,
-    required this.description,
-    this.driverPosition,
+    required this.created_at,
   });
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json["id"] as String,
+      farm: Farm.fromJson((json['farm'] as Map<String, dynamic>?) ?? {}),
+      product: OrderProduct.fromJson(
+        (json['product'] as Map<String, dynamic>?) ?? {},
+      ),
+      qtd: json['qtd'],
+      unit: json['unit'],
+      total: json['total'],
+      status: json['status'],
+      created_at: json['created_at'],
+    );
+  }
+}
+
+class Farm {
+  final String name;
+  final String profile;
+
+  Farm({required this.name, required this.profile});
+
+  factory Farm.fromJson(Map<String, dynamic> json) {
+    return Farm(name: json['name'], profile: json['profile']);
+  }
+}
+
+class OrderProduct {
+  final String name;
+  final String photo;
+  final String type;
+
+  OrderProduct({required this.name, required this.photo, required this.type});
+
+  factory OrderProduct.fromJson(Map<String, dynamic> json) {
+    return OrderProduct(
+      name: json['name'],
+      photo: json['name'],
+      type: json['type']
+    );
+  }
 }
