@@ -57,6 +57,10 @@ class OrdersRepositories {
         message = e.response?.data["error"] ?? "Sessão expirada";
 
         ProductsRepositories().handleAuthError(context, message);
+      } else if (e.response?.statusCode == 404) {
+        message = e.response?.data["info"];
+
+        throw Exception(message);
       } else {
         message = e.response?.data["error"] ?? "Ocorreu um erro inesperado";
 
