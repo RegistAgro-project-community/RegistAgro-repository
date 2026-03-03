@@ -132,3 +132,4 @@ coverage/
 /windows/flutter/generated_plugin_registrant.h
 
 /macos/Flutter/GeneratedPluginRegistrant.swift
+pubspec.lock
