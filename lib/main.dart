@@ -6,6 +6,8 @@ import 'package:projecto_registagro/view/auth/homeScreen/homescreen.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:projecto_registagro/view/auth/signUp/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:projecto_registagro/components/google_maps/location_provider.dart'; // ← SourceLocationProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,36 +29,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          initialRoute: initialRoute,
-          onGenerateRoute: (settings) {
-            _saveRoute(settings.name ?? "/");
-            return MaterialPageRoute(
-              builder: (context) => _getPage(settings.name),
-            );
-          },
-        );
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SourceLocationProvider(),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            initialRoute: initialRoute,
+            onGenerateRoute: (settings) {
+              _saveRoute(settings.name ?? "/");
+              return MaterialPageRoute(
+                builder: (context) => _getPage(settings.name),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
   Widget _getPage(String? route) {
     switch (route) {
       case "/Login":
-        return Login();
+        return const Login();
       case "/MainPage":
-        return MainPage();
+        return const MainPage();
       case "/Signup":
-        return Signup();
+        return const Signup();
       case '/otpCode':
-        return OtpScreen();
+        return const OtpScreen();
       default:
-        return Homescreen();
+        return const Homescreen();
     }
   }
 }
