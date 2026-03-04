@@ -67,10 +67,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: CircleAvatar(
                 radius: 42,
                 backgroundColor: Colors.white,
-                backgroundImage: widget.photo != null && widget.photo!.isEmpty
+                backgroundImage: widget.photo != ""
                     ? NetworkImage(widget.photo!)
                     : null,
-                child: widget.photo == null || widget.photo!.isEmpty
+                child: widget.photo == ""
                     ? const Icon(
                         Icons.person,
                         size: 52,
