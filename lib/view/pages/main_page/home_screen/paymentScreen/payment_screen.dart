@@ -2,10 +2,30 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
+import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
+import 'package:projecto_registagro/repositories/payment.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 
 class CheckoutPage extends StatefulWidget {
-  const CheckoutPage({super.key});
+  final Product product;
+  final String adress;
+  final double farmValue;
+  final double carrierValue;
+  final double registagroValue;
+  final double total;
+  final int qtd;
+
+  const CheckoutPage({
+    super.key,
+    required this.product,
+    required this.adress,
+    required this.farmValue,
+    required this.carrierValue,
+    required this.registagroValue,
+    required this.total,
+    required this.qtd,
+  });
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
@@ -13,7 +33,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   String paymentMethod = "";
-  String? deliveryAddress = "Luanda, Angola - Av. 21 de Janeiro";
+  String deliveryAddress = "Luanda, Angola - Av. 21 de Janeiro";
 
   final TextEditingController _addressController = TextEditingController();
 
@@ -104,116 +124,151 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       ),
     );
-    await Future.delayed(const Duration(seconds: 3));
 
-    Navigator.pop(context);
-    if (!context.mounted) return;
+    try {
+      final reference = await PaymentRepo().getReference(
+        context,
+        widget.product.farm!.id,
+        widget.product.name,
+        widget.qtd,
+        "kg",
+      );
 
-    //todo: Copiar referência
-    await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text(
-          "Referência de pagamento",
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Inter',
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "Use este número para efectuar o pagamento:",
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter'
-              ),
+      //todo: Copiar referência
+      await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text(
+            "Referência de pagamento",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
             ),
-            const SizedBox(height: 20),
-            SelectableText(
-              numbersText,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Use este número para efectuar o pagamento:",
+                style: TextStyle(fontSize: 13, fontFamily: 'Inter'),
+              ),
+              const SizedBox(height: 20),
+              SelectableText(
+                reference,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: numbersText));
+                Navigator.pop(context);
+                //todo: Processando pagamento
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          "Efectuando pagamento...",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+
+                try {
+                  final message = await PaymentRepo().pay(context, reference);
+
+                  Navigator.pop(context);
+                  if (!context.mounted) return;
+
+                  //todo: Sucesso
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => AlertDialog(
+                      title: const Text("Pedido Confirmado"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.green, size: 70),
+                          SizedBox(height: 12),
+                          Text(
+                            message,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => MainPage()),
+                            );
+                          },
+                          child: const Text("Ok"),
+                        ),
+                      ],
+                    ),
+                  );
+                } catch (e) {
+                  Navigator.pop(context);
+                  if (!context.mounted) return;
+
+                  showTopNotification(
+                    context,
+                    title: "Error",
+                    description: e.toString(),
+                    backgroundColor: Colors.red.shade700,
+                    icon: Icons.error_outline,
+                  );
+                }
+
+              },
+              child: const Text("Copiar"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Fechar"),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: numbersText));
-              Navigator.pop(context);
-              //todo: Processando pagamento
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(
-                        strokeWidth: 4,
-                        color: Colors.white,
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        "Efectuando pagamento...",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+      );
+    } catch (e) {
+      Navigator.pop(context);
+      if (!context.mounted) return;
 
-              await Future.delayed(const Duration(seconds: 3));
-              Navigator.pop(context);
-              if (!context.mounted) return;
-              
-              //todo: Sucesso
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => AlertDialog(
-                  title: const Text("Pedido Confirmado"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.check_circle, color: Colors.green, size: 70),
-                      SizedBox(height: 12),
-                      Text(
-                        "Seu pedido foi realizado com sucesso!\nPagamento por referência registado.",
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => MainPage()),
-                        );
-                      },
-                      child: const Text("Ok"),
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: const Text("Copiar"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Fechar"),
-          ),
-        ],
-      ),
-    );
+      showTopNotification(
+        context,
+        title: "Error",
+        description: e.toString(),
+        backgroundColor: Colors.red.shade700,
+        icon: Icons.error_outline,
+      );
+    }
+
+    Navigator.pop(context);
+    if (!context.mounted) return;
   }
 
   Widget buildBottomBar() {
@@ -225,8 +280,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
       child: Row(
         children: [
-          const Text(
-            "Total: AOA 8.000",
+          Text(
+            "Total: AOA ${widget.total}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -284,7 +339,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    deliveryAddress ?? "Nenhum endereço definido",
+                    widget.adress,
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -307,8 +362,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Fazenda Filomena",
+                  Text(
+                    widget.product.farm!.name,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                   ),
                   const SizedBox(height: 12),
@@ -321,10 +376,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.grey[300],
                         ),
-                        child: const Icon(Icons.image),
+                        child:
+                            widget.product.farm!.profile != "" &&
+                                widget.product.farm!.profile.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  widget.product.farm!.profile,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.image_not_supported,
+                                      color: Colors.grey,
+                                    );
+                                  },
+                                ),
+                              )
+                            : Icon(Icons.image),
                       ),
                       const SizedBox(width: 12),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -335,18 +406,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             SizedBox(height: 6),
                             Text(
-                              "AOA 2,830.02",
+                              "AOA ${widget.farmValue}",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    "Saída em: 16 - 21 de março",
-                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
@@ -371,13 +437,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
-                  children: const [
+                  children: [
                     Resumerow("Resumo da compra:", ""),
                     Divider(),
-                    Resumerow("Frete:", "AOA 2,830.02", bold: true),
-                    Resumerow("Quantidade total:", "kg/cx 33", bold: true),
+                    Resumerow(
+                      "Frete:",
+                      "AOA ${widget.carrierValue}",
+                      bold: true,
+                    ),
+                    Resumerow(
+                      "Quantidade total:",
+                      "${widget.qtd}kg",
+                      bold: true,
+                    ),
                     SizedBox(height: 10),
-                    Resumerow("Total da compra:", "AOA 32.53", bold: true),
+                    Resumerow(
+                      "RegistAgro:",
+                      "AOA ${widget.registagroValue}",
+                      bold: true,
+                    ),
+                    SizedBox(height: 10),
+                    Resumerow(
+                      "Total da compra:",
+                      "AOA ${widget.total}",
+                      bold: true,
+                    ),
                   ],
                 ),
               ),
