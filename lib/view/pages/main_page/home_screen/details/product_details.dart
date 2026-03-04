@@ -6,8 +6,13 @@ import 'package:projecto_registagro/view/pages/main_page/home_screen/paymentScre
 
 class ProductDetailsPage extends StatefulWidget {
   final Product data;
+  final String adress;
 
-  const ProductDetailsPage({super.key, required this.data});
+  const ProductDetailsPage({
+    super.key,
+    required this.data,
+    required this.adress,
+  });
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
@@ -16,6 +21,33 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool showMore = false;
   int cartCount = 0;
+
+  _farmValue(String price, int qtd) {
+    final String getPrice = price.split("Kz/kg")[0].trim();
+    final double? value = double.tryParse(getPrice);
+
+    final double total = value! * qtd;
+
+    return total;
+  }
+
+  _carrierValue(double farmValue) {
+    final double value = farmValue * (30 / 100);
+
+    return value;
+  }
+
+  _registagroValue(double farmValue) {
+    final double value = farmValue * (5 / 100);
+
+    return value;
+  }
+
+  _total(double farmValue, double carrierValue, double registagroValue) {
+    final value = farmValue + carrierValue + registagroValue;
+
+    return value;
+  }
 
   Widget buildBottomBar() {
     return Container(
@@ -85,20 +117,63 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                     description: const Text(
                       "Adicione produtos ao carrinho!",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        color: Colors.grey
-                      ),
+                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
                     ),
                     icon: const SizedBox(),
                     height: 75,
                     width: MediaQuery.of(context).size.width * .9,
                     animation: AnimationType.fromTop,
                   ).show(context);
-                } else {
+                }
+                else if (cartCount < 5) {
+                  ElegantNotification.error(
+                    title: const Text(
+                      "Aviso!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    description: const Text(
+                      "Não é permitido fazer compras abaixo de 5kg",
+                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                    ),
+                    icon: const SizedBox(),
+                    height: 75,
+                    width: MediaQuery.of(context).size.width * .9,
+                    animation: AnimationType.fromTop,
+                  ).show(context);
+                }
+                 else {
+                  final double farmValue = _farmValue(
+                    widget.data.price!,
+                    cartCount,
+                  );
+
+                  final double carrierValue = _carrierValue(farmValue);
+
+                  final double registagroValue = _registagroValue(farmValue);
+
+                  final total = _total(
+                    farmValue,
+                    carrierValue,
+                    registagroValue,
+                  );
+
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CheckoutPage()),
+                    MaterialPageRoute(
+                      builder: (context) => CheckoutPage(
+                        product: widget.data,
+                        adress: widget.adress,
+                        farmValue: farmValue,
+                        carrierValue: carrierValue,
+                        registagroValue: registagroValue,
+                        total: total,
+                        qtd: cartCount,
+                      ),
+                    ),
                   );
                 }
               },
@@ -155,7 +230,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final product = widget.data;
-    //final farm = widget.data.farm;
+    final farm = widget.data.farm;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -181,64 +256,64 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   width: double.infinity,
                   height: 385,
                   child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(
-                              product.photo as String,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: const Color(0xFFF2F2F7),
-                                child: const Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: Color(0xFFB0B0C3),
-                                  size: 32,
-                                ),
-                              ),
-                              loadingBuilder: (context, child, progress) {
-                                if (progress == null) return child;
-                                return Container(
-                                  color: const Color(0xFFF2F2F7),
-                                  child: const Center(
-                                    child: SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Color(0xFFB0B0C3),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              height: 40,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                    colors: [
-                                      Colors.black.withOpacity(0.12),
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
                     ),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          product.photo as String,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: const Color(0xFFF2F2F7),
+                            child: const Icon(
+                              Icons.image_not_supported_outlined,
+                              color: Color(0xFFB0B0C3),
+                              size: 32,
+                            ),
+                          ),
+                          loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return Container(
+                              color: const Color(0xFFF2F2F7),
+                              child: const Center(
+                                child: SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Color(0xFFB0B0C3),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: 40,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.12),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+            ),
 
             Container(
               padding: const EdgeInsets.all(20),
@@ -415,29 +490,31 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           ),
                           onPressed: () {
                             //Navigator.push(
-                           //   context,
-                              //MaterialPageRoute(
-                              //  builder: (_) => //(profile: farm),
-                             // ),
-                           // );
+                            //   context,
+                            //MaterialPageRoute(
+                            //  builder: (_) => //(profile: farm),
+                            // ),
+                            // );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: const Row(
+                            child: Row(
                               spacing: 10,
                               children: [
                                 CircleAvatar(
                                   radius: 22,
                                   backgroundColor: Color(0xFFF5F5F5),
-                                  backgroundImage: AssetImage(
-                                    "assets/images/icone.png",
-                                  ),
+                                  backgroundImage: farm?.profile != null
+                                      ? NetworkImage(farm!.profile)
+                                      : AssetImage("assets/images/icone.png"),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Fazenda Filomena",
+                                      farm?.name == null
+                                          ? "Fazenda Filomena"
+                                          : farm!.name,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Color.fromARGB(255, 11, 121, 35),

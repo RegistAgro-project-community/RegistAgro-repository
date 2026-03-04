@@ -39,8 +39,8 @@ class _MainPageState extends State<MainPage>
   List<Order> orders = [];
 
   List<Widget> get screens => [
-    HomeState(products: products, name: name),
-    InicialStore(title: "Loja", products: products),
+    HomeState(products: products, name: name,  adress: userData.adress),
+    InicialStore(title: "Loja", products: products, adress: userData.adress,),
     MyOrderScreen(orders: orders),
     ProfileScreen(
       name: userData.name,
@@ -131,13 +131,11 @@ class _MainPageState extends State<MainPage>
       setState(() {
         farms = fetchedProducts;
 
-        products = farms
-            .expand(
-              (farm) => farm.products.map((p) {
-                return p;
-              }),
-            )
-            .toList();
+        products = farms.expand((farm) {
+          return farm.products.map((p) {
+            return p.copyWith(farm: farm.farm);
+          });
+        }).toList();
 
         isloading = false;
         errorMessage = null;

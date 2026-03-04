@@ -10,7 +10,8 @@ final searchInputController = TextEditingController();
 class HomeState extends StatefulWidget {
   List<Product> products = [];
   String? name;
-  HomeState({super.key, required this.products, this.name});
+  String adress;
+  HomeState({super.key, required this.products, this.name, required this.adress});
 
   @override
   State<HomeState> createState() => _HomeStateState();
@@ -267,7 +268,7 @@ class _HomeStateState extends State<HomeState> {
               ),
               itemCount: _filteredProducts.length,
               itemBuilder: (context, index) =>
-                  ProductCard(product: _filteredProducts[index]),
+                  ProductCard(product: _filteredProducts[index], adress: widget.adress,),
             ),
           ),
         ],
@@ -296,8 +297,8 @@ class _HomeStateState extends State<HomeState> {
           _buildHorizontalList(
             context,
             widget.products.where((p) => p.type == 'frutas').toList().isNotEmpty
-              ? widget.products.where((p) => p.type == 'frutas').toList()
-              : widget.products,
+                ? widget.products.where((p) => p.type == 'frutas').toList()
+                : widget.products,
           ),
 
           const SizedBox(height: 20),
@@ -391,6 +392,7 @@ class _HomeStateState extends State<HomeState> {
                       : category == 'mais_vendidos'
                       ? widget.products.reversed.toList()
                       : widget.products,
+                    adress: widget.adress,
                 ),
               ),
             );
@@ -420,7 +422,7 @@ class _HomeStateState extends State<HomeState> {
         itemCount: productList.length <= 6 ? productList.length : 6,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) =>
-            ProductCard(product: productList[index]),
+            ProductCard(product: productList[index], adress: widget.adress),
       ),
     );
   }

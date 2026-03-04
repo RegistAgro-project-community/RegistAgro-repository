@@ -28,10 +28,9 @@ class Product {
   final String? unit;
   final String? transport;
   final String? photo;
-  //final ProfileModel? farm;
+  final ProfileModel? farm;
 
   Product({
-    //required this.farm,
     required this.id,
     required this.name,
     this.description,
@@ -41,11 +40,11 @@ class Product {
     this.unit,
     this.transport,
     this.photo,
+    this.farm,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  factory Product.fromJson(Map<String, dynamic> json, {ProfileModel? farm}) {
     return Product(
-      //farm: ProfileModel.fromJson(json['farm'] as Map<String, dynamic>),
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? 'Produto sem nome',
       description: json['description'] as String?,
@@ -55,6 +54,33 @@ class Product {
       unit: json['unit'] as String?,
       transport: json['transport'] as String?,
       photo: json['photo'] as String?,
+      farm: farm,
+    );
+  }
+
+  Product copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? price,
+    String? type,
+    String? qtd,
+    String? unit,
+    String? transport,
+    String? photo,
+    ProfileModel? farm,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      type: type ?? this.type,
+      qtd: qtd ?? this.qtd,
+      unit: unit ?? this.unit,
+      transport: transport ?? this.transport,
+      photo: photo ?? this.photo,
+      farm: farm ?? this.farm,
     );
   }
 }

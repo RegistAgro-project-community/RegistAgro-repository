@@ -6,8 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class InicialStore extends StatefulWidget {
   final String title;
   final List products;
+  final String adress;
 
-  const InicialStore({super.key, required this.title, required this.products});
+  const InicialStore({super.key, required this.title, required this.products, required this.adress});
 
   @override
   State<InicialStore> createState() => _InicialStoreState();
@@ -270,7 +271,7 @@ class _InicialStoreState extends State<InicialStore> {
       ),
       itemCount: _filteredProducts.length,
       itemBuilder: (context, index) =>
-          ProductCard(product: _filteredProducts[index]),
+          ProductCard(product: _filteredProducts[index], adress: widget.adress,),
     );
   }
 
