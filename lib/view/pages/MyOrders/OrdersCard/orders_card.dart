@@ -128,10 +128,10 @@ class OrderCard extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                if (order.status == 'ongoing') {
-                  showDetailsBottomSheet(context, order);
-                } else {
+                if (order.status == 'ongoing' || order.status == "pendent") {
                   showTrackingBottomSheet(context, order);
+                } else {
+                  showDetailsBottomSheet(context, order);
                 }
               },
               style: TextButton.styleFrom(
