@@ -18,7 +18,11 @@ class Profile {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext dialogContext) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 2,            
+            ));
         },
       );
 
@@ -55,7 +59,11 @@ class Profile {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+          strokeWidth: 2,           
+        )),
     );
 
     try {

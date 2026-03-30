@@ -42,14 +42,6 @@ class SignupValidations {
       "pass2": pass2,
     };
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-
     try {
       final res = await dio.post(
         'https://api-registagro.onrender.com/auth/signup/consumer',

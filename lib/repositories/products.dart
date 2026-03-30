@@ -76,7 +76,7 @@ class ProductsRepositories {
         context,
         title: "Error",
         description: "Ocorreu um erro inesperado",
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.grey.shade400,
         icon: Icons.error_outline,
       );
 
@@ -89,7 +89,7 @@ class ProductsRepositories {
       context,
       title: "Error",
       description: message,
-      backgroundColor: Colors.amber,
+      backgroundColor: Colors.grey.shade400,
       icon: Icons.error_outline,
     );
 

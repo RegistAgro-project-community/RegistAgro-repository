@@ -27,6 +27,7 @@ class _SignupState extends State<Signup> {
   final _passwordCtrl = TextEditingController();
   final _passwordConfirm = TextEditingController();
   bool isObscure = true;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -84,21 +85,14 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        /*title: ArrowBack(
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.leftToRight,
-                child: Homescreen(),
-                duration: Duration(milliseconds: 350),
-              ),
-            ),
-          },
-        ),*/
+        leading: IconButton(
+          icon: Icon(
+              Icons.arrow_back_ios_new, color: const Color(0xFF61983D
+            )
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) {
@@ -240,10 +234,11 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 20),
                     ButtonSubmit(
-                      tilte: "Criar conta",
                       borderRadius: BorderRadius.circular(12.r),
                       padding: EdgeInsets.symmetric(horizontal: 0),
-                      onPressed: () async {
+                      onPressed: isLoading 
+                      ? null 
+                      : () async {
                         final form = _formKey.currentState;
                         if (form == null) return;
                         if (!form.validate()) {
@@ -262,6 +257,23 @@ class _SignupState extends State<Signup> {
 
                         await signupClass.sendEmail(context);
                       },
+                      child: isLoading
+                          ? SizedBox(
+                              width: 22.w,
+                              height: 22.h,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            )
+                          : Text(
+                              "Criar conta",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500
+                              ),
+                            ),
                     ),
                     Align(
                       alignment: Alignment.centerRight,
