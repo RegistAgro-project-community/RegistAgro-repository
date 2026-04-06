@@ -186,7 +186,7 @@ class _SignupState extends State<Signup> {
                           ),
                           Input(
                             controller: _location,
-                            placeholder: "Insira a sua localização",
+                            placeholder: "Município, Bairro, Rua",
                             labelText: "Localização",
                             isObscure: false,
                             color: Color(0xF4F4F4F4),
