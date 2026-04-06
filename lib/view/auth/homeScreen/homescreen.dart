@@ -14,27 +14,14 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
-  // late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-
      WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 1000));
     });
-    // _controller = VideoPlayerController.asset("assets/videos/Muinho.mp4")
-    //   ..initialize().then((_) {
-    //     setState(() {}); 
-    //     _controller.play();
-    //     _controller.setLooping(true); 
-    //   });
   }
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
 
   imageBackground(){
     return Image(
@@ -51,14 +38,6 @@ class _HomescreenState extends State<Homescreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // _controller.value.isInitialized ? FittedBox(
-          //   fit: BoxFit.cover,
-          //   child: SizedBox(
-          //     width: _controller.value.size.width,
-          //     height: _controller.value.size.height,
-          //     child: VideoPlayer(_controller),
-          //   ),
-          //   ) : Container(color: Colors.transparent,),3
           imageBackground(),
             Container(
                 color: Colors.black.withOpacity(0.7),
@@ -96,7 +75,6 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                         Padding(padding: const EdgeInsets.symmetric(vertical: 150)),
                         ButtonSubmit(
-                          tilte: "Entrar",
                           onPressed: () => {
                             Navigator.push(
                               context, 
@@ -107,10 +85,17 @@ class _HomescreenState extends State<Homescreen> {
                               )
                             )
                           },
+                          child: Text(
+                            "Entrar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
                         ),
                         SizedBox(height: 10.h),
                         ButtonSubmit(
-                          tilte: "Criar conta",
                           color: Color(0xFF61983D),
                           backgroundColor: Colors.transparent,
                           onPressed: () => {
@@ -123,6 +108,14 @@ class _HomescreenState extends State<Homescreen> {
                               )
                             )
                           },
+                          child: Text(
+                            "Criar conta",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
                         )
                     
                       ],

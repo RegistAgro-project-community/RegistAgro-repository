@@ -164,7 +164,6 @@ class _InicialStoreState extends State<InicialStore> {
               ],
             ),
             const SizedBox(height: 16),
-            // Search bar
             Container(
               height: 48,
               decoration: BoxDecoration(
@@ -206,7 +205,6 @@ class _InicialStoreState extends State<InicialStore> {
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
       child: Row(
         children: [
-          // Sort dropdown
           Expanded(
             child: Container(
               height: 38,
@@ -305,12 +303,6 @@ class _InicialStoreState extends State<InicialStore> {
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 70,
-                    height: 70,
-                    color: Colors.grey.shade100,
-                    child: const Icon(Icons.eco, color: Colors.green),
-                  ),
                 ),
               ),
               const SizedBox(width: 14),

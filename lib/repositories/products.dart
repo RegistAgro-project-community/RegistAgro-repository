@@ -74,7 +74,10 @@ class ProductsRepositories {
 
       ProductsRepositories().handleAuthError(
         context,
-        "Ocorreu um erro inesperado",
+        title: "Error",
+        description: "Ocorreu um erro inesperado",
+        backgroundColor: Colors.grey.shade400,
+        icon: Icons.error_outline,
       );
 
       rethrow;
@@ -86,7 +89,7 @@ class ProductsRepositories {
       context,
       title: "Error",
       description: message,
-      backgroundColor: Colors.amber,
+      backgroundColor: Colors.grey.shade400,
       icon: Icons.error_outline,
     );
 

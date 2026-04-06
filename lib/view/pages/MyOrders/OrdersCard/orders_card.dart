@@ -9,13 +9,11 @@ class OrderCard extends StatelessWidget {
 
   MaterialColor _setColor(Order color) {
     switch (color.status) {
-      case "pendent":
+      case "pendente":
         return Colors.amber;
-      case "confirmed":
+      case "confirmado":
         return Colors.green;
-      case "canceled":
-        return Colors.red;
-      case "rejected":
+      case "cancelado":
         return Colors.red;
       case "ongoing":
         return Colors.blue;
@@ -26,13 +24,13 @@ class OrderCard extends StatelessWidget {
 
   String _setDescription(Order order){
     switch (order.status) {
-      case "pendent":
+      case "pendente":
         return "O pedido precisa da confirmação \nde ${order.farm.name}.";
-      case "confirmed":
+      case "confirmado":
         return "O pedido foi confirmado \npor ${order.farm.name}";
-      case "canceled":
+      case "cancelado":
         return "Você cancelou este pedido";
-      case "rejected":
+      case "rejeitado":
         return "O pedido foi rejeitado \npor ${order.farm.name}";
       case "ongoing":
         return "O pedido está em andamento";
@@ -58,23 +56,21 @@ class OrderCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                color: _setColor(order).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                order.status,
-                style: TextStyle(
-                  color: _setColor(order),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: _setColor(order).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              order.status,
+              style: TextStyle(
+                color: _setColor(order),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
               ),
             ),
           ),

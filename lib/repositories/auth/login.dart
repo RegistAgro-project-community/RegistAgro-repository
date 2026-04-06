@@ -12,14 +12,6 @@ Future<Map<String, String>> login(
 ) async {
   final data = {'email': email, 'password': password};
   
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext dialogContext) {
-      return const Center(child: CircularProgressIndicator());
-    },
-  );
-
   try {
     final res = await dio.post(
       'https://api-registagro.onrender.com/auth/login',
@@ -41,6 +33,6 @@ Future<Map<String, String>> login(
   } on DioException catch (e) {
     if (context.mounted) Navigator.of(context).pop();
 
-    return {"error": e.response?.data!["error"]};
+    return {"error": e.response?.data["error"] ?? "Ocorreu um erro ao fazer login"};
   }
 }

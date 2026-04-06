@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ButtonSubmit extends StatelessWidget {
-  final String tilte;
-  final VoidCallback onPressed;
+  final Widget child;
+  final VoidCallback? onPressed;
   final Color backgroundColor;
   final Color color;
   final BorderRadius? borderRadius;
@@ -11,13 +11,14 @@ class ButtonSubmit extends StatelessWidget {
 
   const ButtonSubmit({
     super.key,
-    required this.tilte,
+    required this.child,
     required this.onPressed,
     this.borderRadius,
     this.padding,
     this.color = Colors.white,
     this.backgroundColor = const Color(0xFF61983D),
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,19 +32,10 @@ class ButtonSubmit extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 10.r),
             shape: RoundedRectangleBorder(
               borderRadius: borderRadius ?? BorderRadius.circular(10.r),
-              side: BorderSide(color: Color(0xFF61983D), width: 2.w),
             ),
             elevation: 2.r,
           ),
-          child: Text(
-            tilte,
-            style: TextStyle(
-              color: color,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.r,
-            ),
-          ),
+          child: child,
         ),
       ),
     );

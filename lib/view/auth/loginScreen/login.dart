@@ -1,3 +1,5 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:page_transition/page_transition.dart';
@@ -22,6 +24,7 @@ class _LoginState extends State<Login> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool isObscure = true;
+  bool isLoading = false;
 
   void _toggleObscure() {
     setState(() {
@@ -66,7 +69,15 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+              Icons.arrow_back_ios_new, color: const Color(0xFF61983D
+            )
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) {
           return AnimatedContainer(
@@ -145,51 +156,82 @@ class _LoginState extends State<Login> {
                       ButtonSubmit(
                         borderRadius: BorderRadius.circular(12.r),
                         padding: EdgeInsets.symmetric(horizontal: 0),
-                        tilte: "Entrar",
-                        onPressed: () async {
-                          final form = _formKey.currentState;
-                          if (form == null) return;
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                                final form = _formKey.currentState;
+                                if (form == null) return;
 
-                          if (!form.validate()) {
-                            return;
-                          }
+                                if (!form.validate()) return;
 
-                          final email = _emailCtrl.text.trim();
-                          final password = _passwordCtrl.text.trim();
+                                setState(() => isLoading = true);
 
-                          final res = await login(context, email, password);
+                                final email = _emailCtrl.text.trim();
+                                final password = _passwordCtrl.text.trim();
 
-                          if (res.containsKey('message')) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("${res['message']}"),
-                                backgroundColor: const Color.fromARGB(
-                                  255,
-                                  0,
-                                  255,
-                                  64,
-                                ),
+                                final res = await login(context, email, password);
+
+                                if (!mounted) return;
+                                setState(() => isLoading = false);
+                                if (res.containsKey('message')) {
+                                  ElegantNotification.success(
+                                    title: Text("${res['message']}"),
+                                    description: const Text(
+                                      "Seja bem-vindo de volta!",
+                                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                                    ),
+                                    icon: const SizedBox(),
+                                    height: 75,
+                                    // ignore: use_build_context_synchronously
+                                    width: MediaQuery.of(context).size.width * .9,
+                                    animation: AnimationType.fromTop,
+                                    // ignore: use_build_context_synchronously
+                                  ).show(context);
+
+                                  final prefes = await SharedPreferences.getInstance();
+                                  prefes.setString("last_route", '/MainPage');
+
+                                  Navigator.pushAndRemoveUntil(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(builder: (context) => MainPage()),
+                                    (route) => false,
+                                  );
+                                } else {
+                                  ElegantNotification.error(
+                                    title: Text("${res['error']}"),
+                                    description: const Text(
+                                      "Seja bem-vindo de volta!",
+                                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                                    ),
+                                    icon: const SizedBox(),
+                                    height: 75,
+                                    // ignore: use_build_context_synchronously
+                                    width: MediaQuery.of(context).size.width * .9,
+                                    animation: AnimationType.fromTop,
+                                    // ignore: use_build_context_synchronously
+                                  ).show(context);
+                                  
+                                }
+                              },
+                        child: isLoading
+                          ? SizedBox(
+                              width: 22.w,
+                              height: 22.h,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
                               ),
-                            );
-
-                            final prefes =
-                                await SharedPreferences.getInstance();
-                            prefes.setString("last_route", '/MainPage');
-
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => MainPage()),
-                              (route) => false,
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("${res['error']}"),
-                                backgroundColor: Colors.red,
+                            )
+                          : Text(
+                              "Entrar",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.r,
                               ),
-                            );
-                          }
-                        },
+                            ),
                       ),
 
                       SizedBox(height: 8.h),

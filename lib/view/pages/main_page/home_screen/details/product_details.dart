@@ -3,6 +3,7 @@ import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/paymentScreen/payment_screen.dart';
+import 'package:projecto_registagro/view/pages/main_page/home_screen/profile_ep/profile_details_card.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product data;
@@ -474,12 +475,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 0,
-                            foregroundColor: const Color.fromARGB(
-                              255,
-                              11,
-                              121,
-                              35,
-                            ),
+                            foregroundColor: const Color.fromARGB(255,11,121,35,),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             side: BorderSide.none,
                             shape: const RoundedRectangleBorder(
@@ -489,12 +485,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                           onPressed: () {
-                            //Navigator.push(
-                            //   context,
-                            //MaterialPageRoute(
-                            //  builder: (_) => //(profile: farm),
-                            // ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProfileDetailsPage(profile: farm!),
+                              ),
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
