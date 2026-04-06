@@ -82,12 +82,9 @@ class OrdersRepositories {
     } catch (e) {
       Navigator.of(context).pop();
 
-      showTopNotification(
+      ProductsRepositories().handleAuthError(
         context,
-        title: "Error",
-        description: "Ocorreu um erro inesperado",
-        backgroundColor: Colors.amber,
-        icon: Icons.error_outline,
+        "Ocorreu um erro inesperado",
       );
 
       rethrow;

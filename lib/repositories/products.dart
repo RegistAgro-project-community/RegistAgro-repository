@@ -72,7 +72,7 @@ class ProductsRepositories {
     } catch (e) {
       Navigator.of(context, rootNavigator: true).pop();
 
-      showTopNotification(
+      ProductsRepositories().handleAuthError(
         context,
         title: "Error",
         description: "Ocorreu um erro inesperado",
