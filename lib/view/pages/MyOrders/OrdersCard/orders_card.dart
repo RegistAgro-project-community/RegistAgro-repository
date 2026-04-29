@@ -9,11 +9,11 @@ class OrderCard extends StatelessWidget {
 
   MaterialColor _setColor(Order color) {
     switch (color.status) {
-      case "pendente":
+      case "pendent":
         return Colors.amber;
-      case "confirmado":
+      case "confirmed":
         return Colors.green;
-      case "cancelado":
+      case "rejected":
         return Colors.red;
       case "ongoing":
         return Colors.blue;
@@ -24,11 +24,11 @@ class OrderCard extends StatelessWidget {
 
   String _setDescription(Order order){
     switch (order.status) {
-      case "pendente":
+      case "pendent":
         return "O pedido precisa da confirmação \nde ${order.farm.name}.";
-      case "confirmado":
+      case "confirmed":
         return "O pedido foi confirmado \npor ${order.farm.name}";
-      case "cancelado":
+      case "canceled":
         return "Você cancelou este pedido";
       case "rejeitado":
         return "O pedido foi rejeitado \npor ${order.farm.name}";
@@ -59,18 +59,21 @@ class OrderCard extends StatelessWidget {
         spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: _setColor(order).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              order.status,
-              style: TextStyle(
-                color: _setColor(order),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: _setColor(order).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                order.status,
+                style: TextStyle(
+                  color: _setColor(order),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
             ),
           ),
@@ -84,7 +87,7 @@ class OrderCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey[300],
                 ),
-                child: order.farm.profile != "" && order.farm.profile.isNotEmpty
+                child: order.farm.profile != "" && order.farm.profile.isNotEmpty  
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
@@ -136,7 +139,7 @@ class OrderCard extends StatelessWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                order.status == 'ongoing' ? 'Acompanhar' : 'Ver detalhes',
+                order.status == 'ongoing' || order.status == "pendent" ? 'Acompanhar' : 'Ver detalhes',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,

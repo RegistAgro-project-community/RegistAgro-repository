@@ -58,8 +58,8 @@ class _LoginState extends State<Login> {
       return 'Informe a senha';
     }
 
-    if (value.length < 6) {
-      return 'A senha deve ter no mínimo 6 caracteres';
+    if (value.length < 8) {
+      return 'A senha deve ter no mínimo 8 caracteres';
     }
 
     return null;
@@ -160,9 +160,7 @@ class _LoginState extends State<Login> {
                             ? null
                             : () async {
                                 final form = _formKey.currentState;
-                                if (form == null) return;
-
-                                if (!form.validate()) return;
+                                if (form == null || !form.validate()) return;
 
                                 setState(() => isLoading = true);
 
@@ -173,6 +171,7 @@ class _LoginState extends State<Login> {
 
                                 if (!mounted) return;
                                 setState(() => isLoading = false);
+                                
                                 if (res.containsKey('message')) {
                                   ElegantNotification.success(
                                     title: Text("${res['message']}"),
@@ -199,9 +198,9 @@ class _LoginState extends State<Login> {
                                   );
                                 } else {
                                   ElegantNotification.error(
-                                    title: Text("${res['error']}"),
-                                    description: const Text(
-                                      "Seja bem-vindo de volta!",
+                                    title: Text("Error"),
+                                    description: Text(
+                                      "${res['error']}",
                                       style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
                                     ),
                                     icon: const SizedBox(),
