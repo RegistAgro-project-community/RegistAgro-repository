@@ -42,22 +42,29 @@ class SignupValidations {
       "pass2": pass2,
     };
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
     try {
       final res = await dio.post(
         'https://api-registagro.onrender.com/auth/signup/consumer',
         data: userData,
       );
 
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
+      if (context.mounted) Navigator.of(context).pop(); // fecha o loading
 
-      ElegantNotification.info(
-        title: Text("Enviando código"),
-        description: Text(res.data['message']),
-        height: 80,
-        // ignore: use_build_context_synchronously
-      ).show(context);
+      if (context.mounted) {
+        ElegantNotification.info(
+          title: const Text("Enviando código"),
+          description: Text(res.data['message']),
+          height: 80,
+        ).show(context);
+      }
 
       final prefes = await SharedPreferences.getInstance();
       prefes.setString("last_route", '/otpCode');
@@ -70,7 +77,7 @@ class SignupValidations {
         );
       }
     } on DioException catch (e) {
-      if (context.mounted) Navigator.pop(context);
+      if (context.mounted) Navigator.of(context).pop();
 
       final data = e.response?.data;
 
@@ -80,32 +87,47 @@ class SignupValidations {
         if (errors.isNotEmpty && errors.first is String) {
           final message = errors.join('\n');
 
-          ElegantNotification.error(
-            title: const Text("Error"),
-            description: Text(message),
-            height: 120,
-            // ignore: use_build_context_synchronously
-          ).show(context);
+          if (context.mounted) {
+            ElegantNotification.error(
+              title: const Text("Erro"),
+              description: Text(message),
+              height: 120,
+            ).show(context);
+          }
         } else {
           for (final err in errors) {
-            final message = err['message'];
+            final message = err['message'] ?? 'Erro desconhecido';
 
-            ElegantNotification.error(
-              title: Text("Error"),
-              description: Text(message),
-              height: 80,
-              // ignore: use_build_context_synchronously
-            ).show(context);
+            if (context.mounted) {
+              ElegantNotification.error(
+                title: const Text("Erro"),
+                description: Text(message),
+                height: 80,
+              ).show(context);
+            }
 
             await Future.delayed(const Duration(seconds: 5));
           }
         }
       } else {
+        if (context.mounted) {
+          ElegantNotification.error(
+            title: const Text("Erro"),
+            description: Text(
+              data?['message'] ?? data?['error'] ?? 'Ocorreu um erro inesperado',
+            ),
+            height: 80,
+          ).show(context);
+        }
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (context.mounted) {
         ElegantNotification.error(
-          title: const Text("Error"),
-          description: Text(e.response?.data['message']),
+          title: const Text("Erro"),
+          description: const Text('Ocorreu um erro inesperado'),
           height: 80,
-          // ignore: use_build_context_synchronously
         ).show(context);
       }
     }
@@ -125,54 +147,72 @@ class SignupValidations {
         'https://api-registagro.onrender.com/auth/signup/verify/$code',
       );
 
-      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) Navigator.of(context).pop(); // fecha o loading
 
       final authHeader = otpCode.headers.value('authorization');
       final token = authHeader?.split(" ")[1];
 
+      if (token == null) {
+        ElegantNotification.error(
+          title: const Text("Erro"),
+          description: const Text('Token inválido, tente novamente'),
+          height: 80,
+        ).show(context);
+        return;
+      }
+
       final tokenStorage = TokenStorage();
+      await tokenStorage.storeToken(token);
 
-      try {
-        await tokenStorage.storeToken(token!);
+      final message = otpCode.data['message'];
 
-        final message = otpCode.data['message'];
-
+      if (context.mounted) {
         ElegantNotification.success(
-          title: Text("Sucess"),
+          title: const Text("Sucesso"),
           description: Text(message),
           height: 80,
-          // ignore: use_build_context_synchronously
         ).show(context);
+      }
 
-        final prefes = await SharedPreferences.getInstance();
-        prefes.setString("last_route", '/MainPage');
-        
+      final prefes = await SharedPreferences.getInstance();
+      prefes.setString("last_route", '/MainPage');
+
+      if (context.mounted) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
           (route) => false,
         );
-      } catch (e) {
-        if (context.mounted) Navigator.of(context).pop();
-
-        ElegantNotification.error(
-          title: Text("Error"),
-          description: Text('Ocorreu um erro inesperado'),
-          height: 80,
-          // ignore: use_build_context_synchronously
-        ).show(context);
       }
     } on DioException catch (e) {
+      if (context.mounted) Navigator.of(context).pop(); 
+
+       debugPrint('STATUS: ${e.response?.statusCode}');
+        debugPrint('DATA: ${e.response?.data}');
+        debugPrint('DATA TYPE: ${e.response?.data.runtimeType}');
+
+      final message =
+          e.response?.data?['message'] ??
+          e.response?.data?['error'] ??
+          'Ocorreu um erro inesperado';
+
+      if (context.mounted) {
+        ElegantNotification.error(
+          title: const Text("Erro"),
+          description: Text(message),
+          height: 80,
+        ).show(context);
+      }
+    } catch (e) {
       if (context.mounted) Navigator.of(context).pop();
 
-      final message = e.response?.data?['message'] ?? e.response?.data?['error'];
-
-      ElegantNotification.error(
-        title: Text("Error"),
-        description: Text(message),
-        height: 80,
-        // ignore: use_build_context_synchronously
-      ).show(context);
+      if (context.mounted) {
+        ElegantNotification.error(
+          title: const Text("Erro"),
+          description: const Text('Ocorreu um erro inesperado'),
+          height: 80,
+        ).show(context);
+      }
     }
   }
 }

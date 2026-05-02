@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +88,7 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       ElegantNotification.error(
         title: Text("Erro"),
-        description: Text("Algo deu errado. ${otpCode}"),
+        description: Text("Código incorreto. Por favor, tente novamente!"),
         height: 80,
       ).show(context);
     }
@@ -94,7 +96,6 @@ class _OtpScreenState extends State<OtpScreen> {
   
   void resendCode() async {
     if (!canResend) return;
-
     ElegantNotification.info(
       title: Text("Código reenviado"),
       description: Text("Um novo OTP foi enviado para o seu email."),

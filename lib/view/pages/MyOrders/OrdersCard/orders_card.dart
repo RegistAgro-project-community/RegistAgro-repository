@@ -3,15 +3,28 @@ import 'package:projecto_registagro/view/pages/MyOrders/ModalDetailsBottomSheet/
 import 'package:projecto_registagro/view/pages/MyOrders/ModalTackingBottomSheet/modal_traking_bottomsheet.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 
-class OrderCard extends StatelessWidget {
+class OrderCard extends StatefulWidget {
   final Order order;
   const OrderCard({super.key, required this.order});
 
-  MaterialColor _setColor(Order color) {
-    switch (color.status) {
+  @override
+  State<OrderCard> createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
+  late String _currentStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentStatus = widget.order.status;
+  }
+
+  MaterialColor _setColor(String status) {
+    switch (status) {
       case "pendent":
         return Colors.amber;
-      case "confirmed":
+      case "delivered":
         return Colors.green;
       case "rejected":
         return Colors.red;
@@ -22,25 +35,55 @@ class OrderCard extends StatelessWidget {
     }
   }
 
-  String _setDescription(Order order){
-    switch (order.status) {
+  String _setDescription(String status) {
+    switch (status) {
       case "pendent":
-        return "O pedido precisa da confirmação \nde ${order.farm.name}.";
-      case "confirmed":
-        return "O pedido foi confirmado \npor ${order.farm.name}";
+        return "O pedido precisa da confirmação \nde ${widget.order.farm.name}.";
+      case "delivered":
+        return "O pedido foi entregue \npor ${widget.order.farm.name}";
       case "canceled":
         return "Você cancelou este pedido";
-      case "rejeitado":
-        return "O pedido foi rejeitado \npor ${order.farm.name}";
+      case "rejected":
+        return "O pedido foi rejeitado \npor ${widget.order.farm.name}";
       case "ongoing":
         return "O pedido está em andamento";
       default:
-        return "Caregando...";
+        return "Carregando...";
     }
+  }
+
+  void _confirmDelivery() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Confirmar entrega"),
+        content: const Text("Tem certeza que deseja confirmar a entrega deste pedido?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancelar"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _currentStatus = "delivered";
+              });
+              Navigator.pop(ctx);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text("Confirmar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isOngoing = _currentStatus == 'ongoing';
+    final bool isPendent = _currentStatus == 'pendent';
+    final bool isDelivered = _currentStatus == 'delivered';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -49,6 +92,7 @@ class OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -64,13 +108,14 @@ class OrderCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: _setColor(order).withOpacity(0.1),
+                // ignore: deprecated_member_use
+                color: _setColor(_currentStatus).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                order.status,
+                _currentStatus,
                 style: TextStyle(
-                  color: _setColor(order),
+                  color: _setColor(_currentStatus),
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -87,35 +132,29 @@ class OrderCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey[300],
                 ),
-                child: order.farm.profile != "" && order.farm.profile.isNotEmpty  
+                child: widget.order.farm.profile != "" && widget.order.farm.profile.isNotEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          order.farm.profile,
+                          widget.order.farm.profile,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(
-                              Icons.image_not_supported, 
-                              color: Colors.grey
-                            );
+                            return const Icon(Icons.image_not_supported, color: Colors.grey);
                           },
                         ),
                       )
-                    : Icon(Icons.image, color: Colors.grey),
+                    : const Icon(Icons.image, color: Colors.grey),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    order.farm.name,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    widget.order.farm.name,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    _setDescription(order),
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                    _setDescription(_currentStatus),
+                    style: const TextStyle(color: Colors.grey, fontSize: 15),
                   ),
                 ],
               ),
@@ -123,29 +162,50 @@ class OrderCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                if (order.status == 'ongoing' || order.status == "pendent") {
-                  showTrackingBottomSheet(context, order);
-                } else {
-                  showDetailsBottomSheet(context, order);
-                }
-              },
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                order.status == 'ongoing' || order.status == "pendent" ? 'Acompanhar' : 'Ver detalhes',
-                style: const TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w600,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () {
+                  if (isOngoing || isPendent) {
+                    showTrackingBottomSheet(context, widget.order);
+                  } else {
+                    showDetailsBottomSheet(context, widget.order);
+                  }
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  isOngoing || isPendent ? 'Acompanhar' : 'Ver detalhes',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
+
+              if (isPendent) ...[
+                const SizedBox(width: 16),
+                TextButton(
+                  onPressed: _confirmDelivery,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(
+                    'Confirmar entrega',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),

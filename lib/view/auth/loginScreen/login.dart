@@ -5,7 +5,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/auth/login.dart';
 import 'package:projecto_registagro/view/auth/signUp/signup.dart';
-import 'package:projecto_registagro/components/buttom_logoText/button_submit.dart';
+import 'package:projecto_registagro/components/button_submit/button_submit.dart';
 import 'package:projecto_registagro/components/formInput/input.dart';
 import 'package:projecto_registagro/components/imageLogo/imagelogo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -124,6 +124,7 @@ class _InicialStoreState extends State<InicialStore> {
                     prefs.setString('last_route', '/MainPage');
 
                     Navigator.pushAndRemoveUntil(
+                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(builder: (context) => MainPage()),
                       (route) => false,
@@ -133,6 +134,7 @@ class _InicialStoreState extends State<InicialStore> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -157,6 +159,7 @@ class _InicialStoreState extends State<InicialStore> {
                 Text(
                   '${_filteredProducts.length} itens',
                   style: TextStyle(
+                    // ignore: deprecated_member_use
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 13,
                   ),
@@ -167,8 +170,10 @@ class _InicialStoreState extends State<InicialStore> {
             Container(
               height: 48,
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(100),
+                // ignore: deprecated_member_use
                 border: Border.all(color: Colors.white.withOpacity(0.3)),
               ),
               child: TextField(
@@ -235,14 +240,13 @@ class _InicialStoreState extends State<InicialStore> {
             ),
           ),
           const SizedBox(width: 10),
-
-          // Toggle grid/list
           GestureDetector(
             onTap: () => setState(() => _isGrid = !_isGrid),
             child: Container(
               width: 38,
               height: 38,
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: const Color(0xFF0B7923).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -288,6 +292,7 @@ class _InicialStoreState extends State<InicialStore> {
             border: Border.all(color: Colors.grey.shade100),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
