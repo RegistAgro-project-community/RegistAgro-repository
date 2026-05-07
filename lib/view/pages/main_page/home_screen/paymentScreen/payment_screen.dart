@@ -33,7 +33,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   String paymentMethod = "";
-  String deliveryAddress = "Luanda, Angola - Av. 21 de Janeiro";
+  String deliveryAddress = "";
 
   final TextEditingController _addressController = TextEditingController();
 
@@ -56,7 +56,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             },
             child: const Text("Cancelar"),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               if (_addressController.text.trim().isNotEmpty) {
                 setState(() {
@@ -339,7 +339,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    widget.adress,
+                    deliveryAddress == "" ? widget.adress : deliveryAddress,
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
