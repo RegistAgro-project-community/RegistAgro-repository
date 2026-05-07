@@ -245,6 +245,8 @@ class _SignupState extends State<Signup> {
                           return;
                         }
 
+                        setState(() => isLoading = true);
+
                         final signupClass = SignupValidations(
                           name:  _name.text,
                           email:  _emailCtrl.text,
@@ -256,14 +258,17 @@ class _SignupState extends State<Signup> {
                         );
 
                         await signupClass.sendEmail(context);
+
+                        if (!mounted) return;
+                        setState(() => isLoading = false);
                       },
                       child: isLoading
                           ? SizedBox(
                               width: 22.w,
                               height: 22.h,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
+                                color: Color(0xFF61983D),
+                                strokeWidth: 3,
                               ),
                             )
                           : Text(
