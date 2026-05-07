@@ -31,9 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => SourceLocationProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => SourceLocationProvider()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
