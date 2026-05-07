@@ -48,10 +48,6 @@ class SignupValidations {
         data: userData,
       );
 
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
-
       ElegantNotification.info(
         title: Text("Enviando código"),
         description: Text(res.data['message']),
@@ -62,16 +58,12 @@ class SignupValidations {
       final prefes = await SharedPreferences.getInstance();
       prefes.setString("last_route", '/otpCode');
 
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => OtpScreen()),
-          (route) => false,
-        );
-      }
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => OtpScreen()),
+        (route) => false,
+      );
     } on DioException catch (e) {
-      if (context.mounted) Navigator.pop(context);
-
       final data = e.response?.data;
 
       if (data is Map && data['error'] is List) {
@@ -103,7 +95,9 @@ class SignupValidations {
       } else {
         ElegantNotification.error(
           title: const Text("Error"),
-          description: Text(e.response?.data['message']),
+          description: Text(
+            e.response?.data['message'] ?? e.response?.data["error"],
+          ),
           height: 80,
           // ignore: use_build_context_synchronously
         ).show(context);
@@ -112,20 +106,10 @@ class SignupValidations {
   }
 
   validateOtp(BuildContext context, String code) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-
     try {
       final otpCode = await dio.get(
         'https://api-registagro.onrender.com/auth/signup/verify/$code',
       );
-
-      if (context.mounted) Navigator.of(context).pop();
 
       final authHeader = otpCode.headers.value('authorization');
       final token = authHeader?.split(" ")[1];
@@ -146,15 +130,13 @@ class SignupValidations {
 
         final prefes = await SharedPreferences.getInstance();
         prefes.setString("last_route", '/MainPage');
-        
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
           (route) => false,
         );
       } catch (e) {
-        if (context.mounted) Navigator.of(context).pop();
-
         ElegantNotification.error(
           title: Text("Error"),
           description: Text('Ocorreu um erro inesperado'),
@@ -163,9 +145,8 @@ class SignupValidations {
         ).show(context);
       }
     } on DioException catch (e) {
-      if (context.mounted) Navigator.of(context).pop();
-
-      final message = e.response?.data?['message'] ?? e.response?.data?['error'];
+      final message =
+          e.response?.data?['message'] ?? e.response?.data?['error'];
 
       ElegantNotification.error(
         title: Text("Error"),
