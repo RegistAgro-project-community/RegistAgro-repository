@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/view/auth/signUp/signup.dart';
-import 'package:projecto_registagro/components/buttom_logoText/button_submit.dart';
+import 'package:projecto_registagro/components/button_submit/button_submit.dart';
 
 
 class Homescreen extends StatefulWidget {

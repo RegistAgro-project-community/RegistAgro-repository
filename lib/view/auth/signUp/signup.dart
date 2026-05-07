@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:projecto_registagro/repositories/auth/signup.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
-import 'package:projecto_registagro/components/buttom_logoText/button_submit.dart';
+import 'package:projecto_registagro/components/button_submit/button_submit.dart';
 import 'package:projecto_registagro/components/formInput/input.dart';
 import 'package:projecto_registagro/components/imageLogo/imagelogo.dart';
 
@@ -27,6 +27,7 @@ class _SignupState extends State<Signup> {
   final _passwordCtrl = TextEditingController();
   final _passwordConfirm = TextEditingController();
   bool isObscure = true;
+  bool isObscureConfirm = true;
   bool isLoading = false;
 
   @override
@@ -34,12 +35,18 @@ class _SignupState extends State<Signup> {
     _name.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _passwordConfirm.dispose();
     super.dispose();
   }
 
   void _toggleObscure() {
     setState(() {
       isObscure = !isObscure;
+    });
+  }
+  void _toggleObscureConfirm() {
+    setState(() {
+      isObscureConfirm = !isObscureConfirm;
     });
   }
 
@@ -214,16 +221,16 @@ class _SignupState extends State<Signup> {
                           Input(
                             controller: _passwordConfirm,
                             keyboardType: TextInputType.visiblePassword,
-                            isObscure: isObscure,
+                            isObscure: isObscureConfirm,
                             placeholder: "Confirma sua senha",
                             labelText: "Senha",
                             sufixIcon: IconButton(
                               icon: Icon(
-                                isObscure
+                                isObscureConfirm
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                               ),
-                              onPressed: _toggleObscure,
+                              onPressed: _toggleObscureConfirm,
                               splashRadius: 20.r,
                             ),
                             icon: Icons.lock,
