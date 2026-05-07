@@ -18,8 +18,6 @@ Future<Map<String, String>> login(
       data: data,
     );
 
-    if (context.mounted) Navigator.of(context).pop();
-
     final authHeader = res.headers.value('authorization');
     final token = authHeader?.split(" ")[1];
 
@@ -31,7 +29,6 @@ Future<Map<String, String>> login(
 
     return {'error': "Não foi possível fazer login"};
   } on DioException catch (e) {
-    if (context.mounted) Navigator.of(context).pop();
 
     return {"error": e.response?.data["error"] ?? "Ocorreu um erro ao fazer login"};
   }
