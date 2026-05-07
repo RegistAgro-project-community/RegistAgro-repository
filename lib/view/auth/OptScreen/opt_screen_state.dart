@@ -140,12 +140,18 @@ class _OtpScreenState extends State<OtpScreen> {
                       otpCode = value;
                     });
                   },
-                  onCompleted: (value) async {
+                  onCompleted: isLoading 
+                  ? null 
+                  : (value) async {
+                    setState(() => isLoading = true);
                     otpCode = value;
 
                     final signupClass = SignupValidations();
 
                     await signupClass.validateOtp(context, otpCode);
+
+                    if (!mounted) return;
+                    setState(() => isLoading = false);
                   },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -166,11 +172,18 @@ class _OtpScreenState extends State<OtpScreen> {
                 width: MediaQuery.sizeOf(context).width * 0.8.w,
                 height: 40.h,
                 child: ElevatedButton(
-                  onPressed: () async {
+                  onPressed: isLoading 
+                  ? null 
+                  : () async {
+
+                    setState(() => isLoading = true);
+
                     final signupClass = SignupValidations();
 
                     await signupClass.validateOtp(context, otpCode);
                     
+                    if (!mounted) return;
+                    setState(() => isLoading = false);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isLoading ? null : const Color(0xFF61983D),
