@@ -10,6 +10,7 @@ class PaymentRepo {
     String product,
     int qtd,
     String unit,
+    String delivery
   ) async {
     try {
       final token = await TokenStorage().readToken();
@@ -31,7 +32,7 @@ class PaymentRepo {
 
       final response = await dio.post(
         "https://api-registagro.onrender.com/orders/create/farm/$farmId",
-        data: {"name": product, "qtd": qtd, "unit": unit},
+        data: {"name": product, "qtd": qtd, "unit": unit, "delivery": delivery == "" ? null : delivery},
       );
 
       final String reference = response.data['reference'];
