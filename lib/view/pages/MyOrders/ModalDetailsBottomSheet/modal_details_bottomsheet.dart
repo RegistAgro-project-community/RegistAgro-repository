@@ -24,6 +24,8 @@ String setStatus(String status){
       return "pendente";
     case "delivered":
       return "entregue";
+    case "confirmed":
+      return "confirmado";
     case "canceled":
       return "cancelado";
     case "rejected":
