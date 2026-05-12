@@ -127,7 +127,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   ).show(context);
                 }
                 else if (cartCount < 5) {
-                  ElegantNotification.error(
+                  ElegantNotification.info(
                     title: const Text(
                       "Aviso!",
                       style: TextStyle(
@@ -140,7 +140,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       "Não é permitido fazer compras abaixo de 5kg",
                       style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
                     ),
-                    icon: const SizedBox(),
+                    icon: Icon(Icons.info),
                     height: 75,
                     width: MediaQuery.of(context).size.width * .9,
                     animation: AnimationType.fromTop,
