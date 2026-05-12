@@ -26,6 +26,8 @@ class _OrderCardState extends State<OrderCard> {
         return Colors.amber;
       case "delivered":
         return Colors.green;
+      case "confirmed":
+        return Colors.green;
       case "rejected":
         return Colors.red;
       case "ongoing":
@@ -43,6 +45,8 @@ class _OrderCardState extends State<OrderCard> {
         return "O pedido precisa da confirmação \nde ${widget.order.farm.name}.";
       case "delivered":
         return "O pedido foi entregue \npor ${widget.order.farm.name}";
+      case "confirmed":
+        return "O seu pedido foi confirmado";
       case "canceled":
         return "Você cancelou este pedido";
       case "rejected":
@@ -56,12 +60,14 @@ class _OrderCardState extends State<OrderCard> {
     }
   }
 
-  String _setStatus(String status){
+  String _setStatus(String status) {
     switch (status) {
       case "pendent":
         return "pendente";
       case "delivered":
         return "entregue";
+      case "confirmed":
+        return "confirmado";
       case "canceled":
         return "cancelado";
       case "rejected":
