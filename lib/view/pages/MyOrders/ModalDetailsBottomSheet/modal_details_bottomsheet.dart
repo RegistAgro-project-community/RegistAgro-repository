@@ -18,6 +18,25 @@ String setDescription(Order order) {
   }
 }
 
+String setStatus(String status){
+  switch (status) {
+    case "pendent":
+      return "pendente";
+    case "delivered":
+      return "entregue";
+    case "canceled":
+      return "cancelado";
+    case "rejected":
+      return "rejeitado";
+    case "ongoing":
+      return "em andamento";
+    case "incollection":
+      return "em coleta";
+    default:
+      return status;
+  }
+}
+
 String splitDate(Order order) {
   List date = order.created_at.split("T");
   String created_at = "${date[0]} ${date[1]}";
@@ -85,7 +104,7 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
                       ),
                       Text(order.total),
                       Text(splitDate(order).toString().substring(0, 16)),
-                      Text(order.status),
+                      Text(setStatus(order.status)),
                       Text(setDescription(order)),
                     ],
                   ),
