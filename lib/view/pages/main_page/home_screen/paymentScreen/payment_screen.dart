@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
@@ -132,6 +134,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         widget.product.name,
         widget.qtd,
         "kg",
+        deliveryAddress
       );
 
       //todo: Copiar referência
@@ -235,13 +238,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   Navigator.pop(context);
                   if (!context.mounted) return;
 
-                  showTopNotification(
-                    context,
-                    title: "Error",
-                    description: e.toString(),
-                    backgroundColor: Colors.red.shade700,
-                    icon: Icons.error_outline,
-                  );
+                  ElegantNotification.info(
+                    title: const Text("Aviso!"),
+                    description: Text(
+                      "$e",
+                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                    ),
+                    icon: Icon(Icons.info),
+                    height: 75,
+                    // ignore: use_build_context_synchronously
+                    width: MediaQuery.of(context).size.width * .9,
+                    animation: AnimationType.fromTop,
+                    // ignore: use_build_context_synchronously
+                  ).show(context);
                 }
 
               },
@@ -258,13 +267,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Navigator.pop(context);
       if (!context.mounted) return;
 
-      showTopNotification(
-        context,
-        title: "Error",
-        description: e.toString(),
-        backgroundColor: Colors.red.shade700,
-        icon: Icons.error_outline,
-      );
+      ElegantNotification.info(
+        title: const Text("Aviso!"),
+        description: Text(
+          "$e",
+          style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+        ),
+        icon: Icon(Icons.info),
+        height: 75,
+        // ignore: use_build_context_synchronously
+        width: MediaQuery.of(context).size.width * .9,
+        animation: AnimationType.fromTop,
+        // ignore: use_build_context_synchronously
+      ).show(context);
+
     }
 
     Navigator.pop(context);
