@@ -30,6 +30,8 @@ class _OrderCardState extends State<OrderCard> {
         return Colors.red;
       case "ongoing":
         return Colors.blue;
+      case "incollection":
+        return Colors.blue;
       default:
         return Colors.amber;
     }
@@ -47,8 +49,29 @@ class _OrderCardState extends State<OrderCard> {
         return "O pedido foi rejeitado \npor ${widget.order.farm.name}";
       case "ongoing":
         return "O pedido está em andamento";
+      case "incollection":
+        return "O pedido está em coleta";
       default:
         return "Carregando...";
+    }
+  }
+
+  String _setStatus(String status){
+    switch (status) {
+      case "pendent":
+        return "pendente";
+      case "delivered":
+        return "entregue";
+      case "canceled":
+        return "cancelado";
+      case "rejected":
+        return "rejeitado";
+      case "ongoing":
+        return "em andamento";
+      case "incollection":
+        return "em coleta";
+      default:
+        return status;
     }
   }
 
@@ -57,7 +80,9 @@ class _OrderCardState extends State<OrderCard> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Confirmar entrega"),
-        content: const Text("Tem certeza que deseja confirmar a entrega deste pedido?"),
+        content: const Text(
+          "Tem certeza que deseja confirmar a entrega deste pedido?",
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -71,7 +96,10 @@ class _OrderCardState extends State<OrderCard> {
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Confirmar", style: TextStyle(color: Colors.white)),
+            child: const Text(
+              "Confirmar",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -81,7 +109,7 @@ class _OrderCardState extends State<OrderCard> {
   @override
   Widget build(BuildContext context) {
     final bool isOngoing = _currentStatus == 'ongoing';
-    final bool isPendent = _currentStatus == 'pendent';
+    final bool isIncollection = _currentStatus == 'incollection';
     final bool isDelivered = _currentStatus == 'delivered';
 
     return Container(
@@ -113,7 +141,7 @@ class _OrderCardState extends State<OrderCard> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                _currentStatus,
+                _setStatus(_currentStatus),
                 style: TextStyle(
                   color: _setColor(_currentStatus),
                   fontWeight: FontWeight.w600,
@@ -132,14 +160,19 @@ class _OrderCardState extends State<OrderCard> {
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey[300],
                 ),
-                child: widget.order.farm.profile != "" && widget.order.farm.profile.isNotEmpty
+                child:
+                    widget.order.farm.profile != "" &&
+                        widget.order.farm.profile.isNotEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
                           widget.order.farm.profile,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.image_not_supported, color: Colors.grey);
+                            return const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                            );
                           },
                         ),
                       )
@@ -150,7 +183,10 @@ class _OrderCardState extends State<OrderCard> {
                 children: [
                   Text(
                     widget.order.farm.name,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   Text(
                     _setDescription(_currentStatus),
@@ -167,7 +203,7 @@ class _OrderCardState extends State<OrderCard> {
             children: [
               TextButton(
                 onPressed: () {
-                  if (isOngoing || isPendent) {
+                  if (isOngoing || isIncollection || isDelivered) {
                     showTrackingBottomSheet(context, widget.order);
                   } else {
                     showDetailsBottomSheet(context, widget.order);
@@ -179,7 +215,7 @@ class _OrderCardState extends State<OrderCard> {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  isOngoing || isPendent ? 'Acompanhar' : 'Ver detalhes',
+                  isOngoing || isIncollection ? 'Acompanhar' : 'Ver detalhes',
                   style: const TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.w600,
@@ -187,7 +223,7 @@ class _OrderCardState extends State<OrderCard> {
                 ),
               ),
 
-              if (isPendent) ...[
+              if (isDelivered) ...[
                 const SizedBox(width: 16),
                 TextButton(
                   onPressed: _confirmDelivery,
