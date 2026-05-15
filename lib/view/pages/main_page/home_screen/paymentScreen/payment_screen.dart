@@ -5,7 +5,6 @@ import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/repositories/payment.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 
