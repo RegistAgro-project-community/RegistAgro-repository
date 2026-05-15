@@ -66,7 +66,7 @@ void showTrackingBottomSheet(BuildContext context, Order order) {
                         children: [
                           SizedBox(
                             height: totalHeight * 0.75,
-                            child: const MapScreen(),
+                            child: MapScreen(orderId: order.id,),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16),
