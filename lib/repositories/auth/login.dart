@@ -29,7 +29,17 @@ Future<Map<String, String>> login(
 
     return {'error': "Não foi possível fazer login"};
   } on DioException catch (e) {
+    final responseData = e.response?.data;
+    String errorMessage;
 
-    return {"error": e.response?.data["error"] ?? "Ocorreu um erro ao fazer login"};
+    if (responseData is Map) {
+      errorMessage = responseData["error"] ?? "Ocorreu um erro ao fazer login";
+    } else if (responseData is String) {
+      errorMessage = responseData.isNotEmpty ? responseData : "Ocorreu um erro ao fazer login";
+    } else {
+      errorMessage = "Ocorreu um erro ao fazer login";
+    }
+
+    return {"error": errorMessage};
   }
 }

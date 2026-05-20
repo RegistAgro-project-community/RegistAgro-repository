@@ -113,40 +113,6 @@ class ProfileDetailsPage extends StatelessWidget {
                   )
                 ),
               ),
-              SizedBox(
-              height: 200,
-              child: ListView.separated(
-                padding: EdgeInsets.all(10),
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
-                itemBuilder: (context, index) =>
-                  Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.green, width: 3)
-                    ),
-                  )
-                ),
-              ),
-              SizedBox(
-              height: 200,
-              child: ListView.separated(
-                padding: EdgeInsets.all(10),
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
-                itemBuilder: (context, index) =>
-                  Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 3),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                  )
-                ),
-              )
           ],
         ),
       ),

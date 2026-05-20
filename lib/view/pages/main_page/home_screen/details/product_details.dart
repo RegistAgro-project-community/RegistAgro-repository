@@ -501,8 +501,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   radius: 22,
                                   backgroundColor: Color(0xFFF5F5F5),
                                   backgroundImage: farm?.profile != null
-                                      ? NetworkImage(farm!.profile)
-                                      : AssetImage("assets/images/icone.png"),
+                                      ? NetworkImage(farm!.profile) as ImageProvider
+                                      : const AssetImage("assets/images/icone.png"),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
