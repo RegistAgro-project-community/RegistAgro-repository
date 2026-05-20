@@ -57,7 +57,35 @@ class OrderProduct {
     return OrderProduct(
       name: json['name'],
       photo: json['name'],
-      type: json['type']
+      type: json['type'],
+    );
+  }
+}
+
+class OrderProof {
+  final int reference;
+  final String total;
+  final String farmValue;
+  final String transportValue;
+  final String registagroValue;
+  final String? message;
+
+  OrderProof({
+    required this.reference,
+    required this.farmValue,
+    required this.transportValue,
+    required this.registagroValue,
+    required this.total,
+    this.message
+  });
+
+  factory OrderProof.fromJson(Map<String, dynamic> json) {
+    return OrderProof(
+      reference: json["reference"],
+      farmValue: json["farmValue"],
+      transportValue: json["transportValue"],
+      registagroValue: json["registagroValue"],
+      total: json["total"],
     );
   }
 }
