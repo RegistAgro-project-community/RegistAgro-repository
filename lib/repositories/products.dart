@@ -48,8 +48,11 @@ class ProductsRepositories {
 
       String message = "Erro ao carregar produtos";
 
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 500) {
-        message = e.response?.data?['error'] ?? 'Sessão expirada';
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        message =
+            e.response?.data?['error'] ??
+            e.response?.data["message"] ??
+            'Sessão expirada';
 
         handleAuthError(context, message);
       } else {
