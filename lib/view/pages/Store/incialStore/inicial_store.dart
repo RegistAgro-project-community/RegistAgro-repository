@@ -81,30 +81,32 @@ class _InicialStoreState extends State<InicialStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0B7923),
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-              ),
-              child: Column(
-                children: [
-                  _buildFilters(),
-                  Expanded(
-                    child: _filteredProducts.isEmpty
-                        ? _buildEmptyState()
-                        : _isGrid
-                        ? _buildGrid()
-                        : _buildList(),
-                  ),
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                ),
+                child: Column(
+                  children: [
+                    _buildFilters(),
+                    Expanded(
+                      child: _filteredProducts.isEmpty
+                          ? _buildEmptyState()
+                          : _isGrid
+                          ? _buildGrid()
+                          : _buildList(),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -118,34 +120,6 @@ class _InicialStoreState extends State<InicialStore> {
           children: [
             Row(
               children: [
-                GestureDetector(
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setString('last_route', '/MainPage');
-
-                    Navigator.pushAndRemoveUntil(
-                      // ignore: use_build_context_synchronously
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPage()),
-                      (route) => false,
-                    );
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 14),
                 Expanded(
                   child: Text(
                     widget.title,
@@ -236,24 +210,6 @@ class _InicialStoreState extends State<InicialStore> {
                     _filterAndSort();
                   },
                 ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          GestureDetector(
-            onTap: () => setState(() => _isGrid = !_isGrid),
-            child: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                // ignore: deprecated_member_use
-                color: const Color(0xFF0B7923).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                _isGrid ? Icons.view_list_rounded : Icons.grid_view_rounded,
-                color: const Color(0xFF0B7923),
-                size: 22,
               ),
             ),
           ),

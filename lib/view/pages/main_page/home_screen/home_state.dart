@@ -336,8 +336,8 @@ class _HomeStateState extends State<HomeState> {
               children: [
                 Text(
                   widget.name != null
-                      ? "Bem-vindo, ${widget.name}!"
-                      : "Bem-vindo!",
+                      ? "Bem-vindo (a), ${widget.name}!"
+                      : "Bem-vindo (a)!",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -402,7 +402,7 @@ class _HomeStateState extends State<HomeState> {
             minimumSize: const Size(0, 0),
           ),
           child: const Text(
-            "ver tudo →",
+            "ver tudo",
             style: TextStyle(
               color: Color(0xFF0B7923),
               fontWeight: FontWeight.w600,
