@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/repositories/orders.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ModalDetailsBottomSheet/modal_details_bottomsheet.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ModalTackingBottomSheet/modal_traking_bottomsheet.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';

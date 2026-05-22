@@ -19,7 +19,6 @@ void showTrackingBottomSheet(BuildContext context, Order order) {
           return LayoutBuilder(
             builder: (context, constraints) {
               final totalHeight = constraints.maxHeight;
-
               return Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
