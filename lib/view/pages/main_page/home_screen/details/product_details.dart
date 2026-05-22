@@ -22,6 +22,8 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool showMore = false;
   int cartCount = 0;
+  String unit = 'kg';
+  final List<String> units = ['kg', 'ton'];
 
   _farmValue(String price, int qtd) {
     final String getPrice = price.split("Kz/kg")[0].trim();
@@ -93,6 +95,26 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   icon: const Icon(Icons.add_outlined, color: Colors.grey),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: unit,
+              isDense: true,
+              icon: const Icon(Icons.arrow_drop_down, size: 18),
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+              items: units
+                  .map((u) => DropdownMenuItem(
+                        value: u,
+                        child: Text(u),
+                      ))
+                  .toList(),
+              onChanged: (v) => setState(() => unit = v!),
             ),
           ),
           const SizedBox(width: 12),

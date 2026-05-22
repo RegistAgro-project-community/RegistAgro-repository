@@ -120,7 +120,28 @@ void showDetailsBottomSheet(BuildContext context, Order order) {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
                 ),
-              ),
+                child: order.product.photo.isNotEmpty
+                  ? Image.network(
+                      order.product.photo,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                              Text('Erro ao carregar imagem'),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(child: Text('Sem imagem')),
+              )
             ],
           ),
         ),
