@@ -62,6 +62,14 @@ class _HomeStateState extends State<HomeState> {
     });
   }
 
+  List<Product> _farmProducts(List<Product> products, String? farmName) {
+    if (farmName == null || farmName.isEmpty) return [];
+
+    return products
+        .where((p) => p.farm?.name == farmName)
+        .toList();
+  }
+
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
@@ -275,6 +283,7 @@ class _HomeStateState extends State<HomeState> {
               itemBuilder: (context, index) => ProductCard(
                 product: _filteredProducts[index],
                 adress: widget.adress,
+                farmProducts: _farmProducts(products, products[index].farm?.name),
               ),
             ),
           ),
@@ -312,7 +321,7 @@ class _HomeStateState extends State<HomeState> {
 
           _buildSectionTitle(
             context,
-            "Mais Vendidos",
+            "Diversos",
             category: "mais_vendidos",
           ),
           const SizedBox(height: 10),
@@ -430,7 +439,8 @@ class _HomeStateState extends State<HomeState> {
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) => ProductCard(
           product: productList[index],
-          adress: widget.adress
+          adress: widget.adress,
+          farmProducts: _farmProducts(widget.products, widget.products[index].farm?.name),
         ),
       ),
     );

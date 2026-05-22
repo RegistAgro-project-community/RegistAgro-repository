@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/Models/profile_ep/profile_modals_ep.dart';
 import 'profile_details_card.dart';
 
 class ProfileCard extends StatelessWidget {
   final ProfileModel profile;
   final String adress;
+  final List<Product> farmProducts;
 
-  const ProfileCard({super.key, required this.profile, required this.adress});
+  const ProfileCard({super.key, required this.profile, required this.adress, required this.farmProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,8 @@ class ProfileCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProfileDetailsPage(profile: profile, adress: adress,),
+            builder: (_) =>
+                ProfileDetailsPage(profile: profile, adress: adress,farmProducts: farmProducts,),
           ),
         );
       },

@@ -7,8 +7,19 @@ class ProfileModel {
   final String? phone;
   final String? province;
   final String? adress;
+  final String? nif;
 
-  ProfileModel({required this.id, required this.name, required this.profile, this.adress, this.bio, this.email, this.phone, this.province});
+  ProfileModel({
+    required this.id,
+    required this.name,
+    required this.profile,
+    this.adress,
+    this.bio,
+    this.email,
+    this.phone,
+    this.province,
+    this.nif
+  });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
@@ -18,7 +29,8 @@ class ProfileModel {
       adress: json["adress"] as String? ?? "Sem endereço",
       email: json["email"] as String? ?? "Sem email",
       phone: json["phone"] as String? ?? "Sem telefone",
-      province: json["province"] as String? ?? "Sem província"
+      province: json["province"] as String? ?? "Sem província",
+      nif: json["nif"] as String? ?? "Sem NIF"
     );
   }
 }

@@ -82,6 +82,14 @@ class _InicialStoreState extends State<InicialStore> {
     });
   }
 
+  List<Product> _farmProducts(List<Product> products, String? farmName) {
+    if (farmName == null || farmName.isEmpty) return [];
+
+    return products
+        .where((p) => p.farm?.name == farmName)
+        .toList();
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -241,7 +249,8 @@ class _InicialStoreState extends State<InicialStore> {
       itemCount: _filteredProducts.length,
       itemBuilder: (context, index) => ProductCard(
         product: _filteredProducts[index],
-        adress: widget.adress
+        adress: widget.adress,
+        farmProducts: _farmProducts(widget.products, widget.products[index].farm?.name),
       ),
     );
   }

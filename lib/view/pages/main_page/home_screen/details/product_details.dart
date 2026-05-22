@@ -8,11 +8,13 @@ import 'package:projecto_registagro/view/pages/main_page/home_screen/profile_ep/
 class ProductDetailsPage extends StatefulWidget {
   final Product data;
   final String adress;
+  final List<Product> farmProducts;
 
   const ProductDetailsPage({
     super.key,
     required this.data,
     required this.adress,
+    required this.farmProducts
   });
 
   @override
@@ -494,6 +496,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 builder: (_) => ProfileDetailsPage(
                                   profile: farm!,
                                   adress: widget.adress,
+                                  farmProducts: widget.farmProducts,
                                 ),
                               ),
                             );

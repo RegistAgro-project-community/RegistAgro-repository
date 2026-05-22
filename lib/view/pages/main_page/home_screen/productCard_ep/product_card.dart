@@ -5,8 +5,9 @@ import 'package:projecto_registagro/view/pages/main_page/home_screen/details/pro
 class ProductCard extends StatefulWidget {
   final Product product;
   final String adress;
+  final List<Product> farmProducts;
 
-  const ProductCard({super.key, required this.product, required this.adress});
+  const ProductCard({super.key, required this.product, required this.adress, required this.farmProducts});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -65,7 +66,7 @@ class _ProductCardState extends State<ProductCard>
           context,
           MaterialPageRoute(
             builder: (_) =>
-                ProductDetailsPage(data: product, adress: widget.adress),
+                ProductDetailsPage(data: product, adress: widget.adress, farmProducts: widget.farmProducts,),
           ),
         );
       },

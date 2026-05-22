@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/Models/profile_ep/profile_modals_ep.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/productCard_ep/product_card.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   final ProfileModel profile;
   final String adress;
+  final List<Product> farmProducts;
 
   const ProfileDetailsPage({
     super.key,
     required this.profile,
     required this.adress,
+    required this.farmProducts
   });
 
   @override
@@ -22,58 +22,6 @@ class ProfileDetailsPage extends StatefulWidget {
 class _ProfileDetailsPage extends State<ProfileDetailsPage> {
   static const _green = Color(0xFF0B7923);
   static const _greenLight = Color(0xFFE8F5E9);
-  List<Product> farms = [];
-  FarmPorducts products = FarmPorducts(
-    farm: ProfileModel(id: "", profile: "", name: "", email: "", phone: "", province: "", adress: ""),
-    products: [
-      Product(
-        id: "",
-        name: "",
-        description: "",
-        photo: "",
-        price: "",
-        qtd: "",
-        transport: "",
-        type: "",
-        unit: "",
-      ),
-    ],
-    nif: "",
-  );
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadFarmProducts();
-    });
-  }
-
-  Future<void> _loadFarmProducts() async {
-    try {
-      final data = await ProductsRepositories().getFarmProducts(
-        context,
-        widget.profile.id,
-      );
-
-      setState(() {
-        products = data;
-
-        farms = products.products.map((p) {
-          return p.copyWith(farm: data.farm);
-        }).toList();
-      });
-    } catch (e) {
-      showTopNotification(
-        context,
-        title: "Error",
-        description: e.toString(),
-        backgroundColor: Colors.amber,
-        icon: Icons.error_outline,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +144,7 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            '${products.farm.province}, ${products.farm.adress}',
+                            '${widget.profile.province}, ${widget.profile.adress}',
                             style: TextStyle(
                               fontSize: 13,
                               color: Color.fromARGB(255, 236, 234, 234),
@@ -218,7 +166,7 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              products.nif,
+                              widget.profile.nif ?? "Sem NIF",
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: _green,
@@ -301,7 +249,7 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
       child: Row(
         children: [
           Expanded(
-            child: _statCard(products.products.length.toString(), 'Produtos'),
+            child: _statCard(widget.farmProducts.length.toString(), 'Produtos'),
           ),
           const SizedBox(width: 10),
           Expanded(child: _statCard('3 anos', 'Na plataforma')),
@@ -388,20 +336,23 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
         ),
         const SizedBox(height: 10),
 
-        /*GridView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.80,
+        SizedBox(
+          height: 520,
+          child: GridView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.80,
+            ),
+            itemCount: widget.farmProducts.length,
+            itemBuilder: (context, index) {
+
+              return ProductCard(product: widget.farmProducts[index], adress: widget.adress,farmProducts: widget.farmProducts,);
+            },
           ),
-          itemCount: farms.length,
-          itemBuilder: (context, index) => ProductCard(
-            product: farms[index],
-            adress: widget.adress,
-          ),
-        ),*/
+        ),
       ],
     );
   }
