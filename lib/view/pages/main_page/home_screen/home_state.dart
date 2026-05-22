@@ -11,7 +11,12 @@ class HomeState extends StatefulWidget {
   List<Product> products = [];
   String? name;
   String adress;
-  HomeState({super.key, required this.products, this.name, required this.adress});
+  HomeState({
+    super.key,
+    required this.products,
+    this.name,
+    required this.adress,
+  });
 
   @override
   State<HomeState> createState() => _HomeStateState();
@@ -267,8 +272,10 @@ class _HomeStateState extends State<HomeState> {
                 childAspectRatio: 0.82,
               ),
               itemCount: _filteredProducts.length,
-              itemBuilder: (context, index) =>
-                  ProductCard(product: _filteredProducts[index], adress: widget.adress,),
+              itemBuilder: (context, index) => ProductCard(
+                product: _filteredProducts[index],
+                adress: widget.adress,
+              ),
             ),
           ),
         ],
@@ -392,7 +399,7 @@ class _HomeStateState extends State<HomeState> {
                       : category == 'mais_vendidos'
                       ? widget.products.reversed.toList()
                       : widget.products,
-                    adress: widget.adress,
+                  adress: widget.adress,
                 ),
               ),
             );
@@ -421,8 +428,10 @@ class _HomeStateState extends State<HomeState> {
         scrollDirection: Axis.horizontal,
         itemCount: productList.length <= 6 ? productList.length : 6,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (context, index) =>
-            ProductCard(product: productList[index], adress: widget.adress),
+        itemBuilder: (context, index) => ProductCard(
+          product: productList[index],
+          adress: widget.adress
+        ),
       ),
     );
   }

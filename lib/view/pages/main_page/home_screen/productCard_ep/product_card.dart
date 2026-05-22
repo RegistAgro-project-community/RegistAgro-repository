@@ -63,7 +63,10 @@ class _ProductCardState extends State<ProductCard>
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ProductDetailsPage(data: product, adress: widget.adress)),
+          MaterialPageRoute(
+            builder: (_) =>
+                ProductDetailsPage(data: product, adress: widget.adress),
+          ),
         );
       },
       child: ScaleTransition(
@@ -94,7 +97,7 @@ class _ProductCardState extends State<ProductCard>
                     fit: StackFit.expand,
                     children: [
                       Image.network(
-                        product.photo as String,
+                        product.photo ?? "",
                         fit: BoxFit.cover,
                         errorBuilder: (ctx, error, stackTrace) => Container(
                           color: const Color(0xFFF2F2F7),
@@ -164,7 +167,7 @@ class _ProductCardState extends State<ProductCard>
                         ),
                       ),
                       Text(
-                        product.description as String,
+                        product.description ?? "",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -178,7 +181,7 @@ class _ProductCardState extends State<ProductCard>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            product.price as String,
+                            product.price ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               color: Color(0xFF2D9E5F),

@@ -39,8 +39,8 @@ class _MainPageState extends State<MainPage>
   List<Order> orders = [];
 
   List<Widget> get screens => [
-    HomeState(products: products, name: name,  adress: userData.adress),
-    InicialStore(title: "Loja", products: products, adress: userData.adress,),
+    HomeState(products: products, name: name, adress: userData.adress),
+    InicialStore(title: "Loja", products: products, adress: userData.adress),
     MyOrderScreen(orders: orders),
     ProfileScreen(
       name: userData.name,

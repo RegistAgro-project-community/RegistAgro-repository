@@ -1,13 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/Models/profile_ep/profile_modals_ep.dart';
+import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
+import 'package:projecto_registagro/repositories/products.dart';
+import 'package:projecto_registagro/view/pages/main_page/home_screen/productCard_ep/product_card.dart';
 
-class ProfileDetailsPage extends StatelessWidget {
+class ProfileDetailsPage extends StatefulWidget {
   final ProfileModel profile;
+  final String adress;
 
-  const ProfileDetailsPage({super.key, required this.profile});
+  const ProfileDetailsPage({
+    super.key,
+    required this.profile,
+    required this.adress,
+  });
 
+  @override
+  State<StatefulWidget> createState() => _ProfileDetailsPage();
+}
+
+class _ProfileDetailsPage extends State<ProfileDetailsPage> {
   static const _green = Color(0xFF0B7923);
   static const _greenLight = Color(0xFFE8F5E9);
+  List<Product> farms = [];
+  FarmPorducts products = FarmPorducts(
+    farm: ProfileModel(id: "", profile: "", name: "", email: "", phone: "", province: "", adress: ""),
+    products: [
+      Product(
+        id: "",
+        name: "",
+        description: "",
+        photo: "",
+        price: "",
+        qtd: "",
+        transport: "",
+        type: "",
+        unit: "",
+      ),
+    ],
+    nif: "",
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFarmProducts();
+    });
+  }
+
+  Future<void> _loadFarmProducts() async {
+    try {
+      final data = await ProductsRepositories().getFarmProducts(
+        context,
+        widget.profile.id,
+      );
+
+      setState(() {
+        products = data;
+
+        farms = products.products.map((p) {
+          return p.copyWith(farm: data.farm);
+        }).toList();
+      });
+    } catch (e) {
+      showTopNotification(
+        context,
+        title: "Error",
+        description: e.toString(),
+        backgroundColor: Colors.amber,
+        icon: Icons.error_outline,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +126,11 @@ class ProfileDetailsPage extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
+            icon: const Icon(
+              Icons.share_outlined,
+              color: Colors.white,
+              size: 20,
+            ),
             onPressed: () {},
           ),
         ),
@@ -70,9 +140,7 @@ class ProfileDetailsPage extends StatelessWidget {
           children: [
             Container(
               color: _green,
-              child: CustomPaint(
-                child: const SizedBox.expand(),
-              ),
+              child: CustomPaint(child: const SizedBox.expand()),
             ),
             Positioned(
               bottom: 36,
@@ -89,9 +157,9 @@ class ProfileDetailsPage extends StatelessWidget {
                       border: Border.all(color: Colors.white, width: 3),
                     ),
                     child: ClipOval(
-                      child: profile.profile.isNotEmpty
+                      child: widget.profile.profile.isNotEmpty
                           ? Image.network(
-                              profile.profile,
+                              widget.profile.profile,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => const Icon(
                                 Icons.store_outlined,
@@ -99,7 +167,11 @@ class ProfileDetailsPage extends StatelessWidget {
                                 color: _green,
                               ),
                             )
-                          : const Icon(Icons.store_outlined, size: 32, color: _green),
+                          : const Icon(
+                              Icons.store_outlined,
+                              size: 32,
+                              color: _green,
+                            ),
                     ),
                   ),
                   Column(
@@ -107,7 +179,7 @@ class ProfileDetailsPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        profile.name,
+                        widget.profile.name,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -116,31 +188,44 @@ class ProfileDetailsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Row(
-                        children: const [
-                          Icon(Icons.location_on_outlined, size: 14, color: Color.fromARGB(255, 255, 255, 255)),
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 14,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
                           SizedBox(width: 4),
                           Text(
-                            'Malanje, Angola',
-                            style: TextStyle(fontSize: 13, color: Color.fromARGB(255, 236, 234, 234)),
+                            '${products.farm.province}, ${products.farm.adress}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color.fromARGB(255, 236, 234, 234),
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 6,
-                        children: ['Frutas', 'Legumes', 'Orgânico'].map((tag) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              tag,
-                              style: const TextStyle(fontSize: 11, color: _green),
+                              products.nif,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: _green,
+                              ),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -176,7 +261,10 @@ class ProfileDetailsPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     elevation: 0,
-                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    textStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -193,7 +281,10 @@ class ProfileDetailsPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     elevation: 0,
-                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    textStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -209,7 +300,9 @@ class ProfileDetailsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          Expanded(child: _statCard('47', 'Produtos')),
+          Expanded(
+            child: _statCard(products.products.length.toString(), 'Produtos'),
+          ),
           const SizedBox(width: 10),
           Expanded(child: _statCard('3 anos', 'Na plataforma')),
         ],
@@ -236,10 +329,7 @@ class ProfileDetailsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       ),
     );
@@ -259,7 +349,11 @@ class ProfileDetailsPage extends StatelessWidget {
         children: [
           const Text(
             'Sobre',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1A1A1A),
+            ),
           ),
           const SizedBox(height: 8),
           const Text(
@@ -283,26 +377,31 @@ class ProfileDetailsPage extends StatelessWidget {
             children: [
               const Text(
                 'Produtos em destaque',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1A1A1A),
+                ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 10),
-        //TODO: chamar aqui o componente que traz os cards dos produtos
 
-        // GridView.builder(
-        //   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        //     crossAxisCount: 2,
-        //     crossAxisSpacing: 12,
-        //     mainAxisSpacing: 12,
-        //     childAspectRatio: 0.80,
-        //   ),
-        //   itemCount: _filteredProducts.length,
-        //   itemBuilder: (context, index) =>
-        //       ProductCard(product: _filteredProducts[index], adress: widget.adress,),
-        // );
+        /*GridView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.80,
+          ),
+          itemCount: farms.length,
+          itemBuilder: (context, index) => ProductCard(
+            product: farms[index],
+            adress: widget.adress,
+          ),
+        ),*/
       ],
     );
   }

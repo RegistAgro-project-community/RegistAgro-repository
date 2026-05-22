@@ -125,8 +125,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     width: MediaQuery.of(context).size.width * .9,
                     animation: AnimationType.fromTop,
                   ).show(context);
-                }
-                else if (cartCount < 5) {
+                } else if (cartCount < 5) {
                   ElegantNotification.info(
                     title: const Text(
                       "Aviso!",
@@ -145,8 +144,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     width: MediaQuery.of(context).size.width * .9,
                     animation: AnimationType.fromTop,
                   ).show(context);
-                }
-                 else {
+                } else {
                   final double farmValue = _farmValue(
                     widget.data.price!,
                     cartCount,
@@ -475,7 +473,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 0,
-                            foregroundColor: const Color.fromARGB(255,11,121,35,),
+                            foregroundColor: const Color.fromARGB(
+                              255,
+                              11,
+                              121,
+                              35,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             side: BorderSide.none,
                             shape: const RoundedRectangleBorder(
@@ -488,7 +491,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ProfileDetailsPage(profile: farm!),
+                                builder: (_) => ProfileDetailsPage(
+                                  profile: farm!,
+                                  adress: widget.adress,
+                                ),
                               ),
                             );
                           },
@@ -501,8 +507,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   radius: 22,
                                   backgroundColor: Color(0xFFF5F5F5),
                                   backgroundImage: farm?.profile != null
-                                      ? NetworkImage(farm!.profile) as ImageProvider
-                                      : const AssetImage("assets/images/icone.png"),
+                                      ? NetworkImage(farm!.profile)
+                                            as ImageProvider
+                                      : const AssetImage(
+                                          "assets/images/icone.png",
+                                        ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

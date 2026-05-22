@@ -98,7 +98,7 @@ class _OrderCardState extends State<OrderCard> {
           ),
           ElevatedButton(
             onPressed: () async {
-              /*final order = OrdersRepositories();
+              final order = OrdersRepositories();
               try {
                 final List<OrderProof> proof = await order.confirmOrder(
                   context,
@@ -114,7 +114,7 @@ class _OrderCardState extends State<OrderCard> {
                   backgroundColor: Colors.amber,
                   icon: Icons.error_outline,
                 );
-              }*/
+              }
               //Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),

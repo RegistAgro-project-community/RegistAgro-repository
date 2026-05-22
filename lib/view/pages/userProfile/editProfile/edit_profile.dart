@@ -164,7 +164,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameCtrl.text = widget.user.name;
     _provinceCtrl.text = widget.user.province;
     _adressCtrl.text = widget.user.adress;
-    _bioCtrl.text = widget.user.bio;
+    _bioCtrl.text = widget.user.bio ?? "";
     setState(() => _isEditing = false);
   }
 

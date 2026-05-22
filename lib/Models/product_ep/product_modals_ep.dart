@@ -18,6 +18,24 @@ class DataKeys {
   }
 }
 
+class FarmPorducts {
+  final ProfileModel farm;
+  final List<Product> products;
+  final String nif;
+
+  FarmPorducts({required this.farm, required this.products, required this.nif});
+
+  factory FarmPorducts.fromJson(Map<String, dynamic> json) {
+    return FarmPorducts(
+      farm: ProfileModel.fromJson((json['farm'] as Map<String, dynamic>?) ?? {}),
+      products: (json['products'] as List<dynamic>? ?? [])
+          .map((p) => Product.fromJson(p as Map<String, dynamic>))
+          .toList(),
+      nif: json['nif'] as String,
+    );
+  }
+}
+
 class Product {
   final String id;
   final String name;
@@ -41,7 +59,7 @@ class Product {
     this.transport,
     this.photo,
     this.farm,
-  });
+  }); 
 
   factory Product.fromJson(Map<String, dynamic> json, {ProfileModel? farm}) {
     return Product(

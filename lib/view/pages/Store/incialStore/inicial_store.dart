@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/view/pages/main_page/home_screen/productCard_ep/product_card.dart';
-import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class InicialStore extends StatefulWidget {
   final String title;
-  final List products;
+  final List<Product> products;
   final String adress;
 
-  const InicialStore({super.key, required this.title, required this.products, required this.adress});
+  const InicialStore({
+    super.key,
+    required this.title,
+    required this.products,
+    required this.adress,
+  });
 
   @override
   State<InicialStore> createState() => _InicialStoreState();
@@ -16,7 +20,7 @@ class InicialStore extends StatefulWidget {
 
 class _InicialStoreState extends State<InicialStore> {
   final TextEditingController _searchController = TextEditingController();
-  late List _filteredProducts;
+  late List<Product> _filteredProducts;
   String _sortOption = 'default';
   bool _isGrid = true;
 
@@ -43,12 +47,19 @@ class _InicialStoreState extends State<InicialStore> {
     _searchController.addListener(_filterAndSort);
   }
 
+  num _priceValue(Product product) {
+    final price = num.parse(product.price!.split("Kz/kg")[0]);
+    return price;
+    //if (price is String) return num.tryParse(price) ?? 0;
+    //return 0;
+  }
+
   void _filterAndSort() {
     final query = _searchController.text.toLowerCase().trim();
-    List result = widget.products.where((p) {
+    List<Product> result = widget.products.where((p) {
       if (query.isEmpty) return true;
       return p.name.toLowerCase().contains(query) ||
-          (p.category?.toLowerCase().contains(query) ?? false);
+          (p.type?.toLowerCase().contains(query) ?? false);
     }).toList();
 
     switch (_sortOption) {
@@ -59,10 +70,10 @@ class _InicialStoreState extends State<InicialStore> {
         result.sort((a, b) => b.name.compareTo(a.name));
         break;
       case 'price_asc':
-        result.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
+        result.sort((a, b) => _priceValue(a).compareTo(_priceValue(b)));
         break;
       case 'price_desc':
-        result.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
+        result.sort((a, b) => _priceValue(b).compareTo(_priceValue(a)));
         break;
     }
 
@@ -228,8 +239,10 @@ class _InicialStoreState extends State<InicialStore> {
         childAspectRatio: 0.80,
       ),
       itemCount: _filteredProducts.length,
-      itemBuilder: (context, index) =>
-          ProductCard(product: _filteredProducts[index], adress: widget.adress,),
+      itemBuilder: (context, index) => ProductCard(
+        product: _filteredProducts[index],
+        adress: widget.adress
+      ),
     );
   }
 
@@ -260,7 +273,7 @@ class _InicialStoreState extends State<InicialStore> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  product.image ?? 'assets/images/placeholder.png',
+                  product.photo ?? 'assets/images/placeholder.png',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -278,9 +291,9 @@ class _InicialStoreState extends State<InicialStore> {
                         fontSize: 15,
                       ),
                     ),
-                    if (product.category != null)
+                    if (product.type != null)
                       Text(
-                        product.category!,
+                        product.type!,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey.shade400,
