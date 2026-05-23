@@ -7,12 +7,14 @@ import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsRepositories {
-  Future<List<DataKeys>> getProducts(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
+  Future<List<DataKeys>> getProducts(BuildContext context, {bool showLoading = true}) async {
+    if(showLoading){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
+    }
 
     try {
       final tokenMap = await TokenStorage().readToken();
@@ -35,7 +37,10 @@ class ProductsRepositories {
         'https://api-registagro.onrender.com/products/consumers/get/products',
       );
 
-      Navigator.of(context, rootNavigator: true).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+
 
       final json = response.data as Map<String, dynamic>? ?? {};
       final List<dynamic> items = json['data'] as List<dynamic>? ?? [];
@@ -44,7 +49,9 @@ class ProductsRepositories {
           .map((item) => DataKeys.fromJson(item as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      Navigator.of(context, rootNavigator: true).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context, rootNavigator: true).pop();
+      }
 
       String message = "Erro ao carregar produtos";
 
@@ -73,7 +80,9 @@ class ProductsRepositories {
 
       throw Exception(message);
     } catch (e) {
-      Navigator.of(context, rootNavigator: true).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context, rootNavigator: true).pop();
+      }
 
       ProductsRepositories().handleAuthError(
         context,

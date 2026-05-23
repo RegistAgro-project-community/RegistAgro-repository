@@ -56,7 +56,7 @@ class OrderProduct {
   factory OrderProduct.fromJson(Map<String, dynamic> json) {
     return OrderProduct(
       name: json['name'],
-      photo: json['name'],
+      photo: json['photo'],
       type: json['type'],
     );
   }

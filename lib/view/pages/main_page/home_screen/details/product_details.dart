@@ -14,7 +14,7 @@ class ProductDetailsPage extends StatefulWidget {
     super.key,
     required this.data,
     required this.adress,
-    required this.farmProducts
+    required this.farmProducts,
   });
 
   @override
@@ -24,12 +24,15 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool showMore = false;
   int cartCount = 0;
+  String unit = 'kg';
+  final List<String> units = ['kg', 'ton'];
 
-  _farmValue(String price, int qtd) {
+  _farmValue(String price, int qtd, String unit) {
     final String getPrice = price.split("Kz/kg")[0].trim();
     final double? value = double.tryParse(getPrice);
+    final int qtdConverted = unit == "ton" ? qtd * 1000 : qtd;
 
-    final double total = value! * qtd;
+    final double total = value! * qtdConverted;
 
     return total;
   }
@@ -98,6 +101,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
           ),
           const SizedBox(width: 12),
+          DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: unit,
+              isDense: true,
+              icon: const Icon(Icons.arrow_drop_down, size: 18),
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+              items: units
+                  .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+                  .toList(),
+              onChanged: (v) => setState(() => unit = v!),
+            ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -127,8 +147,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     width: MediaQuery.of(context).size.width * .9,
                     animation: AnimationType.fromTop,
                   ).show(context);
-                } else if (cartCount < 5) {
-                  ElegantNotification.info(
+                } else if (cartCount < 10 && unit == "kg") {
+                  ElegantNotification.error(
                     title: const Text(
                       "Aviso!",
                       style: TextStyle(
@@ -138,7 +158,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ),
                     ),
                     description: const Text(
-                      "Não é permitido fazer compras abaixo de 5kg",
+                      "Não é permitido fazer compras abaixo de 10kg",
                       style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
                     ),
                     icon: Icon(Icons.info),
@@ -150,6 +170,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   final double farmValue = _farmValue(
                     widget.data.price!,
                     cartCount,
+                    unit
                   );
 
                   final double carrierValue = _carrierValue(farmValue);
@@ -173,6 +194,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         registagroValue: registagroValue,
                         total: total,
                         qtd: cartCount,
+                        unit: unit,
                       ),
                     ),
                   );

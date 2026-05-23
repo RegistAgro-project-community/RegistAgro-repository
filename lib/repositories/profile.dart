@@ -55,16 +55,18 @@ class Profile {
     }
   }
 
-  Future<UserModel> userData(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(
-          color: Colors.white,
-          strokeWidth: 2,           
-        )),
-    );
+  Future<UserModel> userData(BuildContext context, {bool showLoading = true}) async {
+    if(showLoading){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,           
+          )),
+      );
+    }
 
     try {
       final tokenMap = await TokenStorage().readToken();
@@ -91,7 +93,9 @@ class Profile {
         "https://api-registagro.onrender.com/users/profile",
       );
 
-      Navigator.of(context).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context).pop();
+      }
 
       final data = res.data["data"];
 
@@ -105,7 +109,9 @@ class Profile {
         photoPath: data['profile']
       );
     } on DioException catch (e) {
-      Navigator.of(context, rootNavigator: true).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context, rootNavigator: true).pop();
+      }
 
       String message = "Erro ao carregar produtos";
 
@@ -131,7 +137,9 @@ class Profile {
 
       throw Exception(message);
     } catch (e) {
-      Navigator.of(context).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context).pop();
+      }
 
       ProductsRepositories().handleAuthError(
         context,

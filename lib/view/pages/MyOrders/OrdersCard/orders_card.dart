@@ -1,3 +1,5 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
 import 'package:projecto_registagro/repositories/orders.dart';
@@ -100,12 +102,29 @@ class _OrderCardState extends State<OrderCard> {
             onPressed: () async {
               final order = OrdersRepositories();
               try {
-                final List<OrderProof> proof = await order.confirmOrder(
+                final message = await order.confirmOrder(
                   context,
                   widget.order.id,
                 );
 
-                print(proof);
+                ElegantNotification.success(
+                    title: const Text(
+                      "Sucess!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    description: Text(
+                      message,
+                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                    ),
+                    icon: Icon(Icons.gpp_good),
+                    height: 75,
+                    width: MediaQuery.of(context).size.width * .9,
+                    animation: AnimationType.fromTop,
+                  ).show(context);
               } on Exception catch (e) {
                 showTopNotification(
                   context,
@@ -115,7 +134,7 @@ class _OrderCardState extends State<OrderCard> {
                   icon: Icons.error_outline,
                 );
               }
-              //Navigator.pop(ctx);
+              Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/repositories/orders.dart';
@@ -26,6 +28,9 @@ class _MainPageState extends State<MainPage>
   bool isloading = true;
   String? errorMessage;
   String? name;
+
+  Timer? _timer;
+  bool isFirstLoad = true;
 
   UserModel userData = UserModel(
     name: 'Elias Manuell',
@@ -56,9 +61,15 @@ class _MainPageState extends State<MainPage>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadProducts();
-      _loadUserData();
-      _loadOrders();
+      _loadAllData();
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!isFirstLoad) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+            _refreshAllData();
+        });
+      }
     });
 
     tabController = TabController(
@@ -76,13 +87,34 @@ class _MainPageState extends State<MainPage>
     });
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _loadAllData() async {
+    setState(() {
+      isFirstLoad = false;
+    });
+
+    await Future.wait([_loadProducts(), _loadUserData(), _loadOrders()]);
+  }
+
+  Future<void> _refreshAllData() async {
+    print("Renderizou");
+
+    await Future.wait([
+      _loadProducts(showLoading: false),
+      _loadUserData(showLoading: false),
+      _loadOrders(showLoading: false),
+    ]);
+  }
+
+  Future<void> _loadOrders({bool showLoading = true}) async {
     setState(() {
       isloading = true;
     });
 
     try {
-      final data = await OrdersRepositories().getOrders(context);
+      final data = await OrdersRepositories().getOrders(
+        context,
+        showLoading: showLoading,
+      );
 
       setState(() {
         orders = data;
@@ -96,13 +128,13 @@ class _MainPageState extends State<MainPage>
     }
   }
 
-  Future<void> _loadUserData() async {
+  Future<void> _loadUserData({bool showLoading = true}) async {
     setState(() {
       isloading = true;
     });
 
     try {
-      final data = await Profile().userData(context);
+      final data = await Profile().userData(context, showLoading: showLoading);
 
       setState(() {
         name = data.name.split(" ")[0];
@@ -118,7 +150,7 @@ class _MainPageState extends State<MainPage>
     }
   }
 
-  Future<void> _loadProducts() async {
+  Future<void> _loadProducts({bool showLoading = true}) async {
     setState(() {
       isloading = true;
     });
@@ -126,7 +158,10 @@ class _MainPageState extends State<MainPage>
     final productsClass = ProductsRepositories();
 
     try {
-      final fetchedProducts = await productsClass.getProducts(context);
+      final fetchedProducts = await productsClass.getProducts(
+        context,
+        showLoading: showLoading,
+      );
 
       setState(() {
         farms = fetchedProducts;
@@ -159,6 +194,7 @@ class _MainPageState extends State<MainPage>
 
   @override
   void dispose() {
+    _timer?.cancel();
     tabController.dispose();
     super.dispose();
   }

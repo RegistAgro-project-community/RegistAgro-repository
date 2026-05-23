@@ -16,6 +16,7 @@ class CheckoutPage extends StatefulWidget {
   final double registagroValue;
   final double total;
   final int qtd;
+  final String unit;
 
   const CheckoutPage({
     super.key,
@@ -26,6 +27,7 @@ class CheckoutPage extends StatefulWidget {
     required this.registagroValue,
     required this.total,
     required this.qtd,
+    required this.unit
   });
 
   @override
@@ -132,8 +134,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         widget.product.farm!.id,
         widget.product.name,
         widget.qtd,
-        "kg",
-        deliveryAddress
+        widget.unit == "ton" ? "t" : widget.unit,
+        deliveryAddress,
       );
 
       //todo: Copiar referência
@@ -211,12 +213,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, color: Colors.green, size: 70),
-                          SizedBox(height: 12),
-                          Text(
-                            message,
-                            textAlign: TextAlign.center,
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 70,
                           ),
+                          SizedBox(height: 12),
+                          Text(message, textAlign: TextAlign.center),
                         ],
                       ),
                       actions: [
@@ -251,7 +254,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     // ignore: use_build_context_synchronously
                   ).show(context);
                 }
-
               },
               child: const Text("Copiar"),
             ),
@@ -279,7 +281,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         animation: AnimationType.fromTop,
         // ignore: use_build_context_synchronously
       ).show(context);
-
     }
 
     Navigator.pop(context);
@@ -296,7 +297,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       child: Row(
         children: [
           Text(
-            "Total: AOA ${widget.total}",
+            "Total: ${widget.total}AKZ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -421,7 +422,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             SizedBox(height: 6),
                             Text(
-                              "AOA ${widget.farmValue}",
+                              "${widget.farmValue}AKZ",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -457,24 +458,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Divider(),
                     Resumerow(
                       "Frete:",
-                      "AOA ${widget.carrierValue}",
+                      "${widget.carrierValue}AKZ",
                       bold: true,
                     ),
                     Resumerow(
                       "Quantidade total:",
-                      "${widget.qtd}kg",
+                      "${widget.qtd}${widget.unit}",
                       bold: true,
                     ),
                     SizedBox(height: 10),
                     Resumerow(
                       "RegistAgro:",
-                      "AOA ${widget.registagroValue}",
+                      "${widget.registagroValue}AKZ",
                       bold: true,
                     ),
                     SizedBox(height: 10),
                     Resumerow(
                       "Total da compra:",
-                      "AOA ${widget.total}",
+                      "${widget.total}AKZ",
                       bold: true,
                     ),
                   ],

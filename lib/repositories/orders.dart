@@ -6,14 +6,16 @@ import 'package:projecto_registagro/repositories/storage.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 
 class OrdersRepositories {
-  Future<List<Order>> getOrders(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-      ),
-    );
+  Future<List<Order>> getOrders(BuildContext context, {bool showLoading = true}) async {
+    if(showLoading){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(
+          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+        ),
+      );
+    }
 
     try {
       final tokenMap = await TokenStorage().readToken();
@@ -40,7 +42,9 @@ class OrdersRepositories {
         'https://api-registagro.onrender.com/orders/consumers/order/sent',
       );
 
-      Navigator.of(context).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context).pop();
+      }
 
       final json = response.data as Map<String, dynamic>? ?? {};
       final List<dynamic> orders = json['orders'] as List<dynamic>;
@@ -49,7 +53,9 @@ class OrdersRepositories {
           .map((key) => Order.fromJson(key as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      Navigator.of(context).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context).pop();
+      }
 
       String message = "";
 
@@ -77,7 +83,9 @@ class OrdersRepositories {
 
       throw Exception(message);
     } catch (e) {
-      Navigator.of(context).pop();
+      if(showLoading && context.mounted){
+        Navigator.of(context).pop();
+      }
 
       ProductsRepositories().handleAuthError(
         context,
@@ -88,10 +96,7 @@ class OrdersRepositories {
     }
   }
 
-  Future<List<OrderProof>> confirmOrder(
-    BuildContext context,
-    String orderId,
-  ) async {
+  Future<String> confirmOrder(BuildContext context, String orderId) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -128,18 +133,15 @@ class OrdersRepositories {
       Navigator.of(context).pop();
 
       final json = res.data as Map<String, dynamic>? ?? {};
-      final List<dynamic> proof = json['proof'] as List<dynamic>;
+      final String message = json["message"] as String;
 
-      return proof
-          .map((key) => OrderProof.fromJson(key as Map<String, dynamic>))
-          .toList();
+      return message;
     } on DioException catch (e) {
       Navigator.of(context).pop();
 
       String message = "";
 
-      if (e.response?.statusCode == 401 ||
-          e.response?.statusCode == 403) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         message = e.response?.data["error"] ?? "Sessão expirada";
 
         ProductsRepositories().handleAuthError(context, message);
