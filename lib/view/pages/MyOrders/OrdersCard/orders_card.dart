@@ -48,7 +48,7 @@ class _OrderCardState extends State<OrderCard> {
       case "pendent":
         return "O pedido precisa da confirmação \nde ${widget.order.farm.name}.";
       case "delivered":
-        return "O pedido foi entregue \npor ${widget.order.farm.name}";
+        return "O pedido foi entregue. \nObrigado por escolher o RegistAgro";
       case "confirmed":
         return "O seu pedido foi confirmado";
       case "canceled":

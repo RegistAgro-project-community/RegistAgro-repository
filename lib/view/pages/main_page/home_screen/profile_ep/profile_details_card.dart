@@ -12,7 +12,7 @@ class ProfileDetailsPage extends StatefulWidget {
     super.key,
     required this.profile,
     required this.adress,
-    required this.farmProducts
+    required this.farmProducts,
   });
 
   @override
@@ -244,6 +244,8 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
   }
 
   Widget _buildStatsRow() {
+    final String created_at = widget.profile.created_at!.split("T")[0];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -252,7 +254,12 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
             child: _statCard(widget.farmProducts.length.toString(), 'Produtos'),
           ),
           const SizedBox(width: 10),
-          Expanded(child: _statCard('3 anos', 'Na plataforma')),
+          Expanded(
+            child: _statCard(
+              created_at,
+              'Na plataforma desde',
+            ),
+          ),
         ],
       ),
     );
@@ -348,8 +355,11 @@ class _ProfileDetailsPage extends State<ProfileDetailsPage> {
             ),
             itemCount: widget.farmProducts.length,
             itemBuilder: (context, index) {
-
-              return ProductCard(product: widget.farmProducts[index], adress: widget.adress,farmProducts: widget.farmProducts,);
+              return ProductCard(
+                product: widget.farmProducts[index],
+                adress: widget.adress,
+                farmProducts: widget.farmProducts,
+              );
             },
           ),
         ),
