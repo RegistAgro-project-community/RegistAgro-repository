@@ -7,7 +7,7 @@ import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:projecto_registagro/view/auth/signUp/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:projecto_registagro/components/google_maps/location_provider.dart'; // ← SourceLocationProvider
+import 'package:projecto_registagro/components/google_maps/location_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
