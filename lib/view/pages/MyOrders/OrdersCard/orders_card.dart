@@ -108,23 +108,23 @@ class _OrderCardState extends State<OrderCard> {
                 );
 
                 ElegantNotification.success(
-                    title: const Text(
-                      "Sucess!",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                      ),
+                  title: const Text(
+                    "Sucess!",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
                     ),
-                    description: Text(
-                      message,
-                      style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
-                    ),
-                    icon: Icon(Icons.gpp_good),
-                    height: 75,
-                    width: MediaQuery.of(context).size.width * .9,
-                    animation: AnimationType.fromTop,
-                  ).show(context);
+                  ),
+                  description: Text(
+                    message,
+                    style: TextStyle(fontFamily: 'Inter', color: Colors.grey),
+                  ),
+                  icon: Icon(Icons.gpp_good),
+                  height: 75,
+                  width: MediaQuery.of(context).size.width * .9,
+                  animation: AnimationType.fromTop,
+                ).show(context);
               } on Exception catch (e) {
                 showTopNotification(
                   context,
@@ -244,7 +244,7 @@ class _OrderCardState extends State<OrderCard> {
             children: [
               TextButton(
                 onPressed: () {
-                  if (isOngoing || isIncollection || isDelivered) {
+                  if (isOngoing || isIncollection) {
                     showTrackingBottomSheet(context, widget.order);
                   } else {
                     showDetailsBottomSheet(context, widget.order);
@@ -264,7 +264,7 @@ class _OrderCardState extends State<OrderCard> {
                 ),
               ),
 
-              if (isDelivered) ...[
+              if (isDelivered && widget.order.payment_status != "released") ...[
                 const SizedBox(width: 16),
                 TextButton(
                   onPressed: _confirmDelivery,

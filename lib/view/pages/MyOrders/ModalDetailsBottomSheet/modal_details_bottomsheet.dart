@@ -13,6 +13,8 @@ String setDescription(Order order) {
       return "Este pedido foi rejeitado.";
     case "ongoing":
       return "O pedido está em andamento";
+    case "delivered":
+      return "O seu pedido foi entregue";
     default:
       return "Caregando...";
   }

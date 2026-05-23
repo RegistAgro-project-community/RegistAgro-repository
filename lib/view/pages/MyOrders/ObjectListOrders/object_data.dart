@@ -7,6 +7,7 @@ class Order {
   final String total;
   final String status;
   final String created_at;
+  final String payment_status;
 
   Order({
     required this.id,
@@ -17,6 +18,7 @@ class Order {
     required this.total,
     required this.status,
     required this.created_at,
+    required this.payment_status
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class Order {
       total: json['total'],
       status: json['status'],
       created_at: json['created_at'],
+      payment_status: json["payment_status"]
     );
   }
 }
@@ -76,7 +79,7 @@ class OrderProof {
     required this.transportValue,
     required this.registagroValue,
     required this.total,
-    this.message
+    this.message,
   });
 
   factory OrderProof.fromJson(Map<String, dynamic> json) {

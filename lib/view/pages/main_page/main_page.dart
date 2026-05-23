@@ -96,6 +96,7 @@ class _MainPageState extends State<MainPage>
   }
 
   Future<void> _refreshAllData() async {
+    // ignore: avoid_print
     print("Renderizou");
 
     await Future.wait([
