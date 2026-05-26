@@ -87,13 +87,6 @@ class _MainPageState extends State<MainPage>
     });
   }
 
-  Future<void> _loadAllData() async {
-    setState(() {
-      isFirstLoad = false;
-    });
-
-    await Future.wait([_loadProducts(), _loadUserData(), _loadOrders()]);
-  }
 
   Future<void> _refreshAllData() async {
     // ignore: avoid_print
@@ -106,7 +99,14 @@ class _MainPageState extends State<MainPage>
     ]);
   }
 
+  Future<void> _loadAllData() async {
+    setState(() {
+      isFirstLoad = false;
+    });
+    await Future.wait([_loadProducts(), _loadUserData(), _loadOrders()]);
+  }
   Future<void> _loadOrders({bool showLoading = true}) async {
+     if (!mounted) return;
     setState(() {
       isloading = true;
     });
@@ -116,13 +116,14 @@ class _MainPageState extends State<MainPage>
         context,
         showLoading: showLoading,
       );
-
+      if (!mounted) return;
       setState(() {
         orders = data;
         errorMessage = null;
         isloading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         errorMessage = e.toString();
       });
@@ -130,13 +131,14 @@ class _MainPageState extends State<MainPage>
   }
 
   Future<void> _loadUserData({bool showLoading = true}) async {
+    if (!mounted) return;
     setState(() {
       isloading = true;
     });
 
-    try {
+    try { 
       final data = await Profile().userData(context, showLoading: showLoading);
-
+      if (!mounted) return;
       setState(() {
         name = data.name.split(" ")[0];
         userData = data;
@@ -145,6 +147,7 @@ class _MainPageState extends State<MainPage>
         isloading = false;
       });
     } on Exception catch (e) {
+      if (!mounted) return;
       setState(() {
         errorMessage = e.toString();
       });
@@ -152,6 +155,7 @@ class _MainPageState extends State<MainPage>
   }
 
   Future<void> _loadProducts({bool showLoading = true}) async {
+    if (!mounted) return;
     setState(() {
       isloading = true;
     });
@@ -163,7 +167,7 @@ class _MainPageState extends State<MainPage>
         context,
         showLoading: showLoading,
       );
-
+      if (!mounted) return;
       setState(() {
         farms = fetchedProducts;
 
@@ -178,6 +182,7 @@ class _MainPageState extends State<MainPage>
       });
     } catch (e) {
       if (mounted) {
+        if (!mounted) return;
         setState(() {
           errorMessage = e.toString();
           isloading = false;
