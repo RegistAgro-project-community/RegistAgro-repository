@@ -24,9 +24,11 @@ class GeoLocation {
         "https://api-registagro.onrender.com/location/get/coordinates/order/$orderId",
       );
 
-      // Tratamento seguro dos dados
-      final dynamic latData = res.data?["latitude"];
-      final dynamic lngData = res.data?["longitude"];
+      final List<dynamic> origin =
+          res.data["origin"] as List<dynamic>? ?? [];
+
+      final dynamic latData = origin[0];
+      final dynamic lngData = origin[1];
 
       if (latData == null || lngData == null) {
         throw Exception("Coordenadas não encontradas");
@@ -41,14 +43,14 @@ class GeoLocation {
     } on DioException catch (e) {
       String message = "Não foi possível obter a localização";
 
-      if (e.response?.statusCode == 401 || 
-          e.response?.statusCode == 403) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         message = e.response?.data?['error'] ?? 'Sessão expirada';
       } else {
-        message = e.response?.data?['error'] ?? 
-                  e.response?.data?['info'] ?? 
-                  e.message ?? 
-                  message;
+        message =
+            e.response?.data?['error'] ??
+            e.response?.data?['info'] ??
+            e.message ??
+            message;
       }
 
       throw Exception(message);
@@ -60,8 +62,8 @@ class GeoLocation {
   double _parseCoordinate(dynamic value) {
     if (value is num) return value.toDouble();
     if (value is String) {
-      return double.tryParse(value) ?? 
-             (throw Exception("Coordenada inválida: $value"));
+      return double.tryParse(value) ??
+          (throw Exception("Coordenada inválida: $value"));
     }
     throw Exception("Tipo de coordenada inválido: ${value.runtimeType}");
   }
