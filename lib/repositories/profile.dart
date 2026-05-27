@@ -126,13 +126,16 @@ class Profile {
             e.message ??
             message;
 
-        showTopNotification(
-          context,
-          title: "Error",
-          description: message,
-          backgroundColor: Colors.red.shade700,
-          icon: Icons.error_outline,
-        );
+        e.response?.data["error"] != null || e.response?.data["info"] != null
+            ? showTopNotification(
+                context,
+                title: "Error",
+                description: message,
+                backgroundColor: Colors.red.shade700,
+                icon: Icons.error_outline,
+              )
+            : print(message);
+        rethrow;
       }
 
       throw Exception(message);

@@ -72,13 +72,16 @@ class OrdersRepositories {
       } else {
         message = e.response?.data["error"] ?? "Ocorreu um erro inesperado";
 
-        showTopNotification(
-          context,
-          title: "Error",
-          description: message,
-          backgroundColor: Colors.red.shade700,
-          icon: Icons.error_outline,
-        );
+        e.response?.data["error"] != null || e.response?.data["info"] != null
+            ? showTopNotification(
+                context,
+                title: "Error",
+                description: message,
+                backgroundColor: Colors.red.shade700,
+                icon: Icons.error_outline,
+              )
+            : print(message);
+        rethrow;
       }
 
       throw Exception(message);

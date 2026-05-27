@@ -7,8 +7,11 @@ import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsRepositories {
-  Future<List<DataKeys>> getProducts(BuildContext context, {bool showLoading = true}) async {
-    if(showLoading){
+  Future<List<DataKeys>> getProducts(
+    BuildContext context, {
+    bool showLoading = true,
+  }) async {
+    if (showLoading) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -37,10 +40,9 @@ class ProductsRepositories {
         'https://api-registagro.onrender.com/products/consumers/get/products',
       );
 
-      if(showLoading && context.mounted){
+      if (showLoading && context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
-
 
       final json = response.data as Map<String, dynamic>? ?? {};
       final List<dynamic> items = json['data'] as List<dynamic>? ?? [];
@@ -49,7 +51,7 @@ class ProductsRepositories {
           .map((item) => DataKeys.fromJson(item as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      if(showLoading && context.mounted){
+      if (showLoading && context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
 
@@ -69,18 +71,21 @@ class ProductsRepositories {
             e.message ??
             message;
 
-        showTopNotification(
-          context,
-          title: "Error",
-          description: message,
-          backgroundColor: Colors.red.shade700,
-          icon: Icons.error_outline,
-        );
+        e.response?.data["error"] != null || e.response?.data["info"] != null
+            ? showTopNotification(
+                context,
+                title: "Error",
+                description: message,
+                backgroundColor: Colors.red.shade700,
+                icon: Icons.error_outline,
+              )
+            : print(message);
+        rethrow;
       }
 
       throw Exception(message);
     } catch (e) {
-      if(showLoading && context.mounted){
+      if (showLoading && context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
 
