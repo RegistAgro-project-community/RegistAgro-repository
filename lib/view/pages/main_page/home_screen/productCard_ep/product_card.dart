@@ -169,7 +169,7 @@ class _ProductCardState extends State<ProductCard>
                       ),
                       Text(
                         product.description ?? "",
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Color(0xFF8E8E9E),

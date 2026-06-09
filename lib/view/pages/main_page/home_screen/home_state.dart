@@ -26,7 +26,7 @@ class _HomeStateState extends State<HomeState> {
   List<Product> products = [];
   List<DataKeys> farms = [];
   bool isloading = true;
-  String? errorMessage;
+  String? errorMessage = "Buscando por produtos no RegistAgro...";
   String? name;
 
   final TextEditingController _searchController = TextEditingController();
@@ -38,7 +38,7 @@ class _HomeStateState extends State<HomeState> {
     super.initState();
 
     name = widget.name?.split(" ")[0];
-    _filteredProducts = products;
+    _filteredProducts = widget.products;
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -236,7 +236,7 @@ class _HomeStateState extends State<HomeState> {
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      child: errorMessage != null
+      child: errorMessage != null && widget.products.isEmpty
           ? _buildErrorWidget()
           : _isSearching
           ? _buildSearchResults()

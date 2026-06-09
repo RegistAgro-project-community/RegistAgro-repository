@@ -24,8 +24,7 @@ class GeoLocation {
         "https://api-registagro.onrender.com/location/get/coordinates/order/$orderId",
       );
 
-      final List<dynamic> origin =
-          res.data["origin"] as List<dynamic>? ?? [];
+      final List<dynamic> origin = res.data["origin"] as List<dynamic>? ?? [];
 
       final dynamic latData = origin[0];
       final dynamic lngData = origin[1];
@@ -38,6 +37,7 @@ class GeoLocation {
       final double longitude = _parseCoordinate(lngData);
 
       final List<double> coordinates = [latitude, longitude];
+      print(coordinates);
 
       return coordinates;
     } on DioException catch (e) {
