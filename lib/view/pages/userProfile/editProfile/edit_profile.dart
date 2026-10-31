@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/repositories/products.dart';
+import 'package:projecto_registagro/config/api_config.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
+import 'package:projecto_registagro/repositories/products.dart';
+import 'package:projecto_registagro/utils/logger.dart';
+import 'package:projecto_registagro/utils/safe_notification.dart';
 import 'package:projecto_registagro/view/pages/userProfile/userModal/user_modal.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -41,124 +44,132 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _saveChanges() async {
-    if (_nameCtrl.text.trim().isEmpty ||
-        _provinceCtrl.text.trim().isEmpty ||
-        _adressCtrl.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Todos os campos são obrigatórios.'),
-          backgroundColor: Colors.red[400],
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+      if (_nameCtrl.text.trim().isEmpty ||
+          _provinceCtrl.text.trim().isEmpty ||
+          _adressCtrl.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Todos os campos são obrigatórios.'),
+            backgroundColor: Colors.red[400],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        ),
-      );
-      return;
-    }
-
-    final updated = widget.user.copyWith(
-      name: _nameCtrl.text.trim(),
-      province: _provinceCtrl.text.trim(),
-      adress: _adressCtrl.text.trim(),
-    );
-
-    setState(() => _isEditing = false);
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      final tokenMap = await TokenStorage().readToken();
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        ProductsRepositories().handleAuthError(
-          context,
-          tokenMap["error"] ?? "Faça Login novamente",
         );
-
-        throw Exception("Não autenticado");
+        return;
       }
 
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': "Bearer ${tokenMap['token']}",
-          },
-        ),
+      final updated = widget.user.copyWith(
+        name: _nameCtrl.text.trim(),
+        province: _provinceCtrl.text.trim(),
+        adress: _adressCtrl.text.trim(),
       );
 
-      final response = await dio.put(
-        "https://api-registagro.onrender.com/users/update",
-        data: {
-          "name": updated.name,
-          "province": updated.province,
-          "adress": updated.adress,
-        },
+      setState(() => _isEditing = false);
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
       );
 
-      Navigator.of(context).pop();
-
-      String message = response.data['message'];
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white, size: 20),
-              SizedBox(width: 10),
-              Text(message),
-            ],
-          ),
-          backgroundColor: const Color.fromARGB(255, 11, 121, 35),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
-
-      Navigator.pop(context, updated);
-    } on DioException catch (e) {
-      Navigator.of(context).pop();
-
-      String message = "";
-
-      switch (e.response?.statusCode) {
-        case 401 || 403 || 500:
-          message = e.response?.data["error"] ?? "Sessão expirada";
-
-          ProductsRepositories().handleAuthError(context, message);
-          break;
-        default:
-          showTopNotification(
+      try {
+        final tokenMap = await TokenStorage().readToken();
+        if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
+          ProductsRepositories().handleAuthError(
             context,
-            title: "Error",
+            tokenMap["error"] ?? "Faça Login novamente",
+          );
+
+          throw Exception("Não autenticado");
+        }
+
+        final dio = DioClient().dio;
+
+        final response = await dio.put(
+          ApiConfig.userProfile,
+          data: {
+            "name": updated.name,
+            "province": updated.province,
+            "adress": updated.adress,
+          },
+        );
+
+        Navigator.of(context).pop();
+
+        String message = response.data['message'] ?? 'Perfil atualizado com sucesso';
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white, size: 20),
+                SizedBox(width: 10),
+                Text(message),
+              ],
+            ),
+            backgroundColor: const Color.fromARGB(255, 11, 121, 35),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+
+        Navigator.pop(context, updated);
+      } on DioException catch (e) {
+        Navigator.of(context).pop();
+        AppLogger.dioError('Erro ao atualizar perfil', error: e);
+
+        String message = _getErrorMessage(e);
+
+        if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+          ProductsRepositories().handleAuthError(context, message);
+        } else {
+          showSafeNotification(
+            context,
+            title: 'Erro',
             description: message,
             backgroundColor: Colors.red.shade700,
             icon: Icons.error_outline,
           );
-          break;
+        }
+
+        throw Exception(message);
+      } catch (e, stackTrace) {
+        Navigator.of(context).pop();
+        AppLogger.error('Erro inesperado ao atualizar perfil', error: e, stackTrace: stackTrace);
+
+        showSafeNotification(
+          context,
+          title: 'Erro',
+          description: 'Ocorreu um erro inesperado',
+          backgroundColor: Colors.amber,
+          icon: Icons.error_outline,
+        );
+
+        rethrow;
       }
-
-      throw Exception(message);
-    } catch (e) {
-      Navigator.of(context).pop();
-
-      showTopNotification(
-        context,
-        title: "Error",
-        description: "Ocorreu um erro inesperado",
-        backgroundColor: Colors.amber,
-        icon: Icons.error_outline,
-      );
-
-      rethrow;
     }
-  }
+
+    String _getErrorMessage(DioException e) {
+      final statusCode = e.response?.statusCode;
+
+      if (statusCode == 401) return 'Sessão expirada. Faça login novamente';
+      if (statusCode == 403) return 'Acesso negado';
+      if (statusCode == 404) return e.response?.data?['info'] ?? 'Não encontrado';
+      if (statusCode == 429) return 'Muitas tentativas. Tente novamente mais tarde';
+      if (statusCode == 500) return 'Erro no servidor. Tente novamente mais tarde';
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        return 'Tempo de conexão esgotado. Verifique sua internet';
+      }
+      if (e.type == DioExceptionType.connectionError) {
+        return 'Erro de conexão. Verifique sua internet';
+      }
+      return 'Ocorreu um erro inesperado';
+    }
 
   void _cancelEditing() {
     _nameCtrl.text = widget.user.name;

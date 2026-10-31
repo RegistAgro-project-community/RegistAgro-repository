@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
-    as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:projecto_registagro/components/google_maps/location_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,60 +20,33 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   String? distanceText;
 
   gmaps.LatLng? _userLatLng;
-  gmaps.LatLng _pickupLatLng = const gmaps.LatLng(37.0, 122.0);
-  static const gmaps.LatLng _defaultLatLng = gmaps.LatLng(37.0, 122.0);
+    gmaps.LatLng _pickupLatLng = const gmaps.LatLng(37.0, 122.0);
+    static const gmaps.LatLng _defaultLatLng = gmaps.LatLng(37.0, 122.0);
 
-  final String _googleApiKey = 'AIzaSyBr5KqYWjgKnRFLX2P9b0-U8_Ap79KRyIk';
-  late final places.FlutterGooglePlacesSdk _places;
-  Set<gmaps.Polyline> _polylines = {};
-  bool isLoading = false;
-  bool _isConfirming = false;
-
-  late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
-  late AnimationController _slideController;
-  late Animation<Offset> _slideAnimation;
+    Set<gmaps.Polyline> _polylines = {};
+    bool isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
+    void initState() {
+      super.initState();
 
-    _places = places.FlutterGooglePlacesSdk(_googleApiKey);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final loc = context.read<SourceLocationProvider>();
+        await loc.fetchCurrentLocation(widget.orderId);
 
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1400),
-    )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
-    _slideController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-        .animate(
-          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
-        );
+        if (!mounted) return;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final loc = context.read<SourceLocationProvider>();
-      await loc.fetchCurrentLocation(widget.orderId);
-
-      if (!mounted) return;
-
-      if (loc.currentLatLng != null) {
-        setState(() {
-          _userLatLng = loc.currentLatLng;
-          _pickupLatLng = loc.currentLatLng!;
-        });
-        _mapController?.animateCamera(
-          gmaps.CameraUpdate.newLatLngZoom(loc.currentLatLng!, 16),
-        );
-      }
-      _slideController.forward();
-    });
-  }
+        if (loc.currentLatLng != null) {
+          setState(() {
+            _userLatLng = loc.currentLatLng;
+            _pickupLatLng = loc.currentLatLng!;
+          });
+          _mapController?.animateCamera(
+            gmaps.CameraUpdate.newLatLngZoom(loc.currentLatLng!, 16),
+          );
+        }
+      });
+    }
 
   Future<void> _updateRouteIfPossible() async {
     if (_destinationLatLng == null || _pickupLatLng == _defaultLatLng) {
@@ -266,12 +237,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    _pulseController.dispose();
-    _slideController.dispose();
-    _mapController?.dispose();
-    super.dispose();
-  }
+    void dispose() {
+      _mapController?.dispose();
+      super.dispose();
+    }
 }
 
 class _CircleButton extends StatelessWidget {

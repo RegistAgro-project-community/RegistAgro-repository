@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/view/auth/OptScreen/opt_screen_state.dart';
 import 'package:projecto_registagro/view/pages/main_page/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,8 +12,12 @@ import 'package:projecto_registagro/components/google_maps/location_provider.dar
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Inicializar DioClient singleton
+  await DioClient().init();
+  
   final prefs = await SharedPreferences.getInstance();
-  final lastRoute = prefs.getString("last_route") ?? "/";
+  final lastRoute = prefs.getString('last_route') ?? '/';
 
   runApp(MyApp(initialRoute: lastRoute));
 }
@@ -24,7 +29,7 @@ class MyApp extends StatelessWidget {
 
   Future<void> _saveRoute(String route) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString("last_route", route);
+    prefs.setString('last_route', route);
   }
 
   @override
@@ -41,7 +46,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: initialRoute,
             onGenerateRoute: (settings) {
-              _saveRoute(settings.name ?? "/");
+              _saveRoute(settings.name ?? '/');
               return MaterialPageRoute(
                 builder: (context) => _getPage(settings.name),
               );
@@ -54,11 +59,11 @@ class MyApp extends StatelessWidget {
 
   Widget _getPage(String? route) {
     switch (route) {
-      case "/Login":
+      case '/Login':
         return const Login();
-      case "/MainPage":
+      case '/MainPage':
         return const MainPage();
-      case "/Signup":
+      case '/Signup':
         return const Signup();
       case '/otpCode':
         return const OtpScreen();

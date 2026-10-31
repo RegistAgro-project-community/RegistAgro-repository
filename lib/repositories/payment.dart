@@ -1,115 +1,124 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/config/api_config.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/repositories/products.dart';
-import 'package:projecto_registagro/repositories/storage.dart';
+import 'package:projecto_registagro/utils/logger.dart';
+import 'package:projecto_registagro/utils/safe_notification.dart';
 
 class PaymentRepo {
+  final Dio _dio = DioClient().dio;
+
   Future<String> getReference(
     BuildContext context,
     String farmId,
     String product,
     int qtd,
     String unit,
-    String delivery
+    String delivery,
   ) async {
     try {
-      final token = await TokenStorage().readToken();
+      final response = await _dio.post(
+        '${ApiConfig.createOrder}/$farmId',
+        data: {
+          'name': product,
+          'qtd': qtd,
+          'unit': unit,
+          'delivery': delivery.isEmpty ? null : delivery,
+        },
+      );
 
-      if (token.containsKey("error") || token["token"] == null) {
-        final message = token["error"] ?? "Faça login novamente";
+      final String reference = response.data['reference'] as String? ?? '';
 
-        ProductsRepositories().handleAuthError(context, message);
+      if (reference.isEmpty) {
+        throw Exception('Referência não gerada');
       }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': "Bearer ${token['token']}",
-          },
-        ),
-      );
-
-      final response = await dio.post(
-        "https://api-registagro.onrender.com/orders/create/farm/$farmId",
-        data: {"name": product, "qtd": qtd, "unit": unit, "delivery": delivery == "" ? null : delivery},
-      );
-
-      final String reference = response.data['reference'];
 
       return reference;
     } on DioException catch (e) {
-      String message = "Ocorreu um erro ao gerar referência";
-
-      if (e.response?.statusCode == 401 ||
-          e.response?.statusCode == 403 ||
-          e.response?.statusCode == 500) {
-        message = e.response?.data?['error'] ?? 'Sessão expirada';
-
-        ProductsRepositories().handleAuthError(context, message);
-      } else {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data?['info'] ??
-            e.message ??
-            message;
+      _handleDioError(context, e);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      AppLogger.error('Erro inesperado ao gerar referência', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        showSafeNotification(
+          context,
+          title: 'Erro',
+          description: 'Ocorreu um erro inesperado',
+          backgroundColor: Colors.red.shade700,
+          icon: Icons.error_outline,
+        );
       }
-
-      throw Exception(message);
-    } catch (e) {
-      throw Exception("Ocorreu um erro inesperado");
+      throw Exception('Ocorreu um erro inesperado');
     }
   }
 
   Future<String> pay(BuildContext context, String reference) async {
     try {
-      final tokenMap = await TokenStorage().readToken();
-
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        ProductsRepositories().handleAuthError(
-          context,
-          tokenMap["error"] ?? "Faça login novamente",
-        );
-        throw Exception("Não autenticado");
-      }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': "Bearer ${tokenMap['token']}",
-          },
-        ),
+      final response = await _dio.patch(
+        ApiConfig.paymentConfirm,
+        data: {'reference': reference},
       );
 
-      final response = await dio.patch(
-        "https://api-registagro.onrender.com/orders/payment/confirm",
-        data: {"reference": reference},
-      );
-
-      final String message = response.data["message"];
+      final String message = response.data['message'] as String? ?? 'Pagamento confirmado';
 
       return message;
     } on DioException catch (e) {
-      String message = "Ocorreu um erro ao gerar referência";
-
-      if (e.response?.statusCode == 401 ||
-          e.response?.statusCode == 403 ||
-          e.response?.statusCode == 500) {
-        message = e.response?.data?['error'] ?? 'Sessão expirada';
-
-        ProductsRepositories().handleAuthError(context, message);
-      } else {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data?['info'] ??
-            e.message ??
-            message;
+      _handleDioError(context, e);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      AppLogger.error('Erro inesperado ao confirmar pagamento', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        showSafeNotification(
+          context,
+          title: 'Erro',
+          description: 'Ocorreu um erro inesperado',
+          backgroundColor: Colors.red.shade700,
+          icon: Icons.error_outline,
+        );
       }
-
-      throw Exception(message);
-    } catch (e) {
-      throw Exception("Ocorreu um erro inesperado");
+      throw Exception('Ocorreu um erro inesperado');
     }
+  }
+
+  void _handleDioError(BuildContext context, DioException e) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401 || statusCode == 403) {
+      final message = e.response?.data?['error'] ?? 'Sessão expirada';
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, message);
+      }
+    } else {
+      final message = _getErrorMessage(e);
+      if (context.mounted) {
+        showSafeNotification(
+          context,
+          title: 'Erro',
+          description: message,
+          backgroundColor: Colors.red.shade700,
+          icon: Icons.error_outline,
+        );
+      }
+      AppLogger.dioError('Erro no pagamento', error: e);
+    }
+  }
+
+  String _getErrorMessage(DioException e) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401) return 'Sessão expirada. Faça login novamente';
+    if (statusCode == 403) return 'Acesso negado';
+    if (statusCode == 404) return e.response?.data?['info'] ?? 'Não encontrado';
+    if (statusCode == 429) return 'Muitas tentativas. Tente novamente mais tarde';
+    if (statusCode == 500) return 'Erro no servidor. Tente novamente mais tarde';
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return 'Tempo de conexão esgotado. Verifique sua internet';
+    }
+    if (e.type == DioExceptionType.connectionError) {
+      return 'Erro de conexão. Verifique sua internet';
+    }
+    return 'Ocorreu um erro inesperado';
   }
 }

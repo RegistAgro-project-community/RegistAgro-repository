@@ -1,9 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/config/api_config.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/repositories/storage.dart';
+import 'package:projecto_registagro/utils/logger.dart';
 
 class VerifyAcessToken {
-  isValidToken(BuildContext context) async {
+  Future<bool> isValidToken(BuildContext context) async {
     final tokenClass = TokenStorage();
     final token = await tokenClass.readToken();
 
@@ -11,20 +13,14 @@ class VerifyAcessToken {
       return false;
     }
 
-    final dio = Dio(
-      BaseOptions(
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer ${token['token']}',
-        },
-      ),
-    );
+    final dio = DioClient().dio;
 
     try {
-      await dio.get('https://api-registagro.onrender.com/token');
+      await dio.get(ApiConfig.tokenVerify);
 
       return true;
     } catch (e) {
+      AppLogger.debug('Token validation failed', error: e);
       return false;
     }
   }

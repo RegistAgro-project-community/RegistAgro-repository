@@ -1,13 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
+import 'package:projecto_registagro/config/api_config.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/repositories/products.dart';
-import 'package:projecto_registagro/repositories/storage.dart';
+import 'package:projecto_registagro/utils/logger.dart';
+import 'package:projecto_registagro/utils/safe_notification.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 
 class OrdersRepositories {
+  final Dio _dio = DioClient().dio;
+
   Future<List<Order>> getOrders(BuildContext context, {bool showLoading = true}) async {
-    if(showLoading){
+    if (showLoading) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -18,31 +22,9 @@ class OrdersRepositories {
     }
 
     try {
-      final tokenMap = await TokenStorage().readToken();
+      final response = await _dio.get(ApiConfig.consumerOrders);
 
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        ProductsRepositories().handleAuthError(
-          context,
-          tokenMap['error'] ?? "Faça login novamente",
-        );
-
-        throw Exception("Não autenticado");
-      }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            "Content-Type": "application/json",
-            "authorization": "Bearer ${tokenMap["token"]}",
-          },
-        ),
-      );
-
-      final response = await dio.get(
-        'https://api-registagro.onrender.com/orders/consumers/order/sent',
-      );
-
-      if(showLoading && context.mounted){
+      if (showLoading && context.mounted) {
         Navigator.of(context).pop();
       }
 
@@ -53,48 +35,21 @@ class OrdersRepositories {
           .map((key) => Order.fromJson(key as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      if(showLoading && context.mounted){
+      if (showLoading && context.mounted) {
         Navigator.of(context).pop();
       }
 
-      String message = "";
-
-      if (e.response?.statusCode == 401 ||
-          e.response?.statusCode == 403 ||
-          e.response?.statusCode == 500) {
-        message = e.response?.data["error"] ?? "Sessão expirada";
-
-        ProductsRepositories().handleAuthError(context, message);
-      } else if (e.response?.statusCode == 404) {
-        message = e.response?.data["info"];
-
-        throw Exception(message);
-      } else {
-        message = e.response?.data["error"] ?? "Ocorreu um erro inesperado";
-
-        e.response?.data["error"] != null || e.response?.data["info"] != null
-            ? showTopNotification(
-                context,
-                title: "Error",
-                description: message,
-                backgroundColor: Colors.red.shade700,
-                icon: Icons.error_outline,
-              )
-            : print(message);
-        rethrow;
-      }
-
-      throw Exception(message);
-    } catch (e) {
-      if(showLoading && context.mounted){
+      _handleDioError(context, e, showLoading);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      if (showLoading && context.mounted) {
         Navigator.of(context).pop();
       }
 
-      ProductsRepositories().handleAuthError(
-        context,
-        "Ocorreu um erro inesperado",
-      );
-
+      AppLogger.error('Erro inesperado ao buscar pedidos', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
       rethrow;
     }
   }
@@ -109,71 +64,173 @@ class OrdersRepositories {
     );
 
     try {
-      final tokenMap = await TokenStorage().readToken();
-
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        ProductsRepositories().handleAuthError(
-          context,
-          tokenMap['error'] ?? "Faça login novamente",
-        );
-
-        throw Exception("Não autenticado");
-      }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            "Content-Type": "application/json",
-            "authorization": "Bearer ${tokenMap["token"]}",
-          },
-        ),
-      );
-
-      final res = await dio.put(
-        "https://api-registagro.onrender.com/flow/consumer/complete/order/$orderId",
+      final res = await _dio.put(
+        '${ApiConfig.consumerCompleteOrder}/$orderId',
       );
 
       Navigator.of(context).pop();
 
       final json = res.data as Map<String, dynamic>? ?? {};
-      final String message = json["message"] as String;
+      final String message = json['message'] as String? ?? 'Pedido confirmado';
 
       return message;
     } on DioException catch (e) {
       Navigator.of(context).pop();
+      _handleDioError(context, e, false);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      Navigator.of(context).pop();
+      AppLogger.error('Erro inesperado ao confirmar pedido', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
+      rethrow;
+    }
+  }
 
-      String message = "";
+  Future<String> cancelOrder(BuildContext context, String orderId) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+      ),
+    );
 
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        message = e.response?.data["error"] ?? "Sessão expirada";
+    try {
+      final res = await _dio.patch(
+        '${ApiConfig.cancelOrder}/$orderId',
+      );
 
+      Navigator.of(context).pop();
+
+      final json = res.data as Map<String, dynamic>? ?? {};
+      final String message = json['message'] as String? ?? 'Pedido cancelado';
+
+      return message;
+    } on DioException catch (e) {
+      Navigator.of(context).pop();
+      _handleDioError(context, e, false);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      Navigator.of(context).pop();
+      AppLogger.error('Erro inesperado ao cancelar pedido', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
+      rethrow;
+    }
+  }
+
+  Future<String> updateOrder(BuildContext context, String orderId, Map<String, dynamic> data) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+      ),
+    );
+
+    try {
+      final res = await _dio.put(
+        '${ApiConfig.updateOrder}/$orderId',
+        data: data,
+      );
+
+      Navigator.of(context).pop();
+
+      final json = res.data as Map<String, dynamic>? ?? {};
+      final String message = json['message'] as String? ?? 'Pedido atualizado';
+
+      return message;
+    } on DioException catch (e) {
+      Navigator.of(context).pop();
+      _handleDioError(context, e, false);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      Navigator.of(context).pop();
+      AppLogger.error('Erro inesperado ao atualizar pedido', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
+      rethrow;
+    }
+  }
+
+  Future<String> deleteOrder(BuildContext context, String orderId) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+      ),
+    );
+
+    try {
+      final res = await _dio.delete(
+        '${ApiConfig.deleteOrder}/$orderId',
+      );
+
+      Navigator.of(context).pop();
+
+      final json = res.data as Map<String, dynamic>? ?? {};
+      final String message = json['message'] as String? ?? 'Pedido apagado';
+
+      return message;
+    } on DioException catch (e) {
+      Navigator.of(context).pop();
+      _handleDioError(context, e, false);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
+      Navigator.of(context).pop();
+      AppLogger.error('Erro inesperado ao apagar pedido', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        ProductsRepositories().handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
+      rethrow;
+    }
+  }
+
+  void _handleDioError(BuildContext context, DioException e, bool showLoading) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401 || statusCode == 403) {
+      final message = e.response?.data?['error'] ?? 'Sessão expirada';
+      if (context.mounted) {
         ProductsRepositories().handleAuthError(context, message);
-      } else if (e.response?.statusCode == 404) {
-        message = e.response?.data["info"];
-
-        throw Exception(message);
-      } else {
-        message = e.response?.data["error"] ?? "Ocorreu um erro inesperado";
-
-        showTopNotification(
+      }
+    } else if (statusCode == 404) {
+      // 404 é tratado pelo chamador
+    } else {
+      final message = _getErrorMessage(e);
+      if (context.mounted) {
+        showSafeNotification(
           context,
-          title: "Error",
+          title: 'Erro',
           description: message,
           backgroundColor: Colors.red.shade700,
           icon: Icons.error_outline,
         );
       }
-
-      throw Exception(message);
-    } catch (e) {
-      Navigator.of(context).pop();
-
-      ProductsRepositories().handleAuthError(
-        context,
-        "Ocorreu um erro inesperado",
-      );
-
-      rethrow;
+      AppLogger.dioError('Erro ao buscar pedidos', error: e);
     }
+  }
+
+  String _getErrorMessage(DioException e) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401) return 'Sessão expirada. Faça login novamente';
+    if (statusCode == 403) return 'Acesso negado';
+    if (statusCode == 404) return e.response?.data?['info'] ?? 'Não encontrado';
+    if (statusCode == 429) return 'Muitas tentativas. Tente novamente mais tarde';
+    if (statusCode == 500) return 'Erro no servidor. Tente novamente mais tarde';
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return 'Tempo de conexão esgotado. Verifique sua internet';
+    }
+    if (e.type == DioExceptionType.connectionError) {
+      return 'Erro de conexão. Verifique sua internet';
+    }
+    return 'Ocorreu um erro inesperado';
   }
 }

@@ -5,6 +5,7 @@ import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
 import 'package:projecto_registagro/repositories/orders.dart';
 import 'package:projecto_registagro/repositories/products.dart';
 import 'package:projecto_registagro/repositories/profile.dart';
+//import 'package:projecto_registagro/utils/logger.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/ObjectListOrders/object_data.dart';
 import 'package:projecto_registagro/view/pages/MyOrders/my_orders.dart';
 import 'package:projecto_registagro/view/pages/Store/incialStore/inicial_store.dart';
@@ -64,13 +65,13 @@ class _MainPageState extends State<MainPage>
       _loadAllData();
     });
 
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!isFirstLoad) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-            _refreshAllData();
-        });
-      }
-    });
+    //_timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      //if (!isFirstLoad) {
+      //  WidgetsBinding.instance.addPostFrameCallback((_) {
+      //      _refreshAllData();
+      //  });
+      //}
+    //});
 
     tabController = TabController(
       length: screens.length,
@@ -88,16 +89,16 @@ class _MainPageState extends State<MainPage>
   }
 
 
-  Future<void> _refreshAllData() async {
-    // ignore: avoid_print
-    print("Renderizou");
+  /*Future<void> _refreshAllData() async {
+      // ignore: avoid_print
+      AppLogger.debug("Renderizou");
 
-    await Future.wait([
+      await Future.wait([
       _loadProducts(showLoading: false),
       _loadUserData(showLoading: false),
       _loadOrders(showLoading: false),
     ]);
-  }
+  }*/
 
   Future<void> _loadAllData() async {
     setState(() {

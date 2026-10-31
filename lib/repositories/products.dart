@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:projecto_registagro/config/api_config.dart';
+import 'package:projecto_registagro/config/dio_client.dart';
 import 'package:projecto_registagro/Models/product_ep/product_modals_ep.dart';
-import 'package:projecto_registagro/components/TopNotifications/top_notification.dart';
-import 'package:projecto_registagro/repositories/storage.dart';
+import 'package:projecto_registagro/utils/logger.dart';
+import 'package:projecto_registagro/utils/safe_notification.dart';
 import 'package:projecto_registagro/view/auth/loginScreen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsRepositories {
+  final Dio _dio = DioClient().dio;
+
   Future<List<DataKeys>> getProducts(
     BuildContext context, {
     bool showLoading = true,
@@ -20,25 +24,7 @@ class ProductsRepositories {
     }
 
     try {
-      final tokenMap = await TokenStorage().readToken();
-
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        handleAuthError(context, tokenMap["error"] ?? "Faça login novamente");
-        throw Exception("Não autenticado");
-      }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': "Bearer ${tokenMap['token']}",
-          },
-        ),
-      );
-
-      final response = await dio.get(
-        'https://api-registagro.onrender.com/products/consumers/get/products',
-      );
+      final response = await _dio.get(ApiConfig.consumerProducts);
 
       if (showLoading && context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
@@ -55,44 +41,17 @@ class ProductsRepositories {
         Navigator.of(context, rootNavigator: true).pop();
       }
 
-      String message = "Erro ao carregar produtos";
-
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data["message"] ??
-            'Sessão expirada';
-
-        handleAuthError(context, message);
-      } else {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data?['info'] ??
-            e.message ??
-            message;
-
-        e.response?.data["error"] != null || e.response?.data["info"] != null
-            ? showTopNotification(
-                context,
-                title: "Error",
-                description: message,
-                backgroundColor: Colors.red.shade700,
-                icon: Icons.error_outline,
-              )
-            : print(message);
-        rethrow;
-      }
-
-      throw Exception(message);
-    } catch (e) {
+      _handleDioError(context, e);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
       if (showLoading && context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
 
-      ProductsRepositories().handleAuthError(
-        context,
-        "Ocorreu um erro inesperado",
-      );
+      AppLogger.error('Erro inesperado ao buscar produtos', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
 
       rethrow;
     }
@@ -109,24 +68,8 @@ class ProductsRepositories {
     );
 
     try {
-      final tokenMap = await TokenStorage().readToken();
-
-      if (tokenMap.containsKey("error") || tokenMap["token"] == null) {
-        handleAuthError(context, tokenMap["error"] ?? "Faça login novamente");
-        throw Exception("Não autenticado");
-      }
-
-      final dio = Dio(
-        BaseOptions(
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': "Bearer ${tokenMap['token']}",
-          },
-        ),
-      );
-
-      final res = await dio.get(
-        "https://api-registagro.onrender.com/products/consumers/get/farm/$farmId",
+      final res = await _dio.get(
+        '${ApiConfig.farmProducts}/$farmId',
       );
 
       Navigator.of(context, rootNavigator: true).pop();
@@ -141,55 +84,70 @@ class ProductsRepositories {
     } on DioException catch (e) {
       Navigator.of(context, rootNavigator: true).pop();
 
-      String message = "Erro ao carregar produtos";
-
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data["message"] ??
-            'Sessão expirada';
-
-        handleAuthError(context, message);
-      } else {
-        message =
-            e.response?.data?['error'] ??
-            e.response?.data?['info'] ??
-            e.message ??
-            message;
-
-        showTopNotification(
-          context,
-          title: "Error",
-          description: message,
-          backgroundColor: Colors.red.shade700,
-          icon: Icons.error_outline,
-        );
-      }
-
-      throw Exception(message);
-    } catch (e) {
+      _handleDioError(context, e);
+      throw Exception(_getErrorMessage(e));
+    } catch (e, stackTrace) {
       Navigator.of(context, rootNavigator: true).pop();
 
-      ProductsRepositories().handleAuthError(
-        context,
-        "Ocorreu um erro inesperado",
-      );
+      AppLogger.error('Erro inesperado ao buscar produtos da fazenda', error: e, stackTrace: stackTrace);
+      if (context.mounted) {
+        handleAuthError(context, 'Ocorreu um erro inesperado');
+      }
 
       rethrow;
     }
   }
 
+  void _handleDioError(BuildContext context, DioException e) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401 || statusCode == 403) {
+      final message = e.response?.data?['error'] ?? 'Sessão expirada';
+      if (context.mounted) {
+        handleAuthError(context, message);
+      }
+    } else {
+      final message = _getErrorMessage(e);
+      if (context.mounted) {
+        showSafeNotification(
+          context,
+          title: 'Erro',
+          description: message,
+          backgroundColor: Colors.red.shade700,
+          icon: Icons.error_outline,
+        );
+      }
+      AppLogger.dioError('Erro ao buscar produtos', error: e);
+    }
+  }
+
+  String _getErrorMessage(DioException e) {
+    final statusCode = e.response?.statusCode;
+
+    if (statusCode == 401) return 'Sessão expirada. Faça login novamente';
+    if (statusCode == 403) return 'Acesso negado';
+    if (statusCode == 404) return e.response?.data?['info'] ?? 'Não encontrado';
+    if (statusCode == 429) return 'Muitas tentativas. Tente novamente mais tarde';
+    if (statusCode == 500) return 'Erro no servidor. Tente novamente mais tarde';
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return 'Tempo de conexão esgotado. Verifique sua internet';
+    }
+    if (e.type == DioExceptionType.connectionError) {
+      return 'Erro de conexão. Verifique sua internet';
+    }
+    return 'Ocorreu um erro inesperado';
+  }
+
   void handleAuthError(BuildContext context, String message) {
-    showTopNotification(
+    showSafeWarningNotification(
       context,
-      title: "Error",
+      title: 'Erro',
       description: message,
-      backgroundColor: Colors.amber,
-      icon: Icons.error_outline,
     );
 
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("last_route", '/');
+      prefs.setString('last_route', '/');
     });
 
     Navigator.pushAndRemoveUntil(

@@ -133,3 +133,4 @@ coverage/
 
 /macos/Flutter/GeneratedPluginRegistrant.swift
 pubspec.lock
+/SECURITY_AUDIT_FLUTTER_CONSUMER_REPORT.md

@@ -1,0 +1,2267 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RegistAgro API",
+    "description": "Oficial RegistAgro API documentation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5500",
+      "description": "Servidor local"
+    },
+    {
+      "url": "https://api-registagro.onrender.com",
+      "description": "Web Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Company",
+      "description": "Ver todas as empresas"
+    },
+    {
+      "name": "Auth",
+      "description": "Authentication routes"
+    },
+    {
+      "name": "Products",
+      "description": "Farm Products"
+    },
+    {
+      "name": "Users",
+      "description": "Users actions routes"
+    },
+    {
+      "name": "Orders",
+      "description": "Orders endpoints"
+    },
+    {
+      "name": "Vehicles",
+      "description": "Vehicles endpoints"
+    },
+    {
+      "name": "Transport Requests",
+      "description": "Carriers transport requests endpoints"
+    },
+    {
+      "name": "Location",
+      "description": "GeoLocation endpoints"
+    },
+    {
+      "name": "Flow",
+      "description": "Flow process endpoints"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Confirma que a API est\u00e1 a responder",
+        "responses": {
+          "200": {
+            "description": "API dispon\u00edvel"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Verifica a sa\u00fade da API e depend\u00eancias",
+        "responses": {
+          "200": {
+            "description": "API, PostgreSQL e Redis dispon\u00edveis"
+          },
+          "503": {
+            "description": "Uma ou mais depend\u00eancias est\u00e3o indispon\u00edveis"
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Indica se a inst\u00e2ncia pode receber tr\u00e1fego",
+        "responses": {
+          "200": {
+            "description": "Inst\u00e2ncia pronta"
+          },
+          "503": {
+            "description": "Inst\u00e2ncia n\u00e3o pronta"
+          }
+        }
+      }
+    },
+    "/token": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Verifica se o token de acesso \u00e9 v\u00e1lido",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/companies/get": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "summary": "Visualiza o nif de todas as fazendas na AGT",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/auth/signup/{rule}": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Cadastrar consumidores e transportadoras",
+        "parameters": [
+          {
+            "name": "rule",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "consumer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/auth/signup/verify/{code}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Valida c\u00f3digo de verifica\u00e7\u00e3o",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{6}$",
+              "example": 906941
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/auth/signup/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Confirma c\u00f3digo OTP associado ao email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOtp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Conta verificada e tokens emitidos"
+          },
+          "400": {
+            "description": "Email/c\u00f3digo inv\u00e1lido ou expirado"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Roda o refresh token e emite um novo access token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens emitidos; o refresh token anterior foi invalidado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Pedido inv\u00e1lido"
+          },
+          "401": {
+            "description": "Sess\u00e3o inv\u00e1lida ou expirada"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Revoga a sess\u00e3o do refresh token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Sess\u00e3o revogada"
+          },
+          "400": {
+            "description": "Refresh token inv\u00e1lido"
+          }
+        }
+      }
+    },
+    "/auth/signup/nif/{nif}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verifica nif das fazendas",
+        "parameters": [
+          {
+            "name": "nif",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "500012345"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/auth/farm/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Definir senha das fazendas",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FarmPass"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/auth/farm/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login das fazendas",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FarmLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login efetuado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/auth/login/{rule}": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login dos consumidores e transportadoras",
+        "parameters": [
+          {
+            "name": "rule",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "consumer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login efetuado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/products/create": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Cadastrar Produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/products/upload/product/{id}": {
+      "patch": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Atualizar foto de um produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "c76766a9-a280-4871-801c-43e8a1346a2b"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#components/schemas/ProductPhoto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/update/product/{id}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Atualizar dados de um produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "c76766a9-a280-4871-801c-43e8a1346a2b"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/UpdateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/farms/get/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Ver todos meus produtos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/farms/get/product/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Ver um produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "c76766a9-a280-4871-801c-43e8a1346a2b"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/delete/product/{id}": {
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Apagar um produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "c76766a9-a280-4871-801c-43e8a1346a2b"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/consumers/get/farm/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Consumidor visualiza todos osproduto de uma fazenda",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "5477da12-e907-4e4c-a4ed-23cadba77b3e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/consumers/product/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Consumidor visualiza um produto",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "c76766a9-a280-4871-801c-43e8a1346a2b"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/products/consumers/get/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Consumidores v\u00eam todos os produtos da plataforma",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Atualizar dados",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/users/delete": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Apagar usu\u00e1rio",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/users/upload/profile": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Adicionar foto de perfil",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfilePhoto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Ver meus dados",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/create/farm/{id}": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Fazer pedido",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "90a35095-f87a-425b-b005-5c68a19eb275"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/payment/confirm": {
+      "patch": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Confirmar pagamento por refer\u00eancia",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPayment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders/farms/order/get": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Visualizar todos os pedidos das fazendas",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/accept/order/{id}": {
+      "patch": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Aceitar pedidos de consumidores",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "e6d2168a-4643-4ad5-aab7-c870a386aa17"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/reject/order/{id}": {
+      "patch": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Rejeitar pedidos de consumidores",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "e6d2168a-4643-4ad5-aab7-c870a386aa17"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/consumers/order/sent": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Ver todos os pedidos enviados",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders/consumers/cancel/order/{id}": {
+      "patch": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Cancelar pedidos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "e6d2168a-4643-4ad5-aab7-c870a386aa17"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/consumers/update/order/{id}": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Atualizar pedidos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "e6d2168a-4643-4ad5-aab7-c870a386aa17"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders/consumers/delete/order/{id}": {
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Apagar pedidos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "e6d2168a-4643-4ad5-aab7-c870a386aa17"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/transports/vehicle/create": {
+      "post": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Transportadoras cadastram um novo ve\u00edculo",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicle"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/transports/farms/get/vehicle/{transport}": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Encontrar ve\u00edculos para contratar transportadora",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "name": "transport",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "aberto_coberto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/transports/request": {
+      "post": {
+        "tags": [
+          "Transport Requests"
+        ],
+        "summary": "Contratar transportadora pelo seu ve\u00edculo",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestTransport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/transports/carriers/vehicles": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Transportadoras visualizam seus transportes",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/transports/carrier/request/get": {
+      "get": {
+        "tags": [
+          "Transport Requests"
+        ],
+        "summary": "Transportadoras visualizam suas solicita\u00e7\u00f5es de transporte",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solicita\u00c3\u00a7\u00c3\u00b5es da transportadora autenticada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "requests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "carrierId"
+                        ],
+                        "properties": {
+                          "carrierId": {
+                            "type": "string",
+                            "description": "ID da transportadora associada \u00e0 solicita\u00e7\u00e3o"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/transports/carrier/request/accept": {
+      "patch": {
+        "tags": [
+          "Transport Requests"
+        ],
+        "summary": "Aceitar pedido de transporte",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/location/carrier/update": {
+      "put": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Transportadora atualiza a sua localiza\u00e7\u00e3o",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/location/carrier/direction/request/{id}": {
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Transportadoras pegam a dire\u00e7\u00e3o at\u00e9 a fazenda",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cef6a53b-b982-4bd3-9d02-761945646255"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/location/get/coordinates/order/{id}": {
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Consumidores e fazendas carregam a localiza\u00e7\u00e3o da transportadora",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60bf2304-50ce-4667-aa07-6e2cd246517e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/flow/farm/start/order/{id}": {
+      "patch": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Fazenda da in\u00edcio ao escoamento",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60bf2304-50ce-4667-aa07-6e2cd246517e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/flow/carrier/finish/request/{id}": {
+      "patch": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Transportadoras terminam suas corridas",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60bf2304-50ce-4667-aa07-6e2cd246517e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/flow/consumer/complete/order/{id}": {
+      "put": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Consumidores confirmam entrega liberando pagamento retido",
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60bf2304-50ce-4667-aa07-6e2cd246517e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "VerifyOtp": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "code"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9]{6}$"
+          }
+        }
+      },
+      "RefreshTokenInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 256
+          }
+        }
+      },
+      "TokenPair": {
+        "type": "object",
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "tokenType",
+          "expiresIn"
+        ],
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string",
+            "enum": [
+              "Bearer"
+            ]
+          },
+          "expiresIn": {
+            "type": "integer",
+            "example": 900
+          }
+        }
+      },
+      "CreateUser": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "adress",
+          "province",
+          "pass1",
+          "pass2"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Eucl\u00e9nio Cadete"
+          },
+          "email": {
+            "type": "string",
+            "example": "eucleniocadete@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "941877294"
+          },
+          "adress": {
+            "type": "string",
+            "example": "Rangel/C10 de baixo"
+          },
+          "province": {
+            "type": "string",
+            "example": "Luanda"
+          },
+          "pass1": {
+            "type": "string",
+            "example": "Euclenio@1"
+          },
+          "pass2": {
+            "type": "string",
+            "example": "Euclenio@1"
+          }
+        }
+      },
+      "FarmPass": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "adress",
+          "province",
+          "pass1",
+          "pass2"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fazenda Verde Luanda"
+          },
+          "email": {
+            "type": "string",
+            "example": "verde.luanda1@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "923456001"
+          },
+          "adress": {
+            "type": "string",
+            "example": "Viana"
+          },
+          "province": {
+            "type": "string",
+            "example": "Luanda"
+          },
+          "pass1": {
+            "type": "string",
+            "example": "FazendaVerde1.0"
+          },
+          "pass2": {
+            "type": "string",
+            "example": "FazendaVerde1.0"
+          }
+        }
+      },
+      "FarmLogin": {
+        "type": "object",
+        "required": [
+          "nif",
+          "password"
+        ],
+        "properties": {
+          "nif": {
+            "type": "string",
+            "example": "500012345"
+          },
+          "password": {
+            "type": "string",
+            "example": "FazendaVerde1.0"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "eucleniocadete@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Euclenio@1"
+          }
+        }
+      },
+      "CreateProduct": {
+        "type": "object",
+        "required": [
+          "img",
+          "data"
+        ],
+        "properties": {
+          "img": {
+            "type": "string",
+            "format": "binary",
+            "description": "Adicionar foto ao produto"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "name",
+              "description",
+              "price",
+              "stock",
+              "unit",
+              "type",
+              "transport"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Banana"
+              },
+              "description": {
+                "type": "string",
+                "example": "A melhor banana de Luanda"
+              },
+              "price": {
+                "type": "number",
+                "example": 15200
+              },
+              "stock": {
+                "type": "number",
+                "example": 30
+              },
+              "unit": {
+                "type": "string",
+                "example": "t"
+              },
+              "type": {
+                "type": "string",
+                "example": "frutas"
+              },
+              "transport": {
+                "type": "string",
+                "example": "frigorifico"
+              }
+            }
+          }
+        }
+      },
+      "ProductPhoto": {
+        "type": "object",
+        "required": [
+          "img"
+        ],
+        "properties": {
+          "img": {
+            "type": "string",
+            "format": "binary",
+            "description": "Adicionar foto a um produto"
+          }
+        }
+      },
+      "UpdateProduct": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "price",
+          "stock",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Banana"
+          },
+          "description": {
+            "type": "string",
+            "example": "A melhor banana de Luanda"
+          },
+          "price": {
+            "type": "number",
+            "example": 15200
+          },
+          "stock": {
+            "type": "number",
+            "example": 30
+          },
+          "unit": {
+            "type": "string",
+            "example": "t"
+          }
+        }
+      },
+      "UpdateData": {
+        "type": "object",
+        "required": [
+          "name",
+          "adress",
+          "province"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Eucl\u00e9nio Cadete"
+          },
+          "adress": {
+            "type": "string",
+            "example": "Rangel/C10 de baixo"
+          },
+          "province": {
+            "type": "string",
+            "example": "Luanda"
+          }
+        }
+      },
+      "ProfilePhoto": {
+        "type": "object",
+        "required": [
+          "img"
+        ],
+        "properties": {
+          "img": {
+            "type": "string",
+            "format": "binary",
+            "description": "Adicionar foto de perfil"
+          }
+        }
+      },
+      "CreateOrder": {
+        "type": "object",
+        "required": [
+          "name",
+          "qtd",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Banana"
+          },
+          "qtd": {
+            "type": "number",
+            "example": 10
+          },
+          "unit": {
+            "type": "string",
+            "example": "kg"
+          },
+          "delivery": {
+            "type": "string",
+            "example": "Rua C10 de baixo"
+          }
+        }
+      },
+      "ConfirmPayment": {
+        "type": "object",
+        "required": [
+          "reference"
+        ],
+        "properties": {
+          "reference": {
+            "type": "string",
+            "example": "491856377"
+          }
+        }
+      },
+      "UpdateOrder": {
+        "type": "object",
+        "required": [
+          "qtd",
+          "unit"
+        ],
+        "properties": {
+          "qtd": {
+            "type": "number",
+            "example": 20
+          },
+          "unit": {
+            "type": "string",
+            "example": "kg"
+          }
+        }
+      },
+      "CreateVehicle": {
+        "type": "object",
+        "required": [
+          "photo",
+          "data"
+        ],
+        "properties": {
+          "photo": {
+            "type": "string",
+            "format": "binary",
+            "description": "Adicionar foto da viatura"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "brand",
+              "plate",
+              "category",
+              "capacity",
+              "unit"
+            ],
+            "properties": {
+              "brand": {
+                "type": "string",
+                "example": "Toyota Hilux"
+              },
+              "plate": {
+                "type": "string",
+                "example": "LDA-28-62-RP"
+              },
+              "category": {
+                "type": "string",
+                "example": "aberto_coberto"
+              },
+              "capacity": {
+                "type": "number",
+                "example": 20
+              },
+              "unit": {
+                "type": "string",
+                "example": "kg"
+              }
+            }
+          }
+        }
+      },
+      "RequestTransport": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "vehicleId"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "example": "406e6da5-9c4c-4da7-9d4c-3fc560d8e1af"
+          },
+          "vehicleId": {
+            "type": "string",
+            "example": "1e854eb1-25d0-42b1-a990-2237b6a57d39"
+          }
+        }
+      },
+      "AcceptRequest": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "example": "7611d529-0363-413a-8c36-a911fa42d052"
+          },
+          "latitude": {
+            "type": "string",
+            "example": "-8.831788"
+          },
+          "longitude": {
+            "type": "string",
+            "example": "13.262048"
+          }
+        }
+      }
+    }
+  }
+}
